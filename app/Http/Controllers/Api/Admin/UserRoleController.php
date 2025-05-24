@@ -24,6 +24,7 @@ class UserRoleController extends Controller
         );
     }
 
+
     public function removeRole(Request $request, $userId)
     {
         $request->validate([
@@ -38,6 +39,7 @@ class UserRoleController extends Controller
             'Role removed successfully.'
         );
     }
+
 
     public function syncRoles(Request $request, $userId)
     {
