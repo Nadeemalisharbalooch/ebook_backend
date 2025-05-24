@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Service\ResponseService;
 use Illuminate\Http\Request;
 
 class UserRoleController extends Controller
@@ -17,7 +18,10 @@ class UserRoleController extends Controller
         $user = User::findOrFail($userId);
         $user->assignRole($request->role);
 
-        return response()->json(['message' => 'Role assigned successfully.']);
+        return ResponseService::success(
+            null,
+            'Role assigned successfully.'
+        );
     }
 
     public function removeRole(Request $request, $userId)
@@ -29,7 +33,10 @@ class UserRoleController extends Controller
         $user = User::findOrFail($userId);
         $user->removeRole($request->role);
 
-        return response()->json(['message' => 'Role removed successfully.']);
+        return ResponseService::success(
+            null,
+            'Role removed successfully.'
+        );
     }
 
     public function syncRoles(Request $request, $userId)
@@ -42,6 +49,9 @@ class UserRoleController extends Controller
         $user = User::findOrFail($userId);
         $user->syncRoles($request->roles);
 
-        return response()->json(['message' => 'Roles synced successfully.']);
+        return ResponseService::success(
+            null,
+            'Roles synced successfully.'
+        );
     }
 }

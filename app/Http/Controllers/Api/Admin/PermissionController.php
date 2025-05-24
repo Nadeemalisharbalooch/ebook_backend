@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\Admin\PermissionResource;
 use App\Models\Permission;
+use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
 class PermissionController extends Controller
@@ -11,23 +13,31 @@ class PermissionController extends Controller
     /**
      * Display a listing of the resource.
      */
-     public function index()
+    public function index()
     {
-        return response()->json(Permission::all());
+        return ResponseService::success(
+            PermissionResource::collection(Permission::all()),
+            'Permissions fetched successfully.'
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      */
-     public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|unique:permissions,name',
         ]);
+        $permission = Permission::create([
+            'name' => $request->name,
+            'guard_name' => 'api',
+        ]);
 
-        $permission = Permission::create(['name' => $request->name,'guard_name' => 'api']);
-
-        return response()->json($permission, 201);
+        return ResponseService::success(
+            new PermissionResource($permission),
+            'Permission created successfully.'
+        );
     }
 
     /**
@@ -36,23 +46,32 @@ class PermissionController extends Controller
     public function show($id)
     {
         $permission = Permission::findOrFail($id);
-        return response()->json($permission);
+
+        return ResponseService::success(
+            new PermissionResource($permission),
+            'Permission fetched successfully.'
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-     public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $permission = Permission::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|unique:permissions,name,' . $id,
+            'name' => 'required|unique:permissions,name,'.$id,
         ]);
 
-        $permission->update(['name' => $request->name]);
+        $permission->update([
+            'name' => $request->name,
+        ]);
 
-        return response()->json($permission);
+        return ResponseService::success(
+            new PermissionResource($permission),
+            'Permission updated successfully.'
+        );
     }
 
     /**
@@ -63,6 +82,9 @@ class PermissionController extends Controller
         $permission = Permission::findOrFail($id);
         $permission->delete();
 
-        return response()->json(null, 204);
+        return ResponseService::success(
+            null,
+            'Permission deleted successfully.'
+        );
     }
 }
