@@ -39,21 +39,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_active' => 'boolean',
-            'is_suspended' => 'boolean',
-        ];
-    }
-
-    /**
      * Check the user's status for login validation.
      *
      * @return string|null Returns error message if status invalid, null if valid.
@@ -73,5 +58,20 @@ class User extends Authenticatable
         }
 
         return null;
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_active' => 'boolean',
+            'is_suspended' => 'boolean',
+        ];
     }
 }
