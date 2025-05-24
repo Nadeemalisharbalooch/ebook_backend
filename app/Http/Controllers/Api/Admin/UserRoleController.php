@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Service\ResponseService;
+use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
 class UserRoleController extends Controller
@@ -24,7 +24,6 @@ class UserRoleController extends Controller
         );
     }
 
-
     public function removeRole(Request $request, $userId)
     {
         $request->validate([
@@ -39,7 +38,6 @@ class UserRoleController extends Controller
             'Role removed successfully.'
         );
     }
-
 
     public function syncRoles(Request $request, $userId)
     {
