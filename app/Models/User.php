@@ -3,7 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -16,7 +19,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +31,8 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -74,5 +79,31 @@ class User extends Authenticatable
             'is_active' => 'boolean',
             'is_suspended' => 'boolean',
         ];
+    }
+
+    /**
+     * Determine if the user is an admin.
+     */
+    public function isAdmin()
+    {
+        return $this->is_admin == 1;
+    }
+
+    /**
+     * Determine if the user is a client.
+     */
+    public function isClient()
+    {
+        return $this->is_admin == 0;
+    }
+
+    /**
+     * Get the profile associated with this user.
+     *
+     * @return HasOne<Profile>
+     */
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class);
     }
 }
