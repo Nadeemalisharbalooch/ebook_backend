@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,7 +17,10 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @method string|null checkStatus()
  * @method \Laravel\Sanctum\NewAccessToken createToken(string $name, array $abilities = [])
+ * @method bool isAdmin()
+ * @method bool isUser()
  */
+#[ObservedBy(UserObserver::class)]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -30,6 +35,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
     ];
 
     protected $dates = ['deleted_at'];
@@ -67,32 +73,30 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_active' => 'boolean',
-            'is_suspended' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_active' => 'boolean',
+        'is_suspended' => 'boolean',
+        'is_admin' => 'boolean',
+    ];
 
     /**
      * Determine if the user is an admin.
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->is_admin == 1;
     }
 
     /**
-     * Determine if the user is a client.
+     * Determine if the user is a user/client.
      */
-    public function isClient()
+    public function isUser(): bool
     {
         return $this->is_admin == 0;
     }

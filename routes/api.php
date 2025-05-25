@@ -13,11 +13,11 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
 
 // Admin Routes
-Route::prefix('admin')->name('admin.')->middleware('auth:sanctum')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['isAdmin','auth:sanctum'])->group(function () {
     require __DIR__ . '/admin/api.php';
 });
 
 // Client/User Routes
-Route::prefix('user')->name('user.')->middleware('auth:sanctum')->group(function () {
+Route::prefix('user')->name('user.')->middleware(['isUser','auth:sanctum'])->group(function () {
     require __DIR__ . '/user/api.php';
 });

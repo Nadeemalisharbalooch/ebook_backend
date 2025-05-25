@@ -16,10 +16,8 @@ class UserSeeder extends Seeder
             [
                 // 1
                 'username' => 'superadmin',
-                'first_name' => 'Super',
-                'last_name' => 'Admin',
                 'name' => 'Super Admin',
-                'email' => 'superadmin@shaz3e.com',
+                'email' => 'superadmin@dc.com.pk',
                 'password' => bcrypt('123456789'),
                 'email_verified_at' => now(),
                 'is_active' => true,
@@ -28,10 +26,8 @@ class UserSeeder extends Seeder
             [
                 // 2
                 'username' => 'developer',
-                'first_name' => 'Developer',
-                'last_name' => 'Developer',
                 'name' => 'Developer',
-                'email' => 'developer@shaz3e.com',
+                'email' => 'developer@dc.com.pk',
                 'password' => bcrypt('123456789'),
                 'email_verified_at' => now(),
                 'is_active' => true,
@@ -40,10 +36,8 @@ class UserSeeder extends Seeder
             [
                 // 3
                 'username' => 'tester',
-                'first_name' => 'Tester',
-                'last_name' => 'Tester',
                 'name' => 'Tester',
-                'email' => 'tester@shaz3e.com',
+                'email' => 'tester@dc.com.pk',
                 'password' => bcrypt('123456789'),
                 'email_verified_at' => now(),
                 'is_active' => true,
@@ -52,10 +46,8 @@ class UserSeeder extends Seeder
             [
                 // 4
                 'username' => 'admin',
-                'first_name' => 'Main',
-                'last_name' => 'Admin',
                 'name' => 'Main Admin',
-                'email' => 'admin@shaz3e.com',
+                'email' => 'admin@dc.com.pk',
                 'password' => bcrypt('123456789'),
                 'email_verified_at' => now(),
                 'is_active' => true,
@@ -64,10 +56,8 @@ class UserSeeder extends Seeder
             [
                 // 5
                 'username' => 'manager',
-                'first_name' => 'Manager',
-                'last_name' => 'Manager',
                 'name' => 'Manager',
-                'email' => 'manager@shaz3e.com',
+                'email' => 'manager@dc.com.pk',
                 'password' => bcrypt('123456789'),
                 'email_verified_at' => now(),
                 'is_active' => true,
@@ -76,10 +66,8 @@ class UserSeeder extends Seeder
             [
                 // 6
                 'username' => 'staff',
-                'first_name' => 'Staff',
-                'last_name' => 'Staff',
                 'name' => 'Staff',
-                'email' => 'staff@shaz3e.com',
+                'email' => 'staff@dc.com.pk',
                 'password' => bcrypt('123456789'),
                 'email_verified_at' => now(),
                 'is_active' => true,
@@ -104,10 +92,8 @@ class UserSeeder extends Seeder
                 [
                     // 7
                     'username' => 'userone',
-                    'first_name' => 'User',
-                    'last_name' => 'One',
                     'name' => 'user',
-                    'email' => 'user1@shaz3e.com',
+                    'email' => 'user1@dc.com.pk',
                     'password' => bcrypt('123456789'),
                     'email_verified_at' => now(),
                     'is_active' => true,
@@ -116,10 +102,8 @@ class UserSeeder extends Seeder
                 [
                     // 8
                     'username' => 'usertwo',
-                    'first_name' => 'User',
-                    'last_name' => 'Two',
                     'name' => 'user',
-                    'email' => 'user2@shaz3e.com',
+                    'email' => 'user2@dc.com.pk',
                     'password' => bcrypt('123456789'),
                     'email_verified_at' => now(),
                     'is_active' => true,
@@ -128,10 +112,8 @@ class UserSeeder extends Seeder
                 [
                     // 9
                     'username' => 'userthree',
-                    'first_name' => 'User',
-                    'last_name' => 'Three',
                     'name' => 'user',
-                    'email' => 'user3@shaz3e.com',
+                    'email' => 'user3@dc.com.pk',
                     'password' => bcrypt('123456789'),
                     'email_verified_at' => now(),
                     'is_active' => true,
@@ -140,10 +122,8 @@ class UserSeeder extends Seeder
                 [
                     // 10
                     'username' => 'userfour',
-                    'first_name' => 'User',
-                    'last_name' => 'Four',
                     'name' => 'user',
-                    'email' => 'user4@shaz3e.com',
+                    'email' => 'user4@dc.com.pk',
                     'password' => bcrypt('123456789'),
                     'email_verified_at' => now(),
                     'is_active' => true,
