@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(false);
             $table->boolean('is_suspended')->default(false);
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 
