@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Rules\UniqueEmailRule;
+use App\Rules\UsernameRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
@@ -23,6 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'username' => [new UsernameRule],
             'name' => ['required', 'string', 'max:255'],
             'email' => [new UniqueEmailRule],
             'password' => ['required', 'confirmed', 'min:8'],
