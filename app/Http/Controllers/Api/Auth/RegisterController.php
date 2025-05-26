@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\ResponseService;
 use Exception;
 use Illuminate\Database\QueryException;
+use PhpParser\Node\Stmt\Return_;
 
 class RegisterController extends Controller
 {
@@ -16,6 +17,7 @@ class RegisterController extends Controller
      */
     public function __invoke(RegisterRequest $request)
     {
+
         try {
             $validated = $request->validated();
 
