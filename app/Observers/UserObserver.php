@@ -17,6 +17,10 @@ class UserObserver
         ], [
             'avatar' => $this->randomAvatar(), // Assign a random avatar
         ]);
+
+        // create random username
+        $user->username = 'user'.$user->id;
+        $user->saveQuietly();
     }
 
     /**
