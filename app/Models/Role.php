@@ -6,7 +6,6 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-
 use Spatie\Permission\Models\Role as ModelsRole;
 
 class Role extends ModelsRole
@@ -20,6 +19,7 @@ class Role extends ModelsRole
      * @var array
      */
     protected $with = ['permissions'];
+
     protected $fillable = [
         // The name of the role. This is the name that is used to identify the
         // role in the system.

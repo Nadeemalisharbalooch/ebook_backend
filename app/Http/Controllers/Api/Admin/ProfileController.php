@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProfileUpdateRequest;
 use App\Http\Resources\Api\Admin\ProfileResource;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Profile;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -17,12 +17,16 @@ class ProfileController extends Controller
         return $request->user();
     }
 
-   /*  public function store(Request $request)
-    {
-        // Update the user's profile
-    } */
+    /*  public function store(Request $request)
+     {
+         // Update the user's profile
+     } */
 
-
+    /**
+     * Update the authenticated user's profile.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(ProfileUpdateRequest $request)
     {
         $user = Auth::user();

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('dashboard', DashboardController::class)->name('dashboard');
 
 Route::get('profile', [ProfileController::class, 'view'])->name('profile');
-Route::post('profile', [ProfileController::class, 'store'])->name('profile');
+Route::post('profile', [ProfileController::class, 'update'])->name('profile');
 
 // Example admin routes for roles
 Route::get('roles', [RoleController::class, 'index']); // List all active roles

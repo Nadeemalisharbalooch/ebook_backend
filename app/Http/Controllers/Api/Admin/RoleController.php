@@ -9,14 +9,12 @@ use App\Http\Resources\Api\Admin\RoleResource;
 use App\Models\Role;
 use App\Services\ResponseService;
 
-
 class RoleController extends Controller
 {
-
-
     public function index()
     {
         $roles = Role::all();
+
         return ResponseService::success(
             RoleResource::collection($roles),
             'Roles retrieved successfully'
@@ -44,6 +42,7 @@ class RoleController extends Controller
         if (isset($validated['permissions'])) {
             $role->syncPermissions($validated['permissions']);
         }
+
         // Return with permissions loaded and wrapped in resource
         return ResponseService::success(
             new RoleResource($role->load('permissions')),
@@ -55,6 +54,7 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
         $role->delete();
+
         return ResponseService::success(
             new RoleResource($role),
             'Role deleted successfully'
@@ -64,6 +64,7 @@ class RoleController extends Controller
     public function trashed()
     {
         $roles = Role::onlyTrashed()->get();
+
         return ResponseService::success(
             RoleResource::collection($roles),
             'Trashed roles fetched successfully'
@@ -85,6 +86,7 @@ class RoleController extends Controller
     {
         $role = Role::withTrashed()->findOrFail($id);
         $role->forceDelete();
+
         return ResponseService::success('Role permanently deleted');
     }
 }

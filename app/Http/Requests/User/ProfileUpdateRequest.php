@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -32,6 +32,5 @@ class ProfileUpdateRequest extends FormRequest
             'zipcode' => 'nullable|string',
             'address' => 'nullable|string',
         ];
-
     }
 }
