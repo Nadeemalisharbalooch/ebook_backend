@@ -13,13 +13,6 @@ class Role extends ModelsRole
     // Use SoftDeletes trait to enable soft deleting of models
     use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $with = ['permissions'];
-
     protected $fillable = [
         // The name of the role. This is the name that is used to identify the
         // role in the system.
