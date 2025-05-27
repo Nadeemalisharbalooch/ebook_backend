@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Services\ResponseService;
 use Exception;
 use Illuminate\Database\QueryException;
-use PhpParser\Node\Stmt\Return_;
 
 class RegisterController extends Controller
 {
