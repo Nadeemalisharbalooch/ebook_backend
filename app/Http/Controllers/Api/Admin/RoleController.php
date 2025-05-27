@@ -33,10 +33,9 @@ class RoleController extends Controller
         );
     }
 
-    public function update(UpdateRoleRequest $request, $id)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
         $validated = $request->validated();
-        $role = Role::findOrFail($id);
         $role->update($validated);
 
         if (isset($validated['permissions'])) {
@@ -50,9 +49,8 @@ class RoleController extends Controller
         );
     }
 
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        $role = Role::findOrFail($id);
         $role->delete();
 
         return ResponseService::success(
@@ -71,10 +69,10 @@ class RoleController extends Controller
         );
     }
 
-    public function restore($id)
+    public function restore(Role $role)
     {
-        $role = Role::withTrashed()->findOrFail($id);
-        $role->restore();
+        return $role;
+        $role->withTrashed()->restore();
 
         return ResponseService::success(
             new RoleResource($role),
@@ -82,9 +80,8 @@ class RoleController extends Controller
         );
     }
 
-    public function forceDelete($id)
+    public function forceDelete(Role $role)
     {
-        $role = Role::withTrashed()->findOrFail($id);
         $role->forceDelete();
 
         return ResponseService::success('Role permanently deleted');

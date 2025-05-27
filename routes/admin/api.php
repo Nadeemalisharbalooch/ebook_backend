@@ -12,12 +12,8 @@ Route::get('profile', [ProfileController::class, 'view'])->name('profile');
 Route::post('profile', [ProfileController::class, 'update'])->name('profile');
 
 // Example admin routes for roles
-Route::get('roles', [RoleController::class, 'index']); // List all active roles
-Route::post('roles', [RoleController::class, 'store']); // Create role
-Route::put('roles/{id}', [RoleController::class, 'update'])->name('roles.update'); // Update role
-Route::delete('roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy'); // Soft delete role
+Route::apiResource('roles', RoleController::class);
 
-//  Soft Delete Features
-Route::get('roles/trashed', [RoleController::class, 'trashed'])->name('roles.trashed'); // List only trashed roles
-Route::post('roles/{id}/restore', [RoleController::class, 'restore'])->name('roles.restore'); // Restore soft deleted role
-Route::delete('roles/{id}/force', [RoleController::class, 'forceDelete'])->name('roles.forceDelete'); // Permanently delete role
+Route::get('roles/trashed', [RoleController::class, 'trashed']);
+Route::post('roles/{role}/restore', [RoleController::class, 'restore']);
+Route::delete('roles/{role}/forceDelete', [RoleController::class, 'forceDelete']);
