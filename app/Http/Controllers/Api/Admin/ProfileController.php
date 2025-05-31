@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProfileUpdateRequest;
-use App\Http\Resources\Api\Admin\ProfileResource;
+use App\Http\Requests\Admin\updatePassword;
 use App\Models\Profile;
+use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -29,18 +29,31 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request)
     {
-        $user = Auth::user();
-
+        $user = auth()->user();
         $validated = $request->validated();
 
-        $profile = Profile::updateOrCreate(
-            ['user_id' => $user->id],
-            $validated
-        );
+        //  update user table fields
+        $user->update(collect($validated)->only(['name', 'email', 'username'])->toArray());
+
+        // Profile table update
+        $profile = $user->profile;
+        if ($profile) {
+            $profile->update(collect($validated)->except(['name', 'email', 'username'])->toArray());
+        } else {
+            return ResponseService::error('User profile does not exist.', 404);
+        }
 
         return ResponseService::success(
-            new ProfileResource($profile),
             'Profile updated successfully'
         );
+    }
+
+    public function updatePassword(updatePassword $request)
+    {
+        $user = auth()->user();
+        $validated = $request->validated();
+        $user->update($validated);
+
+        return ResponseService::success('Password updated successfully.');
     }
 }
