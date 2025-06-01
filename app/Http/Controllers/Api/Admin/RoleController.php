@@ -50,7 +50,6 @@ class RoleController extends Controller
     }
 
     public function destroy(Role $role)
-    public function destroy(Role $role)
     {
         $role->delete();
 
@@ -71,7 +70,6 @@ class RoleController extends Controller
     }
 
     public function restore(Role $role)
-    public function restore(Role $role)
     {
         $role->restore();
 
@@ -81,7 +79,6 @@ class RoleController extends Controller
         );
     }
 
-    public function forceDelete(Role $role)
     public function forceDelete(Role $role)
     {
         $role->forceDelete();
