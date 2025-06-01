@@ -36,13 +36,13 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         $validated = $request->validated();
+
         $role->update($validated);
 
         if (isset($validated['permissions'])) {
             $role->syncPermissions($validated['permissions']);
         }
 
-        // Return with permissions loaded and wrapped in resource
         return ResponseService::success(
             new RoleResource($role->load('permissions')),
             'Role updated successfully'
@@ -71,8 +71,7 @@ class RoleController extends Controller
 
     public function restore(Role $role)
     {
-        return $role;
-        $role->withTrashed()->restore();
+        $role->restore();
 
         return ResponseService::success(
             new RoleResource($role),
