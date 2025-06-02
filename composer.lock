@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b4afa6bbba1dbdc391962487bc297e1",
+    "content-hash": "6e3a1b9f4322524968d51ea4b97543c7",
     "packages": [
         {
             "name": "brick/math",
@@ -2429,16 +2429,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.4.0",
+            "version": "v5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "447a020a1f875a434d62f2a401f53b82a396e494"
+                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/447a020a1f875a434d62f2a401f53b82a396e494",
-                "reference": "447a020a1f875a434d62f2a401f53b82a396e494",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ae59794362fe85e051a58ad36b289443f57be7a9",
+                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9",
                 "shasum": ""
             },
             "require": {
@@ -2481,9 +2481,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.5.0"
             },
-            "time": "2024-12-30T11:07:19+00:00"
+            "time": "2025-05-31T08:24:38+00:00"
         },
         {
             "name": "nunomaduro/termwind",
@@ -3339,16 +3339,16 @@
         },
         {
             "name": "shaz3e/email-builder",
-            "version": "v0.4",
+            "version": "v0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Shaz3e/email-builder.git",
-                "reference": "dffadd5bba2e2f3582abf0f379070939230e8a2f"
+                "reference": "1b7a3acdefccbbc94aa6f734a93c61d5a72833aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Shaz3e/email-builder/zipball/dffadd5bba2e2f3582abf0f379070939230e8a2f",
-                "reference": "dffadd5bba2e2f3582abf0f379070939230e8a2f",
+                "url": "https://api.github.com/repos/Shaz3e/email-builder/zipball/1b7a3acdefccbbc94aa6f734a93c61d5a72833aa",
+                "reference": "1b7a3acdefccbbc94aa6f734a93c61d5a72833aa",
                 "shasum": ""
             },
             "type": "library",
@@ -3377,9 +3377,9 @@
             "description": "Create Email from frontend and use palceholder within email",
             "support": {
                 "issues": "https://github.com/Shaz3e/email-builder/issues",
-                "source": "https://github.com/Shaz3e/email-builder/tree/v0.4"
+                "source": "https://github.com/Shaz3e/email-builder/tree/v0.5"
             },
-            "time": "2025-04-27T21:22:21+00:00"
+            "time": "2025-06-02T22:07:13+00:00"
         },
         {
             "name": "spatie/laravel-permission",

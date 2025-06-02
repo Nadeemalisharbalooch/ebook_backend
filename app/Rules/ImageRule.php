@@ -15,9 +15,9 @@ class ImageRule implements ValidationRule
      *
      * @param  int  $maxSize  Maximum file size in kilobytes (default 2048 KB = 2MB)
      */
-    public function __construct(int $maxSize = 2048)
+    public function __construct($maxSize = null)
     {
-        $this->maxSize = $maxSize;
+        $this->maxSize = $maxSize ?? config('email-builder.image.max_size');
     }
 
     /**
@@ -27,6 +27,9 @@ class ImageRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        // change $attribute to human readable
+        $attribute = str_replace('_', ' ', ucwords($attribute));
+
         // Check if it is a file and an instance of UploadedFile
         if (! $value instanceof UploadedFile) {
             $fail("The {$attribute} must be a valid file.");
@@ -42,11 +45,13 @@ class ImageRule implements ValidationRule
         }
 
         // Check allowed extensions
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        $allowedExtensions = config('email-builder.image.allowed_extensions');
         $extension = strtolower($value->getClientOriginalExtension());
 
         if (! in_array($extension, $allowedExtensions)) {
-            $fail("The {$attribute} must be a file of type: jpg, jpeg, png, gif.");
+            $fail("The {$attribute} must be a file of type: ".implode(', ', $allowedExtensions).'.');
+
+            return;
         }
 
         // Check file size (UploadedFile::getSize() returns bytes)
