@@ -22,7 +22,6 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
-
         $statusError = $user->checkStatus();
         if ($statusError !== null) {
             return ResponseService::error($statusError, 403);

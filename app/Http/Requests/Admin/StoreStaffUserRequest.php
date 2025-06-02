@@ -19,19 +19,17 @@ class StoreStaffUserRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'is_active' => $this->input('is_active', true),
 
-     protected function prepareForValidation()
-{
-    $this->merge([
-        'is_active' => $this->input('is_active', true),
-
-    ]);
-}
-
+        ]);
+    }
 
     public function rules(): array
     {
-          return [
+        return [
             'username' => 'nullable|string|unique:users,username',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
