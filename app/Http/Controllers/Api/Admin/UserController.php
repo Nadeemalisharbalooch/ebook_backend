@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roles = User::with('profile')->get();
+        $roles = User::with('profile')->where('is_admin', false)->get();
 
         return ResponseService::success(
             UserResource::collection($roles),
@@ -43,8 +43,28 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        // Check if the user ID is within a restricted list
+        if (in_array($user->id, [1, 2, 3])) {
+            return ResponseService::error(
+                'You do not have permission to view this user',
+                403
+            );
+        }
+
+        $user = User::where([
+            'id' => $user->id,
+            'is_admin' => false,
+        ])->get();
+
+        if (! $user) {
+            return ResponseService::error(
+                'User not found',
+                404
+            );
+        }
+
         return ResponseService::success(
-            new UserResource($user->load('roles')),
+            new UserResource($user),
             'User retrieved successfully'
         );
     }
@@ -54,18 +74,19 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, string $id)
     {
+        $user = User::findOrFail($id);
+        // Check if the user ID is within a restricted list
+        if (in_array($user->id, [1, 2, 3])) {
+            return ResponseService::error(
+                'You do not have permission to view this user',
+                403
+            );
+        }
 
         $validated = $request->validated();
 
-        //  Find the user
-        $user = User::findOrFail($id);
-
         //  Update basic user data
         $user->update($validated);
-
-        if (isset($validated['role'])) {
-            $user->syncRoles([$validated['role']]);
-        }
 
         return ResponseService::success(
             new UserResource($user->load('roles')),
@@ -78,7 +99,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-
         $user->delete();
 
         return ResponseService::success(

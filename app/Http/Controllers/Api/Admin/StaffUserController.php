@@ -34,6 +34,13 @@ class StaffUserController extends Controller
 
     public function show(User $user)
     {
+        // Check if the user ID is within a restricted list
+        if (in_array($user->id, [1, 2, 3])) {
+            return ResponseService::error(
+                'You do not have permission to view this user',
+                403
+            );
+        }
         return ResponseService::success(
             new StaffUserResource($user->load('roles')),
             ' Staff User retrieved successfully'

@@ -44,11 +44,11 @@ Route::prefix('users')->group(function () {
 
 Route::apiResource('staff', StaffUserController::class);
 
-// Soft Delete Features under 'users' prefix
-Route::prefix('users')->group(function () {
-    Route::get('trashed', [StaffUserController::class, 'trashed'])->name('users.trashed');
-    Route::post('{user}/restore', [StaffUserController::class, 'restore'])->name('users.restore');
-    Route::delete('{user}/force', [StaffUserController::class, 'forceDelete'])->name('users.forceDelete');
+// Soft Delete Features under 'staff' prefix
+Route::prefix('staff')->group(function () {
+    Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
+    Route::post('{user}/restore', [StaffUserController::class, 'restore'])->name('staff.restore');
+    Route::delete('{user}/force', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
 });
 
 // Global Email Templates

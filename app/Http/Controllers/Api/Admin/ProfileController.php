@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProfileUpdateRequest;
-use App\Http\Requests\Admin\updatePassword;
-use App\Models\Profile;
-use App\Models\User;
+use App\Http\Requests\Admin\UpdatePassword;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
@@ -16,11 +14,6 @@ class ProfileController extends Controller
     {
         return $request->user();
     }
-
-    /*  public function store(Request $request)
-     {
-         // Update the user's profile
-     } */
 
     /**
      * Update the authenticated user's profile.
@@ -51,7 +44,7 @@ class ProfileController extends Controller
         );
     }
 
-    public function updatePassword(updatePassword $request)
+    public function updatePassword(UpdatePassword $request)
     {
         $user = auth()->user();
         $validated = $request->validated();
