@@ -27,9 +27,12 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    /** @var \App\Models\User $user */
     public function update(ProfileUpdateRequest $request)
     {
         $user = auth()->user();
+        // Alternatively, you can use:
+        // $user = $request->user();
         $validated = $request->validated();
 
         //  update user table fields

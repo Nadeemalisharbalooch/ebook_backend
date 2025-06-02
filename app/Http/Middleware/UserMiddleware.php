@@ -23,7 +23,6 @@ class UserMiddleware
          * @var \App\Models\User $user
          */
         $user = Auth::user();
-
         if (! $user->isUser()) {
             return ResponseService::error('You are not authorized to access this route.', 403);
         }
