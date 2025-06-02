@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use Shaz3e\EmailBuilder\Services\EmailBuilderService;
 
 class UserObserver
 {
@@ -21,6 +22,19 @@ class UserObserver
         // create random username
         $user->username = 'user'.$user->id;
         $user->saveQuietly();
+
+        // Send Welcome Email
+        $email = new EmailBuilderService;
+        $user = User::findOrFail($user->id);
+
+        $verification_link = route('auth.verification');
+
+        $email->sendEmailByKey('welcome_email', $user->email, [
+            'name' => $user->name,
+            'url' => $verification_link,
+            'app_name' => config('app.name'),
+        ]);
+
     }
 
     /**

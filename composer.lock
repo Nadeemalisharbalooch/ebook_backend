@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8b95dbab80d3d04dc750a96ef8e642e6",
+    "content-hash": "1b4afa6bbba1dbdc391962487bc297e1",
     "packages": [
         {
             "name": "brick/math",
@@ -3336,6 +3336,50 @@
                 "source": "https://github.com/ramsey/uuid/tree/4.8.1"
             },
             "time": "2025-06-01T06:28:46+00:00"
+        },
+        {
+            "name": "shaz3e/email-builder",
+            "version": "v0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Shaz3e/email-builder.git",
+                "reference": "dffadd5bba2e2f3582abf0f379070939230e8a2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Shaz3e/email-builder/zipball/dffadd5bba2e2f3582abf0f379070939230e8a2f",
+                "reference": "dffadd5bba2e2f3582abf0f379070939230e8a2f",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Shaz3e\\EmailBuilder\\Providers\\EmailBuilderServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Shaz3e\\EmailBuilder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shahrukh Akhtar",
+                    "email": "iam@shaz3e.com"
+                }
+            ],
+            "description": "Create Email from frontend and use palceholder within email",
+            "support": {
+                "issues": "https://github.com/Shaz3e/email-builder/issues",
+                "source": "https://github.com/Shaz3e/email-builder/tree/v0.4"
+            },
+            "time": "2025-04-27T21:22:21+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -8189,12 +8233,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.3"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }

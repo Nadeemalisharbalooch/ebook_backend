@@ -8,12 +8,9 @@ use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
 use App\Models\User;
 use App\Services\ResponseService;
-use Illuminate\Http\Request;
 
 class StaffUserController extends Controller
 {
-
-
     public function index()
     {
         $roles = User::with('profile')->get();
@@ -23,7 +20,6 @@ class StaffUserController extends Controller
             ' Staff users retrieved successfully'
         );
     }
-
 
     public function store(StoreStaffUserRequest $request)
     {
@@ -75,7 +71,6 @@ class StaffUserController extends Controller
             'Staff User deleted successfully'
         );
     }
-
 
     public function trashed()
     {

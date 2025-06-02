@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Shaz3e\EmailBuilder\Services\EmailBuilderService;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -37,7 +38,8 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
-        'username',
+        'is_active',
+        'is_suspended',
     ];
 
     protected $dates = ['deleted_at'];
@@ -60,6 +62,19 @@ class User extends Authenticatable
     public function checkStatus(): ?string
     {
         if (! $this->email_verified_at) {
+
+            $email = new EmailBuilderService;
+
+            $user = User::findOrFail($this->id);
+
+            $verification_link = route('auth.verification');
+
+            $email->sendEmailByKey('welcome_email', $user->email, [
+                'name' => $user->name,
+                'url' => $verification_link,
+                'app_name' => config('app.name'),
+            ]);
+
             return 'Your account is not verified';
         }
 
