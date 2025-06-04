@@ -69,8 +69,10 @@ class RoleController extends Controller
         );
     }
 
-    public function restore(Role $role)
+    public function restore($id)
     {
+        $role = Role::withTrashed()->findOrFail($id);
+
         $role->restore();
 
         return ResponseService::success(
@@ -82,7 +84,6 @@ class RoleController extends Controller
     public function forceDelete(Role $role)
     {
         $role->forceDelete();
-
         return ResponseService::success('Role permanently deleted');
     }
 }

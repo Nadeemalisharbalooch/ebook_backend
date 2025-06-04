@@ -22,7 +22,7 @@ class StoreStaffUserRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'is_active' => $this->input('is_active', true),
+            'is_admin' => $this->input('is_admin', 1),
 
         ]);
     }
