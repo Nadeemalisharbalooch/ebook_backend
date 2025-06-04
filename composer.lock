@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e3a1b9f4322524968d51ea4b97543c7",
+    "content-hash": "e2c409d0ca9182aa14c89f0c2bb84e7b",
     "packages": [
         {
             "name": "brick/math",
@@ -3339,16 +3339,16 @@
         },
         {
             "name": "shaz3e/email-builder",
-            "version": "v0.5",
+            "version": "v0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Shaz3e/email-builder.git",
-                "reference": "1b7a3acdefccbbc94aa6f734a93c61d5a72833aa"
+                "reference": "3277c2f78650d472cc9cfff813e19347d26801c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Shaz3e/email-builder/zipball/1b7a3acdefccbbc94aa6f734a93c61d5a72833aa",
-                "reference": "1b7a3acdefccbbc94aa6f734a93c61d5a72833aa",
+                "url": "https://api.github.com/repos/Shaz3e/email-builder/zipball/3277c2f78650d472cc9cfff813e19347d26801c2",
+                "reference": "3277c2f78650d472cc9cfff813e19347d26801c2",
                 "shasum": ""
             },
             "type": "library",
@@ -3377,9 +3377,9 @@
             "description": "Create Email from frontend and use palceholder within email",
             "support": {
                 "issues": "https://github.com/Shaz3e/email-builder/issues",
-                "source": "https://github.com/Shaz3e/email-builder/tree/v0.5"
+                "source": "https://github.com/Shaz3e/email-builder/tree/v0.6"
             },
-            "time": "2025-06-02T22:07:13+00:00"
+            "time": "2025-06-04T18:24:26+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -6037,16 +6037,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.18.0",
+            "version": "2.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "a7de6c3c6c3c022f5cfc337f8ede6a14460cf77e"
+                "reference": "8fcc6a862f2e7b94eb4221fd0819ddba3d30ab26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/a7de6c3c6c3c022f5cfc337f8ede6a14460cf77e",
-                "reference": "a7de6c3c6c3c022f5cfc337f8ede6a14460cf77e",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/8fcc6a862f2e7b94eb4221fd0819ddba3d30ab26",
+                "reference": "8fcc6a862f2e7b94eb4221fd0819ddba3d30ab26",
                 "shasum": ""
             },
             "require": {
@@ -6096,7 +6096,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.18.0"
+                "source": "https://github.com/filp/whoops/tree/2.18.1"
             },
             "funding": [
                 {
@@ -6104,7 +6104,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-15T12:00:00+00:00"
+            "time": "2025-06-03T18:56:14+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -8233,12 +8233,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.3"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }
