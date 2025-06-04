@@ -13,10 +13,11 @@ class StaffUserController extends Controller
 {
     public function index()
     {
-        $roles = User::with('profile')->get();
+        $users = User::with('profile')->where('is_admin', true)->get();
+
 
         return ResponseService::success(
-            StaffUserResource::collection($roles),
+            StaffUserResource::collection($users),
             ' Staff users retrieved successfully'
         );
     }

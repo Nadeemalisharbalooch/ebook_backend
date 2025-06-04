@@ -38,61 +38,66 @@ class UserController extends Controller
         );
     }
 
+
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
-    {
-        // Check if the user ID is within a restricted list
-        if (in_array($user->id, [1, 2, 3])) {
-            return ResponseService::error(
-                'You do not have permission to view this user',
-                403
-            );
-        }
+  public function show(User $user)
+{
 
-        $user = User::where([
-            'id' => $user->id,
-            'is_admin' => false,
-        ])->get();
-
-        if (! $user) {
-            return ResponseService::error(
-                'User not found',
-                404
-            );
-        }
-
-        return ResponseService::success(
-            new UserResource($user),
-            'User retrieved successfully'
+    // Check if the user ID is within a restricted list
+    if (in_array($user->id, [1, 2, 3])) {
+        return ResponseService::error(
+            'You do not have permission to view this user',
+            403
         );
     }
+
+    // Ensure it's not an admin
+    if ($user->is_admin) {
+        return ResponseService::error(
+            'User not found',
+            404
+        );
+    }
+
+    return ResponseService::success(
+        new UserResource($user),
+        'User retrieved successfully'
+    );
+}
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, string $id)
-    {
-        $user = User::findOrFail($id);
-        // Check if the user ID is within a restricted list
-        if (in_array($user->id, [1, 2, 3])) {
-            return ResponseService::error(
-                'You do not have permission to view this user',
-                403
-            );
-        }
+   public function update(UserUpdateRequest $request, string $id)
+{
+    $user = User::findOrFail($id);
 
-        $validated = $request->validated();
-
-        //  Update basic user data
-        $user->update($validated);
-
-        return ResponseService::success(
-            new UserResource($user->load('roles')),
-            'User updated successfully'
+    if (in_array($user->id, [1, 2, 3])) {
+        return ResponseService::error(
+            'You do not have permission to update this user',
+            403
         );
     }
+
+    $validated = $request->validated();
+
+    // Update user basic fields
+    $user->update($validated);
+
+    // Handle role assignment if provided
+    if (isset($validated['role'])) {
+        $user->syncRoles($validated['role']);
+    }
+
+    return ResponseService::success(
+        new UserResource($user->load('roles')),
+        'User updated successfully'
+    );
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -109,7 +114,8 @@ class UserController extends Controller
 
     public function trashed()
     {
-        $user = User::onlyTrashed()->get();
+
+          $user = User::onlyTrashed()->get();
 
         return ResponseService::success(
             UserResource::collection($user),
