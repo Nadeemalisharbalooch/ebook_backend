@@ -84,6 +84,7 @@ class RoleController extends Controller
     public function forceDelete(Role $role)
     {
         $role->forceDelete();
+
         return ResponseService::success('Role permanently deleted');
     }
 }

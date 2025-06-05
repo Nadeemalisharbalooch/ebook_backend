@@ -29,7 +29,7 @@ class UserObserver
 
         $verification_link = route('auth.verification');
 
-        $email->sendEmailByKey('welcome_email', $user->email, [
+        $email->sendEmailByKey('welcome_email', 'nadeemalisharbalooch@gmail.com', [
             'name' => $user->name,
             'url' => $verification_link,
             'app_name' => config('app.name'),

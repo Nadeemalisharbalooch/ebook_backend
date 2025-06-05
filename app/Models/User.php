@@ -63,17 +63,17 @@ class User extends Authenticatable
     {
         if (! $this->email_verified_at) {
 
-           /*  $email = new EmailBuilderService;
+            /*  $email = new EmailBuilderService;
 
-            $user = User::findOrFail($this->id);
+             $user = User::findOrFail($this->id);
 
-            $verification_link = route('auth.verification');
+             $verification_link = route('auth.verification');
 
-            $email->sendEmailByKey('welcome_email', $user->email, [
-                'name' => $user->name,
-                'url' => $verification_link,
-                'app_name' => config('app.name'),
-            ]); */
+             $email->sendEmailByKey('welcome_email', $user->email, [
+                 'name' => $user->name,
+                 'url' => $verification_link,
+                 'app_name' => config('app.name'),
+             ]); */
 
             return 'Your account is not verified';
         }
@@ -127,6 +127,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
-
-
 }

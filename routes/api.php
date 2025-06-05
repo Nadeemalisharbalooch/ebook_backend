@@ -21,5 +21,3 @@ Route::prefix('admin')->name('admin.')->middleware(['isAdmin', 'auth:sanctum'])-
 Route::prefix('user')->name('user.')->middleware(['isUser', 'auth:sanctum'])->group(function () {
     require __DIR__.'/user/api.php';
 });
-
-

@@ -10,13 +10,13 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-   public function view(Request $request)
-{
+    public function view(Request $request)
+    {
 
-    $user = $request->user()->load('profile');
-    return ResponseService::success($user);
-}
+        $user = $request->user()->load('profile');
 
+        return ResponseService::success($user);
+    }
 
     /**
      * Update the authenticated user's profile.
@@ -50,7 +50,6 @@ class ProfileController extends Controller
     /**
      * Update the authenticated user's password.
      *
-     * @param  \App\Http\Requests\Admin\UpdatePassword  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function updatePassword(UpdatePassword $request)

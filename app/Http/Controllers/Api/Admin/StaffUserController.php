@@ -15,7 +15,6 @@ class StaffUserController extends Controller
     {
         $users = User::with('profile')->where('is_admin', true)->get();
 
-
         return ResponseService::success(
             StaffUserResource::collection($users),
             ' Staff users retrieved successfully'
@@ -42,6 +41,7 @@ class StaffUserController extends Controller
                 403
             );
         }
+
         return ResponseService::success(
             new StaffUserResource($user->load('roles')),
             ' Staff User retrieved successfully'
