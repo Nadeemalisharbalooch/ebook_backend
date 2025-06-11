@@ -40,6 +40,7 @@ class User extends Authenticatable
         'is_admin',
         'is_active',
         'is_suspended',
+        'email_verified_at',
     ];
 
     protected $dates = ['deleted_at'];
@@ -84,6 +85,9 @@ class User extends Authenticatable
 
         if ($this->is_suspended) {
             return 'Your account is suspended';
+        }
+        if ($this->is_locked) {
+            return 'Your account is locked';
         }
 
         return null;

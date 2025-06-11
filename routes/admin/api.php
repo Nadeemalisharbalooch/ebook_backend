@@ -21,15 +21,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('dashboard', DashboardController::class)->name('dashboard');
 
 // Profile routes
-Route::get('profile', [ProfileController::class, 'view'])->name('profile');
+
+Route::get('profile', [ProfileController::class, 'view'])
+    ->middleware(['auth', 'impersonate'])
+    ->name('profile');
+
 Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::put('profile/password', [ProfileController::class, 'updatePassword']);
-
 // Role routes
 Route::prefix('roles')->group(function () {
     Route::get('trashed', [RoleController::class, 'trashed'])->name('roles.trashed');
-    Route::post('{id}/restore', [RoleController::class, 'restore'])->name('roles.restore');
-    Route::delete('{role}/force', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
+    Route::post('{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+    Route::delete('{role}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
 });
 Route::apiResource('roles', RoleController::class)->except(['show']);
 
@@ -37,8 +40,7 @@ Route::apiResource('roles', RoleController::class)->except(['show']);
 Route::prefix('users')->group(function () {
     Route::get('trashed', [UserController::class, 'trashed'])->name('users.trashed');
     Route::post('{user}/restore', [UserController::class, 'restore'])->name('users.restore');
-    Route::delete('{user}/force', [UserController::class, 'forceDelete'])->name('users.forceDelete');
-    Route::get('{user}/active', [UserController::class, 'activeUsers'])->name('users.active');
+    Route::delete('{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
 });
 Route::apiResource('users', UserController::class);
 
@@ -52,7 +54,7 @@ Route::apiResource('staff', StaffUserController::class);
 Route::prefix('staff')->group(function () {
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::post('{user}/restore', [StaffUserController::class, 'restore'])->name('staff.restore');
-    Route::delete('{user}/force', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
+    Route::delete('{user}/force-delete', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
 });
 
 // Global Email Templates

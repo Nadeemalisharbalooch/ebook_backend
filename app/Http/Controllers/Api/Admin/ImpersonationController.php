@@ -9,25 +9,26 @@ class ImpersonationController extends Controller
 {
     public function impersonate(User $user)
     {
-        // Check if current user can impersonate (e.g. is admin)
+        // Only admins can impersonate
         if (! auth()->user()->is_admin) {
             abort(403, 'Unauthorized');
         }
 
-        // Store original user id to session
-        session(['impersonate' => $user->id]);
+        // Save impersonated user ID in cache
+        cache()->put('impersonate_token_'.auth()->id(), $user->id, now()->addMinutes(30));
 
         return response()->json([
-            'message' => 'You are now impersonating '.$user->name,
+            'message' => 'Now impersonating '.$user->name,
             'impersonated_user' => $user,
         ]);
     }
 
     public function stopImpersonate()
     {
-        // Remove impersonate from session
-        session()->forget('impersonate');
+        cache()->forget('impersonate_token_'.auth()->id());
 
-        return redirect('/dashboard')->with('success', 'You have returned to your account.');
+        return response()->json([
+            'message' => 'Impersonation stopped',
+        ]);
     }
 }

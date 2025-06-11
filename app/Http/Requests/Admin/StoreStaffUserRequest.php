@@ -30,6 +30,8 @@ class StoreStaffUserRequest extends FormRequest
     public function rules(): array
     {
         return [
+
+            'email_verified_at' => 'nullable|in:yes,no',
             'username' => 'nullable|string|unique:users,username',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',

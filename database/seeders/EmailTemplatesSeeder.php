@@ -17,7 +17,7 @@ class EmailTemplatesSeeder extends Seeder
 
                     Thank you for registering {app_name}
 
-                    Please verify your email.
+                    Please  verify your email.
 
                     Regards,
                     {app_name}', 'placeholders' => '["app_name", "name"]', 'header' => '0', 'footer' => '0', 'deleted_at' => null, 'created_at' => '2025-06-04 18:02:55', 'updated_at' => '2025-06-04 18:03:27'],

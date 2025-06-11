@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class ImpersonateMiddleware
 {
@@ -14,11 +14,18 @@ class ImpersonateMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle($request, Closure $next)
     {
-        if (session()->has('impersonate')) {
-            // user is impersonating, so override auth user
-            Auth::onceUsingId(session('impersonate'));
+        $originalUserId = Auth::id(); // Logged-in user's ID (via token)
+
+        // Check cache if impersonation is active
+        $impersonatedUserId = cache()->get('impersonate_token_'.$originalUserId);
+
+        if ($impersonatedUserId) {
+            $impersonatedUser = User::find($impersonatedUserId);
+            if ($impersonatedUser) {
+                Auth::setUser($impersonatedUser); // Override auth()->user()
+            }
         }
 
         return $next($request);

@@ -29,7 +29,19 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
+
         $validated = $request->validated();
+
+        unset($validated['email_verified_at']);
+
+        // Step 3: set based on is_email_verified
+        if ($request->input('email_verified_at') === 'yes') {
+            $validated['email_verified_at'] = now();
+        } else {
+            $validated['email_verified_at'] = null;
+        }
+
+        // Step 4: create user
         $role = User::create($validated);
 
         return ResponseService::success(
@@ -154,20 +166,33 @@ class UserController extends Controller
         );
     }
 
-    public function restore(User $user)
+    public function restore($userId)
     {
+        $user = User::withTrashed()->findOrFail($userId);
+
+        // Check if actually trashed
+        if (! $user->trashed()) {
+            return ResponseService::error('User is not deleted', 400);
+        }
+
+        // Restore the user
         $user->restore();
 
         return ResponseService::success(
             new UserResource($user),
-            'user restored successfully'
+            'User restored successfully'
         );
     }
 
-    public function forceDelete(User $user)
+    public function forceDelete($userId)
     {
+        $user = User::withTrashed()->findOrFail($userId);
+
+        // Permanently delete
         $user->forceDelete();
 
-        return ResponseService::success('user permanently deleted');
+        return ResponseService::success(
+            'User permanently deleted'
+        );
     }
 }

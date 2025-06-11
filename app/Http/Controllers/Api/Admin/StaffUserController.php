@@ -24,11 +24,20 @@ class StaffUserController extends Controller
     public function store(StoreStaffUserRequest $request)
     {
         $validated = $request->validated();
+
+        unset($validated['email_verified_at']);
+
+        if ($request->input('email_verified_at') === 'yes') {
+            $validated['email_verified_at'] = now();
+        } else {
+            $validated['email_verified_at'] = null;
+        }
+
         $role = User::create($validated);
 
         return ResponseService::success(
             new StaffUserResource($role),
-            ' Staff User created successfully'
+            'Staff User created successfully'
         );
     }
 
