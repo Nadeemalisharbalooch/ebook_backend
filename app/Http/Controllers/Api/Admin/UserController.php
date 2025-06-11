@@ -105,32 +105,41 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, string $id)
-    {
-        $user = User::findOrFail($id);
+   public function update(UserUpdateRequest $request, string $id)
+{
+    $user = User::with('profile')->findOrFail($id);
 
-        if (in_array($user->id, [1, 2, 3])) {
-            return ResponseService::error(
-                'You do not have permission to update this user',
-                403
-            );
-        }
-
-        $validated = $request->validated();
-
-        // Update user basic fields
-        $user->update($validated);
-
-        // Handle role assignment if provided
-        if (isset($validated['role'])) {
-            $user->syncRoles($validated['role']);
-        }
-
-        return ResponseService::success(
-            new UserResource($user->load('roles')),
-            'User updated successfully'
+    if (in_array($user->id, [1, 2, 3])) {
+        return ResponseService::error(
+            'You do not have permission to update this user',
+            403
         );
     }
+
+    $validated = $request->validated();
+
+    // Update user basic fields
+    $user->update($validated);
+
+    // Update profile fields if present
+    if (isset($validated['profile']) && is_array($validated['profile'])) {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $validated['profile']
+        );
+    }
+
+    // Handle role assignment if provided
+    if (isset($validated['role'])) {
+        $user->syncRoles($validated['role']);
+    }
+
+    return ResponseService::success(
+        new UserResource($user->load(['roles', 'profile'])),
+        'User updated successfully'
+    );
+}
+
 
     public function updateActiveStatus(User $user)
     {

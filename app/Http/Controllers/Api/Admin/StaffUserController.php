@@ -57,26 +57,35 @@ class StaffUserController extends Controller
         );
     }
 
-    public function update(UpdateStaffUserRequest $request, string $id)
-    {
+  public function update(UpdateStaffUserRequest $request, string $id)
+{
+    $validated = $request->validated();
 
-        $validated = $request->validated();
+    // Find the user with profile
+    $user = User::with('profile')->findOrFail($id);
 
-        //  Find the user
-        $user = User::findOrFail($id);
+    // Update basic user data
+    $user->update($validated);
 
-        //  Update basic user data
-        $user->update($validated);
-
-        if (isset($validated['role'])) {
-            $user->syncRoles([$validated['role']]);
-        }
-
-        return ResponseService::success(
-            new StaffUserResource($user->load('roles')),
-            ' Staff User updated successfully'
+    // Update profile if profile data is sent
+    if (isset($validated['profile']) && is_array($validated['profile'])) {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $validated['profile']
         );
     }
+
+    // Handle role assignment
+    if (isset($validated['role'])) {
+        $user->syncRoles([$validated['role']]);
+    }
+
+    return ResponseService::success(
+        new StaffUserResource($user->load(['roles', 'profile'])),
+        'Staff user updated successfully'
+    );
+}
+
 
     public function destroy(User $user)
     {
