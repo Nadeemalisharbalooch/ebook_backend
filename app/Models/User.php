@@ -56,6 +56,40 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        // Cast the 'email_verified_at' to a datetime object.
+        'email_verified_at' => 'datetime',
+
+        // Hash the 'password' attribute.
+        'password' => 'hashed',
+
+        // Cast 'is_active', 'is_suspended' and 'is_admin' to booleans.
+        'is_active' => 'boolean',
+        'is_suspended' => 'boolean',
+        'is_admin' => 'boolean',
+    ];
+
+    /**
+     * Default attributes for the user model.
+     *
+     * The following attributes are set as default values for the user model. These
+     * values are used when a new user is created and the attributes are not provided.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'is_locked' => false,
+        'is_admin' => false,
+        'is_active' => false,
+        'is_suspended' => false,
+    ];
+
+
+    /**
      * Check the user's status for login validation.
      *
      * @return string|null Returns error message if status invalid, null if valid.
@@ -92,26 +126,6 @@ class User extends Authenticatable
 
         return null;
     }
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'is_active' => 'boolean',
-        'is_suspended' => 'boolean',
-        'is_admin' => 'boolean',
-    ];
-
-    protected $attributes = [
-        'is_locked' => false,
-        'is_admin' => false,
-        'is_active' => false,
-        'is_suspended' => false,
-    ];
 
     /**
      * Determine if the user is an admin.
