@@ -29,6 +29,8 @@ return new class extends Migration
             $table->json('placeholders')->nullable();
             $table->boolean('header')->default(false);
             $table->boolean('footer')->default(false);
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }

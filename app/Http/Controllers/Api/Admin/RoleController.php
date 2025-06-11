@@ -69,21 +69,33 @@ class RoleController extends Controller
         );
     }
 
-    public function restore($id)
+    public function restore($roleId)
     {
-        $role = Role::withTrashed()->findOrFail($id);
+        $role = Role::withTrashed()->findOrFail($roleId);
 
+        // Check if actually trashed
+        if (! $role->trashed()) {
+            return ResponseService::error('role is not deleted', 400);
+        }
+
+        // Restore the rol$role
         $role->restore();
 
         return ResponseService::success(
             new RoleResource($role),
-            'Role restored successfully'
+            'role restored successfully'
         );
     }
 
-    public function forceDelete(Role $role)
+    public function forceDelete($roleId)
     {
+        $role = Role::withTrashed()->findOrFail($roleId);
+
+        // Permanently delete
         $role->forceDelete();
-        return ResponseService::success('Role permanently deleted');
+
+        return ResponseService::success(
+            'Role permanently deleted'
+        );
     }
 }

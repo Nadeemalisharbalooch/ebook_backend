@@ -1,4 +1,4 @@
-<?php
+welcome_email<?php
 
 namespace App\Observers;
 

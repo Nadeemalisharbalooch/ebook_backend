@@ -12,13 +12,13 @@ use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
-      public function view(Request $request)
-{
+    public function view(Request $request)
+    {
 
-    $user = $request->user()->load('profile');
-    return ResponseService::success($user);
-}
+        $user = $request->user()->load('profile');
 
+        return ResponseService::success($user);
+    }
 
     public function update(ProfileUpdateRequest $request)
     {

@@ -40,6 +40,7 @@ class User extends Authenticatable
         'is_admin',
         'is_active',
         'is_suspended',
+        'email_verified_at',
     ];
 
     protected $dates = ['deleted_at'];
@@ -63,17 +64,17 @@ class User extends Authenticatable
     {
         if (! $this->email_verified_at) {
 
-           /*  $email = new EmailBuilderService;
+            /*  $email = new EmailBuilderService;
 
-            $user = User::findOrFail($this->id);
+             $user = User::findOrFail($this->id);
 
-            $verification_link = route('auth.verification');
+             $verification_link = route('auth.verification');
 
-            $email->sendEmailByKey('welcome_email', $user->email, [
-                'name' => $user->name,
-                'url' => $verification_link,
-                'app_name' => config('app.name'),
-            ]); */
+             $email->sendEmailByKey('welcome_email', $user->email, [
+                 'name' => $user->name,
+                 'url' => $verification_link,
+                 'app_name' => config('app.name'),
+             ]); */
 
             return 'Your account is not verified';
         }
@@ -84,6 +85,9 @@ class User extends Authenticatable
 
         if ($this->is_suspended) {
             return 'Your account is suspended';
+        }
+        if ($this->is_locked) {
+            return 'Your account is locked';
         }
 
         return null;
@@ -102,6 +106,13 @@ class User extends Authenticatable
         'is_admin' => 'boolean',
     ];
 
+    protected $attributes = [
+        'is_locked' => false,
+        'is_admin' => false,
+        'is_active' => false,
+        'is_suspended' => false,
+    ];
+
     /**
      * Determine if the user is an admin.
      */
@@ -113,6 +124,7 @@ class User extends Authenticatable
     /**
      * Determine if the user is a user/client.
      */
+
     public function isUser(): bool
     {
         return $this->is_admin == 0;
@@ -127,6 +139,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
-
-
 }

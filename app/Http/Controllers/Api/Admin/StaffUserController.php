@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\StoreStaffUserRequest;
 use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
@@ -15,7 +16,6 @@ class StaffUserController extends Controller
     {
         $users = User::with('profile')->where('is_admin', true)->get();
 
-
         return ResponseService::success(
             StaffUserResource::collection($users),
             ' Staff users retrieved successfully'
@@ -25,11 +25,20 @@ class StaffUserController extends Controller
     public function store(StoreStaffUserRequest $request)
     {
         $validated = $request->validated();
+
+        unset($validated['email_verified_at']);
+
+        if ($request->input('email_verified_at') === 'yes') {
+            $validated['email_verified_at'] = now();
+        } else {
+            $validated['email_verified_at'] = null;
+        }
+
         $role = User::create($validated);
 
         return ResponseService::success(
             new StaffUserResource($role),
-            ' Staff User created successfully'
+            'Staff User created successfully'
         );
     }
 
@@ -42,32 +51,42 @@ class StaffUserController extends Controller
                 403
             );
         }
+
         return ResponseService::success(
             new StaffUserResource($user->load('roles')),
             ' Staff User retrieved successfully'
         );
     }
 
-    public function update(UpdateStaffUserRequest $request, string $id)
-    {
+  public function update(UpdateStaffUserRequest $request, string $id)
+{
+    $validated = $request->validated();
 
-        $validated = $request->validated();
+    // Find the user with profile
+    $user = User::with('profile')->findOrFail($id);
 
-        //  Find the user
-        $user = User::findOrFail($id);
+    // Update basic user data
+    $user->update($validated);
 
-        //  Update basic user data
-        $user->update($validated);
-
-        if (isset($validated['role'])) {
-            $user->syncRoles([$validated['role']]);
-        }
-
-        return ResponseService::success(
-            new StaffUserResource($user->load('roles')),
-            ' Staff User updated successfully'
+    // Update profile if profile data is sent
+    if (isset($validated['profile']) && is_array($validated['profile'])) {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $validated['profile']
         );
     }
+
+    // Handle role assignment
+    if (isset($validated['role'])) {
+        $user->syncRoles([$validated['role']]);
+    }
+
+    return ResponseService::success(
+        new StaffUserResource($user->load(['roles', 'profile'])),
+        'Staff user updated successfully'
+    );
+}
+
 
     public function destroy(User $user)
     {
@@ -98,5 +117,13 @@ class StaffUserController extends Controller
             new StaffUserResource($user),
             ' Staff user restored successfully'
         );
+    }
+
+     public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
+{
+        $validated = $request->validated();
+        $user->update($validated);
+
+        return ResponseService::success('Password updated successfully.');
     }
 }

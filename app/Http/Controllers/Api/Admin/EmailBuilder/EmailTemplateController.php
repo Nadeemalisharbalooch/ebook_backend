@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Api\Admin\EmailBuilder;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EmailTempalte\StoreEmailTemplateRequest;
-use App\Services\ResponseService;
-
-use Illuminate\Support\Facades\Storage;
-// use Shaz3e\EmailBuilder\App\Models\EmailTemplate;
 use App\Models\EmailTemplate;
+use App\Services\ResponseService;
+// use Shaz3e\EmailBuilder\App\Models\EmailTemplate;
+use Illuminate\Support\Facades\Storage;
 // use Shaz3e\EmailBuilder\Facades\EmailBuilder;
 // use Shaz3e\EmailBuilder\EmailBuilder; // Use the actual class if the facade does not exist
 use Shaz3e\EmailBuilder\Facades\EmailBuilder;
+
 class EmailTemplateController extends Controller
 {
     /**
