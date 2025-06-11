@@ -35,8 +35,14 @@ class UpdateStaffUserRequest extends FormRequest
 
 
         'profile' => 'sometimes|array',
-        'profile.bio' => 'nullable|string|max:1000',
+        'profile.avatar' => 'nullable|string',
+        'profile.gender' => 'nullable|string|in:male,female,other',
+        'profile.dob' => 'nullable|date',
         'profile.phone' => 'nullable|string|max:20',
+        'profile.country' => 'nullable|string|max:100',
+        'profile.state' => 'nullable|string|max:100',
+        'profile.city' => 'nullable|string|max:100',
+        'profile.zipcode' => 'nullable|string|max:20',
         'profile.address' => 'nullable|string|max:255',
     ];
 }
