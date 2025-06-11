@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\UserStoreRequest;
 use App\Http\Requests\Admin\UserUpdateRequest;
 use App\Http\Resources\Api\Admin\UserResource;
@@ -207,5 +208,13 @@ class UserController extends Controller
         return ResponseService::success(
             'User permanently deleted'
         );
+    }
+
+   public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
+{
+        $validated = $request->validated();
+        $user->update($validated);
+
+        return ResponseService::success('Password updated successfully.');
     }
 }

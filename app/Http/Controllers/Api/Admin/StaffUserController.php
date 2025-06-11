@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\StoreStaffUserRequest;
 use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
@@ -116,5 +117,13 @@ class StaffUserController extends Controller
             new StaffUserResource($user),
             ' Staff user restored successfully'
         );
+    }
+
+     public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
+{
+        $validated = $request->validated();
+        $user->update($validated);
+
+        return ResponseService::success('Password updated successfully.');
     }
 }

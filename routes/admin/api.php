@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\StaffUserController;
 use App\Http\Controllers\Api\Admin\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,7 +42,10 @@ Route::prefix('users')->group(function () {
     Route::get('trashed', [UserController::class, 'trashed'])->name('users.trashed');
     Route::post('{user}/restore', [UserController::class, 'restore'])->name('users.restore');
     Route::delete('{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
+    Route::put('/{user}/update-password', [UserController::class, 'updatePassword']);
 });
+
+
 Route::apiResource('users', UserController::class);
 
 // Account status toggles
@@ -55,6 +59,7 @@ Route::prefix('staff')->group(function () {
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::post('{user}/restore', [StaffUserController::class, 'restore'])->name('staff.restore');
     Route::delete('{user}/force-delete', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
+      Route::put('/{user}/update-password', [UserController::class, 'updatePassword']);
 });
 
 // Global Email Templates
