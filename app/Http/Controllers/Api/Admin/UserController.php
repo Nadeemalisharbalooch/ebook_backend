@@ -14,15 +14,19 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $roles = User::with('profile')->where('is_admin', false)->get();
+   public function index()
+{
+    $roles = User::with(['profile'])
+                 ->withTrashed() // include trashed users
+                 ->where('is_admin', false)
+                 ->get();
 
-        return ResponseService::success(
-            UserResource::collection($roles),
-            'users retrieved successfully'
-        );
-    }
+    return ResponseService::success(
+        UserResource::collection($roles),
+        'Users retrieved successfully'
+    );
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -53,30 +57,30 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
-    {
-
-        // Check if the user ID is within a restricted list
-        if (in_array($user->id, [1, 2, 3])) {
-            return ResponseService::error(
-                'You do not have permission to view this user',
-                403
-            );
-        }
-
-        // Ensure it's not an admin
-        if ($user->is_admin) {
-            return ResponseService::error(
-                'User not found',
-                404
-            );
-        }
-
-        return ResponseService::success(
-            new UserResource($user),
-            'User retrieved successfully'
+   public function show(User $user)
+{
+    if (in_array($user->id, [1, 2, 3])) {
+        return ResponseService::error(
+            'You do not have permission to view this user',
+            403
         );
     }
+
+    if ($user->is_admin) {
+        return ResponseService::error(
+            'User not found',
+            404
+        );
+    }
+
+    // Load the profile relationship
+    $user->load('profile');
+
+    return ResponseService::success(
+        new UserResource($user),
+        'User retrieved successfully'
+    );
+}
 
     public function activeUsers(User $user)
     {

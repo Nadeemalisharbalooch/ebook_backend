@@ -106,6 +106,13 @@ class User extends Authenticatable
         'is_admin' => 'boolean',
     ];
 
+    protected $attributes = [
+        'is_locked' => false,
+        'is_admin' => false,
+        'is_active' => false,
+        'is_suspended' => false,
+    ];
+
     /**
      * Determine if the user is an admin.
      */
@@ -117,6 +124,7 @@ class User extends Authenticatable
     /**
      * Determine if the user is a user/client.
      */
+
     public function isUser(): bool
     {
         return $this->is_admin == 0;
