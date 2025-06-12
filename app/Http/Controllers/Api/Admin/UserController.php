@@ -10,23 +10,25 @@ use App\Http\Resources\Api\Admin\UserResource;
 use App\Models\User;
 use App\Services\ResponseService;
 
+
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
-   public function index()
-{
-    $roles = User::with(['profile'])
-                 ->withTrashed() // include trashed users
-                 ->where('is_admin', false)
-                 ->get();
+    public function index()
+    {
+        $roles = User::with(['profile'])
+            ->withTrashed() // include trashed users
+            ->where('is_admin', false)
+            ->get();
 
-    return ResponseService::success(
-        UserResource::collection($roles),
-        'Users retrieved successfully'
-    );
-}
+        return ResponseService::success(
+            UserResource::collection($roles),
+            'Users retrieved successfully'
+        );
+    }
 
 
     /**
@@ -58,34 +60,8 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-   public function show(User $user)
-{
-    if (in_array($user->id, [1, 2, 3])) {
-        return ResponseService::error(
-            'You do not have permission to view this user',
-            403
-        );
-    }
-
-    if ($user->is_admin) {
-        return ResponseService::error(
-            'User not found',
-            404
-        );
-    }
-
-    // Load the profile relationship
-    $user->load('profile');
-
-    return ResponseService::success(
-        new UserResource($user),
-        'User retrieved successfully'
-    );
-}
-
-    public function activeUsers(User $user)
+    public function show(User $user)
     {
-        // Check if the user ID is within a restricted list
         if (in_array($user->id, [1, 2, 3])) {
             return ResponseService::error(
                 'You do not have permission to view this user',
@@ -93,53 +69,83 @@ class UserController extends Controller
             );
         }
 
-        // Toggle the active status
-        $user->is_active = ! $user->is_active;
-        $user->save();
+        if ($user->is_admin) {
+            return ResponseService::error(
+                'User not found',
+                404
+            );
+        }
+
+        // Load the profile relationship
+        $user->load('profile');
 
         return ResponseService::success(
             new UserResource($user),
-            'User active status updated successfully'
+            'User retrieved successfully'
         );
     }
 
+    public function toggleActive(User $user)
+    {
+        $user->is_active = ! $user->is_active;
+        $user->save();
+
+        return ResponseService::success(new UserResource($user), 'Active status updated.');
+    }
+
+    // Toggle the active status
+    public function toggleLocked(User $user)
+    {
+        $user->is_locked = ! $user->is_locked;
+        $user->save();
+
+        return ResponseService::success(new UserResource($user), 'Lock status updated.');
+    }
+
+    public function toggleSuspended(User $user)
+    {
+        $user->is_suspended = ! $user->is_suspended;
+        $user->save();
+
+        return ResponseService::success(new UserResource($user), 'Suspended status updated.');
+    }
     /**
      * Update the specified resource in storage.
      */
-   public function update(UserUpdateRequest $request, string $id)
-{
-    $user = User::with('profile')->findOrFail($id);
+    public function update(UserUpdateRequest $request, string $id)
+    {
+        $user = User::with('profile')->findOrFail($id);
 
-    if (in_array($user->id, [1, 2, 3])) {
-        return ResponseService::error(
-            'You do not have permission to update this user',
-            403
+        if (in_array($user->id, [1, 2, 3])) {
+            return ResponseService::error(
+                'You do not have permission to update this user',
+                403
+            );
+        }
+
+        $validated = $request->validated();
+
+        // Update user basic fields
+        $user->update($validated);
+
+        // Update profile fields if present
+        if (isset($validated['profile']) && is_array($validated['profile'])) {
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $validated['profile']
+            );
+        }
+
+        // Handle role assignment if provided
+        if (isset($validated['role'])) {
+            $user->syncRoles($validated['role']);
+        }
+
+        return ResponseService::success(
+            new UserResource($user->load(['roles', 'profile'])),
+            'User updated successfully'
         );
     }
-
-    $validated = $request->validated();
-
-    // Update user basic fields
-    $user->update($validated);
-
-    // Update profile fields if present
-    if (isset($validated['profile']) && is_array($validated['profile'])) {
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            $validated['profile']
-        );
-    }
-
-    // Handle role assignment if provided
-    if (isset($validated['role'])) {
-        $user->syncRoles($validated['role']);
-    }
-
-    return ResponseService::success(
-        new UserResource($user->load(['roles', 'profile'])),
-        'User updated successfully'
-    );
-}
 
 
     public function updateActiveStatus(User $user)
@@ -210,8 +216,8 @@ class UserController extends Controller
         );
     }
 
-   public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
-{
+    public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
+    {
         $validated = $request->validated();
         $user->update($validated);
 

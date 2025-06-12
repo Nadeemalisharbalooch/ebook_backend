@@ -11,13 +11,25 @@ use App\Services\ResponseService;
 
 class RoleController extends Controller
 {
+
+
+
     public function index()
     {
-        $roles = Role::all();
+        $roles = Role::withTrashed()->get(); // include trashed + eager load permissions
 
         return ResponseService::success(
             RoleResource::collection($roles),
-            'Roles retrieved successfully'
+            'All roles including trashed retrieved successfully'
+        );
+    }
+
+    public function show(Role $role)
+    {
+
+        return ResponseService::success(
+            new RoleResource($role),
+            'Role retrieved successfully'
         );
     }
 

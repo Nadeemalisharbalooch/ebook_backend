@@ -34,6 +34,7 @@ Route::prefix('roles')->group(function () {
     Route::get('trashed', [RoleController::class, 'trashed'])->name('roles.trashed');
     Route::post('{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
     Route::delete('{role}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
+    Route::get('{role}', [RoleController::class, 'show'])->name('roles.show');
 });
 Route::apiResource('roles', RoleController::class)->except(['show']);
 
@@ -49,9 +50,9 @@ Route::prefix('users')->group(function () {
 Route::apiResource('users', UserController::class);
 
 // Account status toggles
-Route::patch('/{user}/toggle-active', [AccountStatusController::class, 'toggleActive']);
-Route::patch('/{user}/toggle-locked', [AccountStatusController::class, 'toggleLocked']);
-Route::patch('/{user}/toggle-suspended', [AccountStatusController::class, 'toggleSuspended']);
+Route::patch('/{user}/toggle-active', [UserController::class, 'toggleActive']);
+Route::patch('/{user}/toggle-locked', [UserController::class, 'toggleLocked']);
+Route::patch('/{user}/toggle-suspended', [UserController::class, 'toggleSuspended']);
 
 // Staff routes
 Route::apiResource('staff', StaffUserController::class);
@@ -59,7 +60,7 @@ Route::prefix('staff')->group(function () {
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::post('{user}/restore', [StaffUserController::class, 'restore'])->name('staff.restore');
     Route::delete('{user}/force-delete', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
-      Route::put('/{user}/update-password', [UserController::class, 'updatePassword']);
+    Route::put('/{user}/update-password', [UserController::class, 'updatePassword']);
 });
 
 // Global Email Templates

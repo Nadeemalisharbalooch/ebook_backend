@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <style>
         .email-wrapper {
@@ -14,7 +15,7 @@
             max-width: 600px;
             margin: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .email-header {
@@ -53,6 +54,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="email-wrapper">
         <div class="email-content">
@@ -61,8 +63,14 @@
             </div>
             <div class="email-body">
                 <p>Dear {name},</p>
-                <p>Thank you for joining <strong>{app_name}</strong>. To get started, please verify your email address by clicking the button below:</p>
-                <a href="{url}" class="email-button">Verify Email</a>
+                <p>Thank you for joining <strong>{app_name}</strong>. To get started, please verify your email address
+                    by clicking the button below:</p>
+                <a href="{{ verification_url }}" class="email-button">Verify Email</a>
+
+                <p>If the button above doesn't work, paste this link:<br>
+                    <a href="{{ verification_url }}">{{ verification_url }}</a>
+                </p>
+
                 <p>If the button above doesn't work, please copy and paste the following link into your browser:</p>
                 <p><a href="{url}">{url}</a></p>
                 <p>We’re excited to have you on board!</p>
@@ -74,4 +82,5 @@
         </div>
     </div>
 </body>
+
 </html>

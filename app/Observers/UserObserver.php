@@ -39,6 +39,7 @@ class UserObserver
        event(new UserRegistered($user));
     }
 
+
     /**
      * Handle the User "updated" event.
      */
