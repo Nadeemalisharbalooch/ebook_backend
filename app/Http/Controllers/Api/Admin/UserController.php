@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Services\ResponseService;
 
 
-class UserController extends Controller  
+class UserController extends Controller
 {
 
     /**
@@ -85,26 +85,30 @@ class UserController extends Controller
         );
     }
 
-    public function activeUsers(User $user)
+    public function toggleActive(User $user)
     {
-        // Check if the user ID is within a restricted list
-        if (in_array($user->id, [1, 2, 3])) {
-            return ResponseService::error(
-                'You do not have permission to view this user',
-                403
-            );
-        }
-
-        // Toggle the active status
         $user->is_active = ! $user->is_active;
         $user->save();
 
-        return ResponseService::success(
-            new UserResource($user),
-            'User active status updated successfully'
-        );
+        return ResponseService::success(new UserResource($user), 'Active status updated.');
     }
 
+    // Toggle the active status
+    public function toggleLocked(User $user)
+    {
+        $user->is_locked = ! $user->is_locked;
+        $user->save();
+
+        return ResponseService::success(new UserResource($user), 'Lock status updated.');
+    }
+
+    public function toggleSuspended(User $user)
+    {
+        $user->is_suspended = ! $user->is_suspended;
+        $user->save();
+
+        return ResponseService::success(new UserResource($user), 'Suspended status updated.');
+    }
     /**
      * Update the specified resource in storage.
      */
