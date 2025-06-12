@@ -1,16 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    $user = $request->user();
+Route::middleware('auth:sanctum')->get('/user', function () {
+    $user = auth()->user();
 
-    // Add custom attributes without overwriting relationships
-    $user->setAttribute('role_names', $user->getRoleNames());
-    $user->setAttribute('permissions', $user->getAllPermissions()->pluck('name'));
-
-    return $user; // This returns an object (Eloquent model + added attributes)
+    return response()->json([
+        'user' => $user,
+        'roles' => $user->getRoleNames(), // returns a Collection
+        'permissions' => $user->getAllPermissions()->pluck('name'),
+    ]);
 });
 
 // Auth Routes

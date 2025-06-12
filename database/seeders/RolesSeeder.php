@@ -13,13 +13,14 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
+        $guardName = 'web';
         $roles = [
-            ['name' => 'superadmin'],
-            ['name' => 'tester'],
-            ['name' => 'developer'],
-            ['name' => 'admin'],
-            ['name' => 'manager'],
-            ['name' => 'staff'],
+            ['name' => 'superadmin', 'guard_name' => $guardName],
+            ['name' => 'tester', 'guard_name' => $guardName],
+            ['name' => 'developer', 'guard_name' => $guardName],
+            ['name' => 'admin', 'guard_name' => $guardName],
+            ['name' => 'manager', 'guard_name' => $guardName],
+            ['name' => 'staff', 'guard_name' => $guardName],
         ];
 
         foreach ($roles as $role) {
@@ -33,16 +34,16 @@ class RolesSeeder extends Seeder
     protected function assignRolesToUsers(): void
     {
         $users = [
-            'superadmin@shaz3e.com' => 'superadmin',
-            'tester@shaz3e.com' => 'tester',
-            'developer@shaz3e.com' => 'developer',
-            'admin@shaz3e.com' => 'admin',
-            'manager@shaz3e.com' => 'manager',
-            'staff@shaz3e.com' => 'staff',
+            '1' => 'superadmin',
+            '2' => 'tester',
+            '3' => 'developer',
+            '4' => 'admin',
+            '5' => 'manager',
+            '6' => 'staff',
         ];
 
-        foreach ($users as $email => $roleName) {
-            $user = User::where('email', $email)->first();
+        foreach ($users as $id => $roleName) {
+            $user = User::where('id', $id)->first();
             if ($user) {
                 $user->assignRole($roleName);
             }
