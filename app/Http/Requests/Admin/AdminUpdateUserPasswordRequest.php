@@ -23,7 +23,7 @@ class AdminUpdateUserPasswordRequest extends FormRequest
     {
         return [
 
-             'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string', 'min:8'],
         ];
     }
 }

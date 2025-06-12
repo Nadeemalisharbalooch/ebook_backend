@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\Admin\AccountStatusController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\EmailBuilder\EmailTemplateController;
 use App\Http\Controllers\Api\Admin\EmailBuilder\GlobalEmailTemplateController;
@@ -45,7 +44,6 @@ Route::prefix('users')->group(function () {
     Route::delete('{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
     Route::put('/{user}/update-password', [UserController::class, 'updatePassword']);
 });
-
 
 Route::apiResource('users', UserController::class);
 

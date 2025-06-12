@@ -15,17 +15,17 @@ class ImpersonationController extends Controller
         }
 
         // Save impersonated user ID in cache
-        cache()->put('impersonate_token_' . auth()->id(), $user->id, now()->addMinutes(30));
+        cache()->put('impersonate_token_'.auth()->id(), $user->id, now()->addMinutes(30));
 
         return response()->json([
-            'message' => 'Now impersonating ' . $user->name,
+            'message' => 'Now impersonating '.$user->name,
             'impersonated_user' => $user,
         ]);
     }
 
     public function stopImpersonate()
     {
-        cache()->forget('impersonate_token_' . auth()->id());
+        cache()->forget('impersonate_token_'.auth()->id());
 
         return response()->json([
             'message' => 'Impersonation stopped',

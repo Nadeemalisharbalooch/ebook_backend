@@ -10,10 +10,8 @@ use App\Http\Resources\Api\Admin\UserResource;
 use App\Models\User;
 use App\Services\ResponseService;
 
-
 class UserController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
@@ -29,7 +27,6 @@ class UserController extends Controller
             'Users retrieved successfully'
         );
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -109,6 +106,7 @@ class UserController extends Controller
 
         return ResponseService::success(new UserResource($user), 'Suspended status updated.');
     }
+
     /**
      * Update the specified resource in storage.
      */
@@ -146,7 +144,6 @@ class UserController extends Controller
             'User updated successfully'
         );
     }
-
 
     public function updateActiveStatus(User $user)
     {

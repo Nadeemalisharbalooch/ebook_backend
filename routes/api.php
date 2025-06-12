@@ -13,7 +13,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $user; // This returns an object (Eloquent model + added attributes)
 });
 
-
 // Auth Routes
 Route::prefix('auth')->name('auth.')->group(function () {
     require __DIR__.'/auth/api.php';

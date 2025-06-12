@@ -11,9 +11,6 @@ use App\Services\ResponseService;
 
 class RoleController extends Controller
 {
-
-
-
     public function index()
     {
         $roles = Role::withTrashed()->get(); // include trashed + eager load permissions
@@ -99,9 +96,14 @@ class RoleController extends Controller
         );
     }
 
-    public function forceDelete($roleId)
+    public function forceDelete(string $role)
     {
-        $role = Role::withTrashed()->findOrFail($roleId);
+        $role = Role::withTrashed()->findOrFail($role);
+
+        // check if user is trached otherwise throw error
+        if (! $role->trashed()) {
+            return ResponseService::error('role is not deleted', 400);
+        }
 
         // Permanently delete
         $role->forceDelete();

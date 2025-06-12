@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\EmailTemplate;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EmailBuilderService
 {
@@ -15,8 +15,9 @@ class EmailBuilderService
     {
         $template = EmailTemplate::where('key', $key)->first();
 
-        if (!$template) {
+        if (! $template) {
             Log::warning("Email template with key [$key] not found.");
+
             return false;
         }
 
@@ -41,7 +42,7 @@ class EmailBuilderService
             $fullBody .= $this->buildFooter($template);
         }
 
-        $fullBody .= "</div>";
+        $fullBody .= '</div>';
 
         // Send the email
         Mail::html($fullBody, function ($message) use ($to, $subject) {
@@ -58,7 +59,7 @@ class EmailBuilderService
     {
         foreach ($data as $key => $value) {
             $content = str_replace(
-                ['{{ ' . $key . ' }}', '{{' . $key . '}}', '{' . $key . '}'],
+                ['{{ '.$key.' }}', '{{'.$key.'}}', '{'.$key.'}'],
                 $value,
                 $content
             );
@@ -74,7 +75,7 @@ class EmailBuilderService
     {
         return "
             <div style='background: {$template->header_background_color}; color: {$template->header_text_color}; padding: 20px; text-align: center;'>
-                " . ($template->header_image ? "<img src='{$template->header_image}' alt='Header' style='max-height: 80px; margin-bottom: 10px;'>" : "") . "
+                ".($template->header_image ? "<img src='{$template->header_image}' alt='Header' style='max-height: 80px; margin-bottom: 10px;'>" : '')."
                 <h2 style='margin: 0;'>{$template->header_text}</h2>
             </div>
         ";
@@ -87,10 +88,10 @@ class EmailBuilderService
     {
         return "
             <div style='background: {$template->footer_background_color}; color: {$template->footer_text_color}; padding: 20px; text-align: center; font-size: 13px;'>
-                " . ($template->footer_image ? "<img src='{$template->footer_image}' alt='Footer' style='max-height: 60px; margin-bottom: 10px;'>" : "") . "
+                ".($template->footer_image ? "<img src='{$template->footer_image}' alt='Footer' style='max-height: 60px; margin-bottom: 10px;'>" : '')."
                 <p style='margin: 0 0 10px;'>{$template->footer_text}</p>
-                " . ($template->footer_bottom_image ? "<img src='{$template->footer_bottom_image}' alt='Bottom Footer' style='max-height: 40px;'>" : "") . "
+                ".($template->footer_bottom_image ? "<img src='{$template->footer_bottom_image}' alt='Bottom Footer' style='max-height: 40px;'>" : '').'
             </div>
-        ";
+        ';
     }
 }

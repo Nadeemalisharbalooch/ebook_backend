@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -22,7 +21,7 @@ class GenericTemplateMail extends Mailable
     public function build()
     {
         return $this->subject($this->subject)
-                    ->html(new HtmlString($this->htmlBody));
+            ->html(new HtmlString($this->htmlBody));
     }
 
     /**

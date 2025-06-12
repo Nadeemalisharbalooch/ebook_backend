@@ -46,7 +46,7 @@ class StaffUserController extends Controller
     {
         $user = User::with(['roles', 'profile'])->find($id);
 
-        if (!$user) {
+        if (! $user) {
             return ResponseService::error('User not found', 404);
         }
 
@@ -55,7 +55,6 @@ class StaffUserController extends Controller
             'User retrieved successfully'
         );
     }
-
 
     public function update(UpdateStaffUserRequest $request, string $id)
     {
@@ -85,7 +84,6 @@ class StaffUserController extends Controller
             'Staff user updated successfully'
         );
     }
-
 
     public function destroy(User $user)
     {
@@ -125,6 +123,4 @@ class StaffUserController extends Controller
 
         return ResponseService::success('Password updated successfully.');
     }
-
-
 }

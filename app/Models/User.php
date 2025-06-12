@@ -88,7 +88,6 @@ class User extends Authenticatable
         'is_suspended' => false,
     ];
 
-
     /**
      * Check the user's status for login validation.
      *
@@ -138,7 +137,6 @@ class User extends Authenticatable
     /**
      * Determine if the user is a user/client.
      */
-
     public function isUser(): bool
     {
         return $this->is_admin == 0;
