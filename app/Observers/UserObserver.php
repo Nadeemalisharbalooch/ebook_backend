@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Events\UserRegistered;
 use App\Models\User;
-use Shaz3e\EmailBuilder\Services\EmailBuilderService;
 
 class UserObserver
 {
@@ -25,20 +24,8 @@ class UserObserver
         $user->saveQuietly();
 
         // Send Welcome Email
-        $email = new EmailBuilderService;
-        $user = User::findOrFail($user->id);
-
-       /*  $verification_link = route('auth.verification'); */
-
-       /*  $email->sendEmailByKey('welcome_email', 'nadeemalisharbalooch@gmail.com', [
-            'name' => $user->name,
-            'url' => $verification_link,
-            'app_name' => config('app.name'), */
-       /*  ]); */
-
-       event(new UserRegistered($user));
+        event(new UserRegistered($user));
     }
-
 
     /**
      * Handle the User "updated" event.
