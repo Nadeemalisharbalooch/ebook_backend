@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Events\UserRegistered;
 use App\Models\User;
 
 class UserObserver
@@ -23,8 +22,8 @@ class UserObserver
         $user->username = 'user'.$user->id;
         $user->saveQuietly();
 
-        // Send Welcome Email
-        event(new UserRegistered($user));
+        // Todo: Send Welcome Email
+
     }
 
     /**

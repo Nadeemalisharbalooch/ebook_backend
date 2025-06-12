@@ -16,7 +16,6 @@ class RegisterController extends Controller
      */
     public function __invoke(RegisterRequest $request)
     {
-
         try {
             $validated = $request->validated();
 
