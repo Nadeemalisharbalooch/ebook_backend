@@ -26,7 +26,7 @@ return [
     | by a queue worker. When false, emails will be sent instantly.
     |
     */
-    'queue_emails' => true,
+    'queue_emails' => false,
 
     /*
     |--------------------------------------------------------------------------

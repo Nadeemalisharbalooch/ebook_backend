@@ -24,13 +24,20 @@ class SendWelcomeEmail
     /**
      * Handle the event.
      */
- public function handle(UserRegistered $event): void
-    {
-        $email = new EmailBuilderService;
-        $email->sendEmailBykey('welcome_email', "nadeemalisharbalooch@gmail.com", [
-            'app_name' => config('app.name'),
-            'name' => $event->user->name,
-            'app_url' => config('app.url'),
-        ]);
-    }
+
+    public function handle(UserRegistered $event): void
+{
+
+    $verificationUrl = config('app.url') . '/verify/' . $event->user->id;
+
+    $email = new \App\Services\EmailBuilderService;
+    $email->sendEmailBykey('welcome_email', 'nadeemalisharbalooch@gmail.com', [
+        'name' => $event->user->name,
+        'app_name' => config('app.name'),
+        'app_url' => config('app.url'),
+        'verification_url' => $verificationUrl,
+    ]);
+}
+
+
 }

@@ -42,50 +42,49 @@ class StaffUserController extends Controller
         );
     }
 
-    public function show(User $user)
+    public function show($id)
     {
-        // Check if the user ID is within a restricted list
-        if (in_array($user->id, [1, 2, 3])) {
-            return ResponseService::error(
-                'You do not have permission to view this user',
-                403
-            );
+        $user = User::with(['roles', 'profile'])->find($id);
+
+        if (!$user) {
+            return ResponseService::error('User not found', 404);
         }
 
         return ResponseService::success(
-            new StaffUserResource($user->load('roles')),
-            ' Staff User retrieved successfully'
+            new StaffUserResource($user),
+            'User retrieved successfully'
         );
     }
 
-  public function update(UpdateStaffUserRequest $request, string $id)
-{
-    $validated = $request->validated();
 
-    // Find the user with profile
-    $user = User::with('profile')->findOrFail($id);
+    public function update(UpdateStaffUserRequest $request, string $id)
+    {
+        $validated = $request->validated();
 
-    // Update basic user data
-    $user->update($validated);
+        // Find the user with profile
+        $user = User::with('profile')->findOrFail($id);
 
-    // Update profile if profile data is sent
-    if (isset($validated['profile']) && is_array($validated['profile'])) {
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            $validated['profile']
+        // Update basic user data
+        $user->update($validated);
+
+        // Update profile if profile data is sent
+        if (isset($validated['profile']) && is_array($validated['profile'])) {
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $validated['profile']
+            );
+        }
+
+        // Handle role assignment
+        if (isset($validated['role'])) {
+            $user->syncRoles([$validated['role']]);
+        }
+
+        return ResponseService::success(
+            new StaffUserResource($user->load(['roles', 'profile'])),
+            'Staff user updated successfully'
         );
     }
-
-    // Handle role assignment
-    if (isset($validated['role'])) {
-        $user->syncRoles([$validated['role']]);
-    }
-
-    return ResponseService::success(
-        new StaffUserResource($user->load(['roles', 'profile'])),
-        'Staff user updated successfully'
-    );
-}
 
 
     public function destroy(User $user)
@@ -119,8 +118,8 @@ class StaffUserController extends Controller
         );
     }
 
-     public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
-{
+    public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
+    {
         $validated = $request->validated();
         $user->update($validated);
 
