@@ -29,6 +29,7 @@ class PermissionsSeeder extends Seeder
             foreach ($actions as $action) {
                 Permission::firstOrCreate([
                     'name' => "{$module}.{$action}",
+                    'guard_name' => 'web', // web || sanctum
                 ]);
             }
         }
