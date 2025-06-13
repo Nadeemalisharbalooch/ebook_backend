@@ -69,6 +69,7 @@ Route::apiResource('email-templates', EmailTemplateController::class);
 
 // Impersonation routes (require authentication)
 Route::middleware(['auth'])->group(function () {
+    // add just
     Route::get('/impersonate/{user}', [ImpersonationController::class, 'impersonate'])->name('impersonate.start');
     Route::get('/impersonate/stop', [ImpersonationController::class, 'stopImpersonate'])->name('impersonate.stop');
 });
