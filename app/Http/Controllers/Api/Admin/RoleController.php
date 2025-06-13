@@ -21,14 +21,17 @@ class RoleController extends Controller
         );
     }
 
-    public function show(Role $role)
-    {
+  public function show(Role $role)
+{
+    // Load permissions relationship
+    $role->load('permissions');
 
-        return ResponseService::success(
-            new RoleResource($role),
-            'Role retrieved successfully'
-        );
-    }
+    return ResponseService::success(
+        new RoleResource($role),
+        'Role retrieved successfully'
+    );
+}
+
 
     public function store(StoreRoleRequest $request)
     {
