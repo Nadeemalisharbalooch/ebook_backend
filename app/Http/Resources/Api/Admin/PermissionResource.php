@@ -17,5 +17,3 @@ class PermissionResource extends JsonResource
         return parent::toArray($request);
     }
 }
-
-

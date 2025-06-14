@@ -21,17 +21,16 @@ class RoleController extends Controller
         );
     }
 
-  public function show(Role $role)
-{
-    // Load permissions relationship
-    $role->load('permissions');
+    public function show(Role $role)
+    {
+        // Load permissions relationship
+        $role->load('permissions');
 
-    return ResponseService::success(
-        new RoleResource($role),
-        'Role retrieved successfully'
-    );
-}
-
+        return ResponseService::success(
+            new RoleResource($role),
+            'Role retrieved successfully'
+        );
+    }
 
     public function store(StoreRoleRequest $request)
     {
@@ -61,7 +60,7 @@ class RoleController extends Controller
         );
     }
 
-     public function toggleActive(role $role)
+    public function toggleActive(role $role)
     {
         $role->is_active = ! $role->is_active;
         $role->save();

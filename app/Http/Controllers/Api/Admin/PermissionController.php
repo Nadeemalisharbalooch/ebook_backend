@@ -9,8 +9,7 @@ use App\Services\ResponseService;
 
 class PermissionController extends Controller
 {
-
-      public function index()
+    public function index()
     {
         $permissions = Permission::all();
 

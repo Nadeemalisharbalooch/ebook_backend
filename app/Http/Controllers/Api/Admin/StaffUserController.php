@@ -7,12 +7,9 @@ use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\StoreStaffUserRequest;
 use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
-
-use Illuminate\Support\Facades\Auth;
-
 use App\Models\User;
-
 use App\Services\ResponseService;
+use Illuminate\Support\Facades\Auth;
 
 class StaffUserController extends Controller
 {
@@ -21,7 +18,7 @@ class StaffUserController extends Controller
         $users = User::with(['profile'])
             ->withTrashed()
             ->where('is_admin', true)
-            ->where('id', '!=',  Auth::id())
+            ->where('id', '!=', Auth::id())
             ->get();
 
         return ResponseService::success(
@@ -29,7 +26,6 @@ class StaffUserController extends Controller
             'Users retrieved successfully'
         );
     }
-
 
     public function store(StoreStaffUserRequest $request)
     {

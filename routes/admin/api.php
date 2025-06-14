@@ -39,7 +39,7 @@ Route::prefix('roles')->group(function () {
 });
 Route::apiResource('roles', RoleController::class);
 
-//permissions
+// permissions
 Route::prefix('permissions')->group(function () {
     Route::get('/', [PermissionController::class, 'index']);
 });
@@ -80,7 +80,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/impersonate/{user}', [ImpersonationController::class, 'impersonate'])->name('impersonate.start');
 
 });
-
-
-
-
