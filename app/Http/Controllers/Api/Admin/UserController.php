@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\UserUpdateRequest;
 use App\Http\Resources\Api\Admin\UserResource;
 use App\Models\User;
 use App\Services\ResponseService;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -17,13 +18,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roles = User::with(['profile'])
-            ->withTrashed() // include trashed users
+
+        $users = User::with(['profile'])
+            ->withTrashed()
             ->where('is_admin', false)
+            ->where('id', '!=', Auth::id())
             ->get();
 
         return ResponseService::success(
-            UserResource::collection($roles),
+            UserResource::collection($users),
             'Users retrieved successfully'
         );
     }
@@ -34,6 +37,7 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
 
+        /** @var Request $request */
         $validated = $request->validated();
 
         unset($validated['email_verified_at']);

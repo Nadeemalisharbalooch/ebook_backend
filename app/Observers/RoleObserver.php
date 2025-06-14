@@ -11,7 +11,8 @@ class RoleObserver
      */
     public function created(Role $role): void
     {
-        //
+        $role->guard_name = 'web';
+        $role->saveQuietly();
     }
 
     /**
@@ -19,7 +20,7 @@ class RoleObserver
      */
     public function updated(Role $role): void
     {
-        $role->guard_name = 'sanctum';
+        $role->guard_name = 'web';
         $role->saveQuietly();
     }
 

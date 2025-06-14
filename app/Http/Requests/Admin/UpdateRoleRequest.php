@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,12 +23,16 @@ class UpdateRoleRequest extends FormRequest
     public function rules()
     {
 
+        /** @var \App\Models\Role|null $role */
+
         return [
+            'is_active' => 'nullable|boolean',
             'name' => [
                 'required',
                 'string',
                 'max:100',
-                Rule::unique(Role::class)->ignore($this->role),
+                Rule::unique('roles', 'name')->ignore(optional($this->route('role'))->id),
+
             ],
             'guard_name' => ['nullable', 'in:web,sanctum'],
             'permissions' => 'nullable|array',

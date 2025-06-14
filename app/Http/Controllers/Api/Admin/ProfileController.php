@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\ProfileUpdateRequest;
 use App\Http\Requests\Admin\UpdatePassword;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -26,7 +27,7 @@ class ProfileController extends Controller
     /** @var \App\Models\User */
     public function update(ProfileUpdateRequest $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $validated = $request->validated();
 
@@ -53,7 +54,7 @@ class ProfileController extends Controller
      */
     public function updatePassword(UpdatePassword $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $validated = $request->validated();
         $user->update($validated);
 

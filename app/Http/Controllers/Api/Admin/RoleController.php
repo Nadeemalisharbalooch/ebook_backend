@@ -23,6 +23,8 @@ class RoleController extends Controller
 
     public function show(Role $role)
     {
+        // Load permissions relationship
+        $role->load('permissions');
 
         return ResponseService::success(
             new RoleResource($role),
@@ -56,6 +58,14 @@ class RoleController extends Controller
             new RoleResource($role->load('permissions')),
             'Role updated successfully'
         );
+    }
+
+    public function toggleActive(role $role)
+    {
+        $role->is_active = ! $role->is_active;
+        $role->save();
+
+        return ResponseService::success(new RoleResource($role), 'Active status updated.');
     }
 
     public function destroy(Role $role)
