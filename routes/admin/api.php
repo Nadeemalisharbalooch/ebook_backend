@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\EmailBuilder\EmailTemplateController;
 use App\Http\Controllers\Api\Admin\EmailBuilder\GlobalEmailTemplateController;
 use App\Http\Controllers\Api\Admin\ImpersonationController;
+use App\Http\Controllers\Api\Admin\PermissionController;
 use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\StaffUserController;
@@ -33,10 +34,15 @@ Route::prefix('roles')->group(function () {
     Route::get('trashed', [RoleController::class, 'trashed'])->name('roles.trashed');
     Route::post('{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
     Route::delete('{role}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
-    Route::get('{role}', [RoleController::class, 'show'])->name('roles.show');
-});
-Route::apiResource('roles', RoleController::class)->except(['show']);
+    Route::patch('/{role}/toggle-active', [RoleController::class, 'toggleActive']);
 
+});
+Route::apiResource('roles', RoleController::class);
+
+//permissions
+Route::prefix('permissions')->group(function () {
+    Route::get('/', [PermissionController::class, 'index']);
+});
 // User routes
 Route::prefix('users')->group(function () {
     Route::get('trashed', [UserController::class, 'trashed'])->name('users.trashed');
@@ -70,6 +76,7 @@ Route::apiResource('email-templates', EmailTemplateController::class);
 // Impersonation routes (require authentication)
 Route::middleware(['auth'])->group(function () {
     // add just
-    Route::get('/impersonate/{user}', [ImpersonationController::class, 'impersonate'])->name('impersonate.start');
     Route::get('/impersonate/stop', [ImpersonationController::class, 'stopImpersonate'])->name('impersonate.stop');
+    Route::get('/impersonate/{user}', [ImpersonationController::class, 'impersonate'])->name('impersonate.start');
+
 });

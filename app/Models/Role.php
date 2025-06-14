@@ -26,7 +26,7 @@ class Role extends ModelsRole
         'guard_name',
 
         // A boolean indicating whether the role is active or not.
-        'active',
+        'is_active',
     ];
 
     /**

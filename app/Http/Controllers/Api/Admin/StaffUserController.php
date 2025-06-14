@@ -7,23 +7,33 @@ use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\StoreStaffUserRequest;
 use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
+
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\User;
+
 use App\Services\ResponseService;
 
 class StaffUserController extends Controller
 {
     public function index()
     {
-        $users = User::with('profile')->where('is_admin', true)->get();
+        $users = User::with(['profile'])
+            ->withTrashed()
+            ->where('is_admin', true)
+            ->where('id', '!=',  Auth::id())
+            ->get();
 
         return ResponseService::success(
             StaffUserResource::collection($users),
-            ' Staff users retrieved successfully'
+            'Users retrieved successfully'
         );
     }
 
+
     public function store(StoreStaffUserRequest $request)
     {
+        /** @var Request $request */
         $validated = $request->validated();
 
         unset($validated['email_verified_at']);

@@ -7,6 +7,8 @@ use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\UserStoreRequest;
 use App\Http\Requests\Admin\UserUpdateRequest;
 use App\Http\Resources\Api\Admin\UserResource;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\User;
 use App\Services\ResponseService;
 
@@ -17,16 +19,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roles = User::with(['profile'])
-            ->withTrashed() // include trashed users
+
+        $users = User::with(['profile'])
+            ->withTrashed()
             ->where('is_admin', false)
+            ->where('id', '!=',  Auth::id())
             ->get();
 
         return ResponseService::success(
-            UserResource::collection($roles),
+            UserResource::collection($users),
             'Users retrieved successfully'
         );
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -34,6 +40,7 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
 
+         /** @var Request $request */
         $validated = $request->validated();
 
         unset($validated['email_verified_at']);

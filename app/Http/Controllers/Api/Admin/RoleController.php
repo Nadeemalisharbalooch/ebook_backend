@@ -61,6 +61,14 @@ class RoleController extends Controller
         );
     }
 
+     public function toggleActive(role $role)
+    {
+        $role->is_active = ! $role->is_active;
+        $role->save();
+
+        return ResponseService::success(new RoleResource($role), 'Active status updated.');
+    }
+
     public function destroy(Role $role)
     {
         $role->delete();

@@ -19,10 +19,12 @@ class StoreRoleRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-            'name' => 'required|string|unique:roles,name|max:100',
-        ];
-    }
+   public function rules(): array
+{
+    return [
+        'is_active' => 'nullable|boolean',
+        'name' => 'required|string|unique:roles,name|max:100',
+    ];
+}
+
 }
