@@ -37,6 +37,15 @@ class Role extends ModelsRole
     protected $dates = ['deleted_at'];
 
     /**
+     * attributes
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'is_active' => false,
+    ];
+
+    /**
      * Global scope to exclude super admin, developer and tester roles.
      *
      * The global scope is used to exclude certain roles from the results of the
