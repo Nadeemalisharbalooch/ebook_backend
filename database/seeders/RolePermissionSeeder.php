@@ -25,7 +25,8 @@ class RolePermissionSeeder extends Seeder
         ];
 
         foreach ($rolePermissions as $roleName => $permissions) {
-            $role = Role::where('name', $roleName)->first();
+            // Fetch role without applying the 'excludeRoles' global scope
+            $role = Role::withoutGlobalScope('excludeRoles')->where('name', $roleName)->first();
             if ($role) {
                 $role->syncPermissions($permissions);
             }
