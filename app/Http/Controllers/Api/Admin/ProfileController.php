@@ -60,4 +60,5 @@ class ProfileController extends Controller
 
         return ResponseService::success('Password updated successfully.');
     }
+
 }

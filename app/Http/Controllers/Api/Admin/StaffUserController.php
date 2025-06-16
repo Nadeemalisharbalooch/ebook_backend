@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\StoreStaffUserRequest;
 use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
+use App\Models\Permission;
 use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,7 @@ class StaffUserController extends Controller
 {
     public function index()
     {
+
         $this->authorizePermission('clients.list');
 
         $users = User::with(['profile'])
@@ -52,13 +54,15 @@ class StaffUserController extends Controller
 
     public function show($id)
     {
-        $this->authorizePermission('clients.view');
+        $this->authorizePermission('clients.read');
+
 
         $user = User::with(['roles', 'profile'])->find($id);
 
         if (!$user) {
             return ResponseService::error('User not found', 404);
         }
+
 
         return ResponseService::success(
             new StaffUserResource($user),
@@ -67,32 +71,39 @@ class StaffUserController extends Controller
     }
 
     public function update(UpdateStaffUserRequest $request, string $id)
-    {
-        $this->authorizePermission('clients.update');
+{
+    return $request->all();
+    $this->authorizePermission('clients.update');
 
-        $validated = $request->validated();
+    $validated = $request->validated();
+    $user = User::with('profile')->findOrFail($id);
 
-        $user = User::with('profile')->findOrFail($id);
+    // Handle avatar upload
+    if ($request->hasFile('profile.avatar_file')) {
+        $file = $request->file('profile.avatar_file');
+        $path = $file->store('avatars', 'public'); // stores in storage/app/public/avatars
+        $validated['profile']['avatar'] = $path;
+    }
 
-        $user->update($validated);
+    $user->update($validated);
 
-        if (isset($validated['profile']) && is_array($validated['profile'])) {
-            $user->profile()->updateOrCreate(
-                ['user_id' => $user->id],
-                $validated['profile']
-            );
-        }
-
-        // 👇 Sync multiple roles (instead of a single role)
-        if (isset($validated['roles'])) {
-            $user->syncRoles($validated['roles']); // Assign multiple roles
-        }
-
-        return ResponseService::success(
-            new StaffUserResource($user->load(['roles', 'profile'])),
-            'Staff user updated successfully'
+    if (isset($validated['profile']) && is_array($validated['profile'])) {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $validated['profile']
         );
     }
+
+    if (isset($validated['roles'])) {
+        $user->syncRoles($validated['roles']);
+    }
+
+    return ResponseService::success(
+        new StaffUserResource($user->load(['roles', 'profile'])),
+        'Staff user updated successfully'
+    );
+}
+
 
     public function destroy(User $user)
     {
@@ -129,6 +140,19 @@ class StaffUserController extends Controller
             'Staff user restored successfully'
         );
     }
+
+     public function forceDelete($userId)
+        {
+             $this->authorizePermission('clients.force.delete');
+            $user = User::withTrashed()->findOrFail($userId);
+
+            // Permanently delete
+            $user->forceDelete();
+
+            return ResponseService::success(
+                'User permanently deleted'
+            );
+        }
 
     public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
     {
@@ -173,9 +197,6 @@ class StaffUserController extends Controller
 
         return ResponseService::success(new StaffUserResource($user), 'Suspended status updated.');
     }
-
-
-
 
     protected function authorizePermission(string $permission)
     {

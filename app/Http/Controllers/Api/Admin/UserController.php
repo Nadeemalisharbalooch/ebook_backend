@@ -3,208 +3,244 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-    use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
-    use App\Http\Requests\Admin\UserStoreRequest;
-    use App\Http\Requests\Admin\UserUpdateRequest;
-    use App\Http\Resources\Api\Admin\UserResource;
-    use App\Models\User;
-    use App\Services\ResponseService;
-    use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
+use App\Http\Requests\Admin\UserStoreRequest;
+use App\Http\Requests\Admin\UserUpdateRequest;
+use App\Http\Resources\Api\Admin\UserResource;
+use App\Models\User;
+use App\Services\ResponseService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
-   class UserController extends Controller
+class UserController extends Controller
+{
+    public function index()
     {
-        /**
-         * Display a listing of the resource.
-         */
-        public function index()
-        {
+        $this->authorizePermission('users.list');
 
-            $users = User::with(['profile'])
-                ->withTrashed()
-                ->where('is_admin', false)
-                ->where('id', '!=', Auth::id())
-                ->get();
+        $users = User::with(['profile'])
+            ->withTrashed()
+            ->where('is_admin', false)
+            ->where('id', '!=', Auth::id())
+            ->get();
 
-            return ResponseService::success(
-                UserResource::collection($users),
-                'Users retrieved successfully'
+        return ResponseService::success(
+            UserResource::collection($users),
+            'Users retrieved successfully'
+        );
+    }
+
+    public function store(UserStoreRequest $request)
+    {
+        $this->authorizePermission('users.create');
+
+        $validated = $request->validated();
+        unset($validated['email_verified_at']);
+
+        $validated['email_verified_at'] = $request->input('email_verified_at') === 'yes'
+            ? now()
+            : null;
+
+        $user = User::create($validated);
+
+        return ResponseService::success(
+            new UserResource($user),
+            'User created successfully'
+        );
+    }
+
+    public function show(User $user)
+    {
+        $this->authorizePermission('users.read');
+
+        if (in_array($user->id, [1, 2, 3])) {
+            return ResponseService::error(
+                'You do not have permission to view this user',
+                403
             );
         }
 
-        /**
-         * Store a newly created resource in storage.
-         */
-        public function store(UserStoreRequest $request)
-        {
-
-            /** @var Request $request */
-            $validated = $request->validated();
-
-            unset($validated['email_verified_at']);
-
-            // Step 3: set based on is_email_verified
-            if ($request->input('email_verified_at') === 'yes') {
-                $validated['email_verified_at'] = now();
-            } else {
-                $validated['email_verified_at'] = null;
-            }
-
-            // Step 4: create user
-            $role = User::create($validated);
-
-            return ResponseService::success(
-                new UserResource($role),
-                'User created successfully'
+        if ($user->is_admin) {
+            return ResponseService::error(
+                'User not found',
+                404
             );
         }
 
-        /**
-         * Display the specified resource.
-         */
-        public function show(User $user)
-        {
-            if (in_array($user->id, [1, 2, 3])) {
-                return ResponseService::error(
-                    'You do not have permission to view this user',
-                    403
-                );
-            }
+        $user->load('profile');
 
-            if ($user->is_admin) {
-                return ResponseService::error(
-                    'User not found',
-                    404
-                );
-            }
+        return ResponseService::success(
+            new UserResource($user),
+            'User retrieved successfully'
+        );
+    }
 
-            // Load the profile relationship
-            $user->load('profile');
+    public function toggleLocked(User $user)
+    {
+        $this->authorizePermission('users.update');
 
-            return ResponseService::success(
-                new UserResource($user),
-                'User retrieved successfully'
+        $user->is_locked = !$user->is_locked;
+        $user->save();
+
+        return ResponseService::success(new UserResource($user), 'Lock status updated.');
+    }
+
+    public function toggleSuspended(User $user)
+    {
+        $this->authorizePermission('users.update');
+
+        $user->is_suspended = !$user->is_suspended;
+        $user->save();
+
+        return ResponseService::success(new UserResource($user), 'Suspended status updated.');
+    }
+
+  public function update(UserUpdateRequest $request, string $id)
+{
+    $this->authorizePermission('users.update');
+
+    $user = User::with('profile')->findOrFail($id);
+
+    if (in_array($user->id, [1, 2, 3])) {
+        return ResponseService::error(
+            'You do not have permission to update this user',
+            403
+        );
+    }
+
+    $validated = $request->validated();
+
+    // Handle avatar upload if present
+    if ($request->hasFile('profile.avatar')) {
+        // Delete old avatar if exists
+        if ($user->profile && $user->profile->avatar) {
+            Storage::disk('public')->delete(
+                str_replace('/storage/', '', $user->profile->avatar)
             );
         }
 
+        // Store new avatar
+        $avatarPath = $request->file('profile.avatar')->store('avatars', 'public');
+        $validated['profile']['avatar'] = '/storage/'.$avatarPath;
+    } elseif (isset($validated['profile']['avatar']) && is_string($validated['profile']['avatar'])) {
+        // Keep existing avatar if no new file was uploaded
+        $validated['profile']['avatar'] = $user->profile->avatar ?? null;
+    }
 
+    $user->update($validated);
 
-        // Toggle the active status
-        public function toggleLocked(User $user)
-        {
-            $user->is_locked = ! $user->is_locked;
-            $user->save();
+    if (isset($validated['profile']) && is_array($validated['profile'])) {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $validated['profile']
+        );
+    }
 
-            return ResponseService::success(new UserResource($user), 'Lock status updated.');
-        }
+    if (isset($validated['role'])) {
+        $user->syncRoles($validated['role']);
+    }
 
-        public function toggleSuspended(User $user)
-        {
-            $user->is_suspended = ! $user->is_suspended;
-            $user->save();
+    return ResponseService::success(
+        new UserResource($user->load(['roles', 'profile'])),
+        'User updated successfully'
+    );
+}
 
-            return ResponseService::success(new UserResource($user), 'Suspended status updated.');
-        }
+    public function destroy(User $user)
+    {
 
-        /**
-         * Update the specified resource in storage.
-         */
-        public function update(UserUpdateRequest $request, string $id)
-        {
-            $user = User::with('profile')->findOrFail($id);
+        $this->authorizePermission('users.delete');
 
-            if (in_array($user->id, [1, 2, 3])) {
-                return ResponseService::error(
-                    'You do not have permission to update this user',
-                    403
-                );
-            }
-
-            $validated = $request->validated();
-
-            // Update user basic fields
-            $user->update($validated);
-
-            // Update profile fields if present
-            if (isset($validated['profile']) && is_array($validated['profile'])) {
-                $user->profile()->updateOrCreate(
-                    ['user_id' => $user->id],
-                    $validated['profile']
-                );
-            }
-
-            // Handle role assignment if provided
-            if (isset($validated['role'])) {
-                $user->syncRoles($validated['role']);
-            }
-
-            return ResponseService::success(
-                new UserResource($user->load(['roles', 'profile'])),
-                'User updated successfully'
+        if (in_array($user->id, [1, 2, 3])) {
+            return ResponseService::error(
+                'You do not have permission to delete this user',
+                403
             );
         }
 
+        $user->delete();
 
+        return ResponseService::success(
+            new UserResource($user),
+            'User deleted successfully'
+        );
+    }
 
-        /**
-         * Remove the specified resource from storage.
-         */
-        public function destroy(User $user)
-        {
-            $user->delete();
+    public function trashed()
+    {
+        $this->authorizePermission('users.list');
 
-            return ResponseService::success(
-                new UserResource($user),
-                'User deleted successfully'
+        $users = User::onlyTrashed()->get();
+
+        return ResponseService::success(
+            UserResource::collection($users),
+            'Trashed users fetched successfully'
+        );
+    }
+
+    public function restore($userId)
+    {
+        $this->authorizePermission('users.restore');
+
+        $user = User::withTrashed()->findOrFail($userId);
+
+        if (!$user->trashed()) {
+            return ResponseService::error('User is not deleted', 400);
+        }
+
+        if (in_array($user->id, [1, 2, 3])) {
+            return ResponseService::error(
+                'You do not have permission to restore this user',
+                403
             );
         }
 
-        public function trashed()
-        {
+        $user->restore();
 
-            $user = User::onlyTrashed()->get();
+        return ResponseService::success(
+            new UserResource($user),
+            'User restored successfully'
+        );
+    }
 
-            return ResponseService::success(
-                UserResource::collection($user),
-                'Trashed user fetched successfully'
+    public function forceDelete($userId)
+    {
+        $this->authorizePermission('users.force.delete');
+
+        $user = User::withTrashed()->findOrFail($userId);
+
+        if (!$user->trashed()) {
+            return ResponseService::error('User is not deleted', 400);
+        }
+
+        if (in_array($user->id, [1, 2, 3])) {
+            return ResponseService::error(
+                'You do not have permission to permanently delete this user',
+                403
             );
         }
 
-        public function restore($userId)
-        {
-            $user = User::withTrashed()->findOrFail($userId);
+        $user->forceDelete();
 
-            // Check if actually trashed
-            if (! $user->trashed()) {
-                return ResponseService::error('User is not deleted', 400);
-            }
+        return ResponseService::success(
+            'User permanently deleted'
+        );
+    }
 
-            // Restore the user
-            $user->restore();
+    public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
+    {
+        $this->authorizePermission('users.update');
 
-            return ResponseService::success(
-                new UserResource($user),
-                'User restored successfully'
-            );
-        }
+        $validated = $request->validated();
+        $user->update($validated);
 
-        public function forceDelete($userId)
-        {
-            $user = User::withTrashed()->findOrFail($userId);
+        return ResponseService::success('Password updated successfully.');
+    }
 
-            // Permanently delete
-            $user->forceDelete();
-
-            return ResponseService::success(
-                'User permanently deleted'
-            );
-        }
-
-        public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
-        {
-            $validated = $request->validated();
-            $user->update($validated);
-
-            return ResponseService::success('Password updated successfully.');
+    protected function authorizePermission(string $permission)
+    {
+        if (!auth()->user()->can($permission)) {
+            abort(403, 'Unauthorized.');
         }
     }
+}

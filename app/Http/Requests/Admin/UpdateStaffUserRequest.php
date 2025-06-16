@@ -39,8 +39,8 @@ class UpdateStaffUserRequest extends FormRequest
             'roles' => 'sometimes|array',
             'roles.*' => 'required|string|exists:roles,name',
 
-            'profile' => 'sometimes|array',
-            'profile.avatar' => 'nullable|string',
+            'profile.avatar' => 'nullable|string|max:255',
+'profile.avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'profile.gender' => 'nullable|string|in:male,female,other',
             'profile.dob' => 'nullable|date|before_or_equal:today',
             'profile.phone' => 'nullable|string|max:20',

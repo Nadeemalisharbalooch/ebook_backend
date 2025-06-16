@@ -20,8 +20,10 @@ use Illuminate\Support\Facades\Route;
 
 // Dashboard route
 Route::get('dashboard', DashboardController::class)->name('dashboard');
+ Route::get('toggleAccountLock', [ProfileController::class, 'toggleAccountLock']);
 
 // Profile routes
+
 
 Route::get('profile', [ProfileController::class, 'view'])
     ->middleware(['auth', 'impersonate'])
@@ -60,8 +62,9 @@ Route::patch('/{user}/toggle-suspended', [StaffUserController::class, 'toggleSus
 Route::patch('/{user}/toggle-email-verified', [StaffUserController::class, 'email_verified']);
 
 // Staff routes
-Route::apiResource('staff', StaffUserController::class);
+  Route::post('update/{id}', [StaffUserController::class, 'update'])->name('staff.update');
 Route::prefix('staff')->group(function () {
+    Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::post('{user}/restore', [StaffUserController::class, 'restore'])->name('staff.restore');
     Route::delete('{user}/force-delete', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
