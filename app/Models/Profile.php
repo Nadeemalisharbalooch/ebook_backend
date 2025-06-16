@@ -23,7 +23,7 @@ class Profile extends Model
     protected function casts(): array
     {
         return [
-            'dob' => 'date',         // Date of birth
+            'dob' => 'date:Y-m-d',         // Date of birth
         ];
     }
 

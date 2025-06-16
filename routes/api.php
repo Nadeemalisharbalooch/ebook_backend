@@ -3,7 +3,7 @@
 use App\Http\Resources\Api\Admin\UserCurrentResource;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->get('/user', function () {
+Route::middleware('auth:sanctum','impersonate')->get('/user', function () {
     return new UserCurrentResource(
         auth()->user()->load('roles.permissions')
     );

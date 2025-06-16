@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Http\Resources\Api\Admin\RoleResource;
+use App\Models\Permission;
 use App\Models\Role;
 use App\Services\ResponseService;
 
@@ -13,7 +14,8 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::withTrashed()->get(); // include trashed + eager load permissions
+        $this->authorizePermission('roles.list');
+        $roles = Role::withTrashed()->get();
 
         return ResponseService::success(
             RoleResource::collection($roles),
@@ -23,7 +25,7 @@ class RoleController extends Controller
 
     public function show(Role $role)
     {
-        // Load permissions relationship
+        $this->authorizePermission('roles.read');
         $role->load('permissions');
 
         return ResponseService::success(
@@ -34,6 +36,7 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
+        $this->authorizePermission('roles.create');
         $validated = $request->validated();
 
         $role = Role::create($validated);
@@ -46,6 +49,7 @@ class RoleController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
+        $this->authorizePermission('roles.update');
         $validated = $request->validated();
 
         $role->update($validated);
@@ -60,9 +64,10 @@ class RoleController extends Controller
         );
     }
 
-    public function toggleActive(role $role)
+    public function toggleActive(Role $role)
     {
-        $role->is_active = ! $role->is_active;
+        $this->authorizePermission('roles.update');
+        $role->is_active = !$role->is_active;
         $role->save();
 
         return ResponseService::success(new RoleResource($role), 'Active status updated.');
@@ -70,6 +75,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        $this->authorizePermission('roles.delete');
         $role->delete();
 
         return ResponseService::success(
@@ -80,6 +86,7 @@ class RoleController extends Controller
 
     public function trashed()
     {
+        $this->authorizePermission('roles.list');
         $roles = Role::onlyTrashed()->get();
 
         return ResponseService::success(
@@ -90,36 +97,41 @@ class RoleController extends Controller
 
     public function restore($roleId)
     {
+        $this->authorizePermission('roles.restore');
         $role = Role::withTrashed()->findOrFail($roleId);
 
-        // Check if actually trashed
-        if (! $role->trashed()) {
-            return ResponseService::error('role is not deleted', 400);
+        if (!$role->trashed()) {
+            return ResponseService::error('Role is not deleted', 400);
         }
 
-        // Restore the rol$role
         $role->restore();
 
         return ResponseService::success(
             new RoleResource($role),
-            'role restored successfully'
+            'Role restored successfully'
         );
     }
 
     public function forceDelete(string $role)
     {
+        $this->authorizePermission('roles.force.delete');
         $role = Role::withTrashed()->findOrFail($role);
 
-        // check if user is trached otherwise throw error
-        if (! $role->trashed()) {
-            return ResponseService::error('role is not deleted', 400);
+        if (!$role->trashed()) {
+            return ResponseService::error('Role is not deleted', 400);
         }
 
-        // Permanently delete
         $role->forceDelete();
 
         return ResponseService::success(
             'Role permanently deleted'
         );
+    }
+
+    protected function authorizePermission(string $permission)
+    {
+        if (!auth()->user()->can($permission)) {
+            abort(403, 'Unauthorized.');
+        }
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\StoreStaffUserRequest;
 use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
+use App\Models\Permission;
 use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,9 @@ class StaffUserController extends Controller
 {
     public function index()
     {
+
+        $this->authorizePermission('clients.list');
+
         $users = User::with(['profile'])
             ->withTrashed()
             ->where('is_admin', true)
@@ -27,34 +31,38 @@ class StaffUserController extends Controller
         );
     }
 
+
     public function store(StoreStaffUserRequest $request)
     {
-        /** @var Request $request */
+        $this->authorizePermission('clients.create');
+
         $validated = $request->validated();
 
         unset($validated['email_verified_at']);
 
-        if ($request->input('email_verified_at') === 'yes') {
-            $validated['email_verified_at'] = now();
-        } else {
-            $validated['email_verified_at'] = null;
-        }
+        $validated['email_verified_at'] = $request->input('email_verified_at') === 'yes'
+            ? now()
+            : null;
 
-        $role = User::create($validated);
+        $user = User::create($validated);
 
         return ResponseService::success(
-            new StaffUserResource($role),
+            new StaffUserResource($user),
             'Staff User created successfully'
         );
     }
 
     public function show($id)
     {
+        $this->authorizePermission('clients.read');
+
+
         $user = User::with(['roles', 'profile'])->find($id);
 
-        if (! $user) {
+        if (!$user) {
             return ResponseService::error('User not found', 404);
         }
+
 
         return ResponseService::success(
             new StaffUserResource($user),
@@ -63,36 +71,43 @@ class StaffUserController extends Controller
     }
 
     public function update(UpdateStaffUserRequest $request, string $id)
-    {
-        $validated = $request->validated();
+{
+    return $request->all();
+    $this->authorizePermission('clients.update');
 
-        // Find the user with profile
-        $user = User::with('profile')->findOrFail($id);
+    $validated = $request->validated();
+    $user = User::with('profile')->findOrFail($id);
 
-        // Update basic user data
-        $user->update($validated);
+    // Handle avatar upload
+    if ($request->hasFile('profile.avatar_file')) {
+        $file = $request->file('profile.avatar_file');
+        $path = $file->store('avatars', 'public'); // stores in storage/app/public/avatars
+        $validated['profile']['avatar'] = $path;
+    }
 
-        // Update profile if profile data is sent
-        if (isset($validated['profile']) && is_array($validated['profile'])) {
-            $user->profile()->updateOrCreate(
-                ['user_id' => $user->id],
-                $validated['profile']
-            );
-        }
+    $user->update($validated);
 
-        // Handle role assignment
-        if (isset($validated['role'])) {
-            $user->syncRoles([$validated['role']]);
-        }
-
-        return ResponseService::success(
-            new StaffUserResource($user->load(['roles', 'profile'])),
-            'Staff user updated successfully'
+    if (isset($validated['profile']) && is_array($validated['profile'])) {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $validated['profile']
         );
     }
 
+    if (isset($validated['roles'])) {
+        $user->syncRoles($validated['roles']);
+    }
+
+    return ResponseService::success(
+        new StaffUserResource($user->load(['roles', 'profile'])),
+        'Staff user updated successfully'
+    );
+}
+
+
     public function destroy(User $user)
     {
+        $this->authorizePermission('clients.delete');
 
         $user->delete();
 
@@ -104,29 +119,89 @@ class StaffUserController extends Controller
 
     public function trashed()
     {
-        $user = User::onlyTrashed()->get();
+        $this->authorizePermission('clients.list');
+
+        $users = User::onlyTrashed()->get();
 
         return ResponseService::success(
-            StaffUserResource::collection($user),
-            'Trashed user fetched successfully'
+            StaffUserResource::collection($users),
+            'Trashed users fetched successfully'
         );
     }
 
     public function restore(User $user)
     {
+        $this->authorizePermission('clients.restore');
+
         $user->restore();
 
         return ResponseService::success(
             new StaffUserResource($user),
-            ' Staff user restored successfully'
+            'Staff user restored successfully'
         );
     }
 
+     public function forceDelete($userId)
+        {
+             $this->authorizePermission('clients.force.delete');
+            $user = User::withTrashed()->findOrFail($userId);
+
+            // Permanently delete
+            $user->forceDelete();
+
+            return ResponseService::success(
+                'User permanently deleted'
+            );
+        }
+
     public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
     {
+        $this->authorizePermission('clients.password.update');
+
         $validated = $request->validated();
         $user->update($validated);
 
         return ResponseService::success('Password updated successfully.');
+    }
+
+    public function email_verified(User $user)
+    {
+        $user->email_verified_at = $user->email_verified_at ? null : now();
+        $user->save();
+
+        return ResponseService::success(new StaffUserResource($user), 'Lock status updated.');
+    }
+    public function toggleLocked(User $user)
+    {
+        $user->is_locked = ! $user->is_locked;
+        $user->save();
+
+        return ResponseService::success(new StaffUserResource($user), 'Lock status updated.');
+    }
+
+    public function toggleActive(User $user)
+    {
+        $user->is_active = ! $user->is_active;
+        $user->save();
+
+        return ResponseService::success(
+            new StaffUserResource($user),
+            'User active status updated successfully'
+        );
+    }
+
+    public function toggleSuspended(User $user)
+    {
+        $user->is_suspended = ! $user->is_suspended;
+        $user->save();
+
+        return ResponseService::success(new StaffUserResource($user), 'Suspended status updated.');
+    }
+
+    protected function authorizePermission(string $permission)
+    {
+        if (!auth()->user()->can($permission)) {
+            abort(403, 'Unauthorized.');
+        }
     }
 }

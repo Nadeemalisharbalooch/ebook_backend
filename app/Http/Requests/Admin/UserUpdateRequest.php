@@ -35,7 +35,8 @@ class UserUpdateRequest extends FormRequest
             'role' => 'sometimes|string|exists:roles,name',
 
             'profile' => 'sometimes|array',
-            'profile.avatar' => 'nullable|string',
+            'profile.avatar' => 'nullable|sometimes|string|max:255',
+            'profile.avatar_file' => 'nullable|sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'profile.gender' => 'nullable|string|in:male,female,other',
             'profile.dob' => 'nullable|date',
             'profile.phone' => 'nullable|string|max:20',
