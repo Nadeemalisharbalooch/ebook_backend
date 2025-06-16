@@ -15,6 +15,8 @@ class StaffUserController extends Controller
 {
     public function index()
     {
+        $this->authorizePermission('clients.list');
+
         $users = User::with(['profile'])
             ->withTrashed()
             ->where('is_admin', true)
@@ -27,32 +29,34 @@ class StaffUserController extends Controller
         );
     }
 
+
     public function store(StoreStaffUserRequest $request)
     {
-        /** @var Request $request */
+        $this->authorizePermission('clients.create');
+
         $validated = $request->validated();
 
         unset($validated['email_verified_at']);
 
-        if ($request->input('email_verified_at') === 'yes') {
-            $validated['email_verified_at'] = now();
-        } else {
-            $validated['email_verified_at'] = null;
-        }
+        $validated['email_verified_at'] = $request->input('email_verified_at') === 'yes'
+            ? now()
+            : null;
 
-        $role = User::create($validated);
+        $user = User::create($validated);
 
         return ResponseService::success(
-            new StaffUserResource($role),
+            new StaffUserResource($user),
             'Staff User created successfully'
         );
     }
 
     public function show($id)
     {
+        $this->authorizePermission('clients.view');
+
         $user = User::with(['roles', 'profile'])->find($id);
 
-        if (! $user) {
+        if (!$user) {
             return ResponseService::error('User not found', 404);
         }
 
@@ -64,15 +68,14 @@ class StaffUserController extends Controller
 
     public function update(UpdateStaffUserRequest $request, string $id)
     {
+        $this->authorizePermission('clients.update');
+
         $validated = $request->validated();
 
-        // Find the user with profile
         $user = User::with('profile')->findOrFail($id);
 
-        // Update basic user data
         $user->update($validated);
 
-        // Update profile if profile data is sent
         if (isset($validated['profile']) && is_array($validated['profile'])) {
             $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
@@ -80,9 +83,9 @@ class StaffUserController extends Controller
             );
         }
 
-        // Handle role assignment
-        if (isset($validated['role'])) {
-            $user->syncRoles([$validated['role']]);
+        // 👇 Sync multiple roles (instead of a single role)
+        if (isset($validated['roles'])) {
+            $user->syncRoles($validated['roles']); // Assign multiple roles
         }
 
         return ResponseService::success(
@@ -93,6 +96,7 @@ class StaffUserController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorizePermission('clients.delete');
 
         $user->delete();
 
@@ -104,29 +108,79 @@ class StaffUserController extends Controller
 
     public function trashed()
     {
-        $user = User::onlyTrashed()->get();
+        $this->authorizePermission('clients.list');
+
+        $users = User::onlyTrashed()->get();
 
         return ResponseService::success(
-            StaffUserResource::collection($user),
-            'Trashed user fetched successfully'
+            StaffUserResource::collection($users),
+            'Trashed users fetched successfully'
         );
     }
 
     public function restore(User $user)
     {
+        $this->authorizePermission('clients.restore');
+
         $user->restore();
 
         return ResponseService::success(
             new StaffUserResource($user),
-            ' Staff user restored successfully'
+            'Staff user restored successfully'
         );
     }
 
     public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
     {
+        $this->authorizePermission('clients.password.update');
+
         $validated = $request->validated();
         $user->update($validated);
 
         return ResponseService::success('Password updated successfully.');
+    }
+
+    public function email_verified(User $user)
+    {
+        $user->email_verified_at = $user->email_verified_at ? null : now();
+        $user->save();
+
+        return ResponseService::success(new StaffUserResource($user), 'Lock status updated.');
+    }
+    public function toggleLocked(User $user)
+    {
+        $user->is_locked = ! $user->is_locked;
+        $user->save();
+
+        return ResponseService::success(new StaffUserResource($user), 'Lock status updated.');
+    }
+
+    public function toggleActive(User $user)
+    {
+        $user->is_active = ! $user->is_active;
+        $user->save();
+
+        return ResponseService::success(
+            new StaffUserResource($user),
+            'User active status updated successfully'
+        );
+    }
+
+    public function toggleSuspended(User $user)
+    {
+        $user->is_suspended = ! $user->is_suspended;
+        $user->save();
+
+        return ResponseService::success(new StaffUserResource($user), 'Suspended status updated.');
+    }
+
+
+
+
+    protected function authorizePermission(string $permission)
+    {
+        if (!auth()->user()->can($permission)) {
+            abort(403, 'Unauthorized.');
+        }
     }
 }

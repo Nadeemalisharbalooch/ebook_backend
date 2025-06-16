@@ -14,7 +14,8 @@ class UpdateStaffUserRequest extends FormRequest
 
     public function rules(): array
     {
-        // Get the user ID from the route parameter (it's 'staff' for apiResource)
+        /** @var \App\Models\Role|null $role */
+
         $staffId = $this->route('staff');
 
         return [
@@ -35,7 +36,8 @@ class UpdateStaffUserRequest extends FormRequest
             'is_admin' => 'sometimes|boolean',
             'is_active' => 'sometimes|boolean',
             'is_suspended' => 'sometimes|boolean',
-            'role' => 'sometimes|string|exists:roles,name',
+            'roles' => 'sometimes|array',
+            'roles.*' => 'required|string|exists:roles,name',
 
             'profile' => 'sometimes|array',
             'profile.avatar' => 'nullable|string',

@@ -54,9 +54,10 @@ Route::prefix('users')->group(function () {
 Route::apiResource('users', UserController::class);
 
 // Account status toggles
-Route::patch('/{user}/toggle-active', [UserController::class, 'toggleActive']);
-Route::patch('/{user}/toggle-locked', [UserController::class, 'toggleLocked']);
-Route::patch('/{user}/toggle-suspended', [UserController::class, 'toggleSuspended']);
+Route::patch('/{user}/toggle-active', [StaffUserController::class, 'toggleActive']);
+Route::patch('/{user}/toggle-locked', [StaffUserController::class, 'toggleLocked']);
+Route::patch('/{user}/toggle-suspended', [StaffUserController::class, 'toggleSuspended']);
+Route::patch('/{user}/toggle-email-verified', [StaffUserController::class, 'email_verified']);
 
 // Staff routes
 Route::apiResource('staff', StaffUserController::class);

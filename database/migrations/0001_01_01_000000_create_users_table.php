@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->integer('verification_code')->nullable();
             $table->string('password');
             $table->boolean('is_locked')->default(false);
             $table->boolean('is_admin')->default(false);
