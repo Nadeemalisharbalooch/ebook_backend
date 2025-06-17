@@ -42,7 +42,7 @@ class Role extends ModelsRole
      * @var array
      */
     protected $attributes = [
-        'is_active' => false,
+        'is_active' => true,
     ];
 
     /**
