@@ -62,7 +62,7 @@ Route::patch('/{user}/toggle-suspended', [StaffUserController::class, 'toggleSus
 Route::patch('/{user}/toggle-email-verified', [StaffUserController::class, 'email_verified']);
 
 // Staff routes
-  Route::post('update/{id}', [StaffUserController::class, 'update'])->name('staff.update');
+Route::apiResource('staff', UserController::class);
 Route::prefix('staff')->group(function () {
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');

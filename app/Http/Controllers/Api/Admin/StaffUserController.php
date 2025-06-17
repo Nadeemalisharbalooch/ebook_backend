@@ -9,8 +9,10 @@ use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
 use App\Models\Permission;
 use App\Models\User;
+
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class StaffUserController extends Controller
 {
@@ -70,42 +72,43 @@ class StaffUserController extends Controller
         );
     }
 
-    public function update(UpdateStaffUserRequest $request, string $id)
-{
-    return $request->all();
-    $this->authorizePermission('clients.update');
+ public function update(UpdateStaffUserRequest $request, string $id)
+    {
+         $this->authorizePermission('clients.update');
+        $validated = $request->validated();
 
-    $validated = $request->validated();
-    $user = User::with('profile')->findOrFail($id);
+        $user = User::with('profile')->findOrFail($id);
+        $user->update($validated);
 
-    // Handle avatar upload
-    if ($request->hasFile('profile.avatar_file')) {
-        $file = $request->file('profile.avatar_file');
-        $path = $file->store('avatars', 'public'); // stores in storage/app/public/avatars
-        $validated['profile']['avatar'] = $path;
-    }
+        if (isset($validated['profile']) && is_array($validated['profile'])) {
+            $user->profile()->update(
+                ['user_id' => $user->id],
+                $validated['profile']
+            );
+        }
 
-    $user->update($validated);
+        if (isset($validated['role'])) {
+            $user->syncRoles([$validated['role']]);
+        }
 
-    if (isset($validated['profile']) && is_array($validated['profile'])) {
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            $validated['profile']
+        return ResponseService::success(
+            new StaffUserResource($user->load(['roles', 'profile'])),
+            'Staff user updated successfully'
         );
     }
 
-    if (isset($validated['roles'])) {
-        $user->syncRoles($validated['roles']);
-    }
 
-    return ResponseService::success(
-        new StaffUserResource($user->load(['roles', 'profile'])),
-        'Staff user updated successfully'
-    );
-}
+    public function destroy(string $id)
+    {
+        $user = User::findOrFail($id);
 
+        if ($user->id === Auth::id()) {
+            return ResponseService::error('You cannot delete your own account', 403);
+        }
 
-    public function destroy(User $user)
+        if ($user->is_admin) {
+            return ResponseService::error('You cannot delete an admin user', 403);
+        }
     {
         $this->authorizePermission('clients.delete');
 
@@ -116,7 +119,7 @@ class StaffUserController extends Controller
             'Staff User deleted successfully'
         );
     }
-
+    }
     public function trashed()
     {
         $this->authorizePermission('clients.list');
