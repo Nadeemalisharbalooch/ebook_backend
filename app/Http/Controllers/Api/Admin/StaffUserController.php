@@ -7,12 +7,9 @@ use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use App\Http\Requests\Admin\StoreStaffUserRequest;
 use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
-use App\Models\Permission;
 use App\Models\User;
-
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class StaffUserController extends Controller
 {
@@ -32,7 +29,6 @@ class StaffUserController extends Controller
             'Users retrieved successfully'
         );
     }
-
 
     public function store(StoreStaffUserRequest $request)
     {
@@ -58,13 +54,11 @@ class StaffUserController extends Controller
     {
         $this->authorizePermission('clients.read');
 
-
         $user = User::with(['roles', 'profile'])->find($id);
 
-        if (!$user) {
+        if (! $user) {
             return ResponseService::error('User not found', 404);
         }
-
 
         return ResponseService::success(
             new StaffUserResource($user),
@@ -72,9 +66,9 @@ class StaffUserController extends Controller
         );
     }
 
- public function update(UpdateStaffUserRequest $request, string $id)
+    public function update(UpdateStaffUserRequest $request, string $id)
     {
-         $this->authorizePermission('clients.update');
+        $this->authorizePermission('clients.update');
         $validated = $request->validated();
 
         $user = User::with('profile')->findOrFail($id);
@@ -97,7 +91,6 @@ class StaffUserController extends Controller
         );
     }
 
-
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
@@ -109,7 +102,7 @@ class StaffUserController extends Controller
         if ($user->is_admin) {
             return ResponseService::error('You cannot delete an admin user', 403);
         }
-    {
+
         $this->authorizePermission('clients.delete');
 
         $user->delete();
@@ -118,8 +111,9 @@ class StaffUserController extends Controller
             new StaffUserResource($user),
             'Staff User deleted successfully'
         );
+
     }
-    }
+
     public function trashed()
     {
         $this->authorizePermission('clients.list');
@@ -144,18 +138,18 @@ class StaffUserController extends Controller
         );
     }
 
-     public function forceDelete($userId)
-        {
-             $this->authorizePermission('clients.force.delete');
-            $user = User::withTrashed()->findOrFail($userId);
+    public function forceDelete($userId)
+    {
+        $this->authorizePermission('clients.force.delete');
+        $user = User::withTrashed()->findOrFail($userId);
 
-            // Permanently delete
-            $user->forceDelete();
+        // Permanently delete
+        $user->forceDelete();
 
-            return ResponseService::success(
-                'User permanently deleted'
-            );
-        }
+        return ResponseService::success(
+            'User permanently deleted'
+        );
+    }
 
     public function updatePassword(AdminUpdateUserPasswordRequest $request, User $user)
     {
@@ -174,6 +168,7 @@ class StaffUserController extends Controller
 
         return ResponseService::success(new StaffUserResource($user), 'Lock status updated.');
     }
+
     public function toggleLocked(User $user)
     {
         $user->is_locked = ! $user->is_locked;
@@ -203,7 +198,7 @@ class StaffUserController extends Controller
 
     protected function authorizePermission(string $permission)
     {
-        if (!auth()->user()->can($permission)) {
+        if (! auth()->user()->can($permission)) {
             abort(403, 'Unauthorized.');
         }
     }

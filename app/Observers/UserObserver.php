@@ -2,7 +2,8 @@
 
 namespace App\Observers;
 
-use App\Events\Auth\UserRegisterEvent;
+use App\Events\Auth\CodeVerificationEvent;
+use App\Events\Auth\SendWelcomeEmailEvent;
 use App\Models\User;
 
 class UserObserver
@@ -21,14 +22,9 @@ class UserObserver
 
         // create random username
         $user->username = 'user'.$user->id;
-        $user->verification_code = rand(100000, 999999);
-
         $user->saveQuietly();
-        event(new UserRegisterEvent($user));
 
-
-        // Todo: Send Verification Email
-
+        event(new CodeVerificationEvent($user));
     }
 
     /**
@@ -36,9 +32,8 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        if($user->isDirty('email_verified_at')) {
-            // Todo: Send Welcome Email
-            logger('Welcome Email Sent');
+        if ($user->isDirty('email_verified_at')) {
+            event(new SendWelcomeEmailEvent($user));
         }
     }
 

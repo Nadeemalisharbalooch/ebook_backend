@@ -15,7 +15,6 @@ class UpdateStaffUserRequest extends FormRequest
     public function rules(): array
     {
         /** @var \App\Models\Role|null $role */
-
         $staffId = $this->route('staff');
 
         return [
@@ -39,9 +38,8 @@ class UpdateStaffUserRequest extends FormRequest
             'roles' => 'sometimes|array',
             'roles.*' => 'required|string|exists:roles,name',
 
-
-           'profile.avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'profile.avatar'      => 'required_without:profile.avatar_file|string',
+            'profile.avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile.avatar' => 'required_without:profile.avatar_file|string',
 
             'profile.dob' => 'nullable|date|before_or_equal:today',
             'profile.phone' => 'required|string|max:20',

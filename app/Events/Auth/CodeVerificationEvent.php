@@ -8,14 +8,18 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserRegisterEvent
+class CodeVerificationEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public User $user) {}
+    public function __construct(public User $user)
+    {
+        $user->verification_code = rand(100000, 999999);
+        $user->save();
+    }
 
     /**
      * Get the channels the event should broadcast on.

@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\StaffUserController;
 use App\Http\Controllers\Api\Admin\UserController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,10 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 // Dashboard route
 Route::get('dashboard', DashboardController::class)->name('dashboard');
- Route::get('toggleAccountLock', [ProfileController::class, 'toggleAccountLock']);
+Route::get('toggleAccountLock', [ProfileController::class, 'toggleAccountLock']);
 
 // Profile routes
-
 
 Route::get('profile', [ProfileController::class, 'view'])
     ->middleware(['auth', 'impersonate'])
