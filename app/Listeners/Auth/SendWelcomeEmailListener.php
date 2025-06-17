@@ -3,7 +3,6 @@
 namespace App\Listeners\Auth;
 
 use App\Events\Auth\SendWelcomeEmailEvent;
-use Illuminate\Support\Facades\Log;
 
 class SendWelcomeEmailListener
 {
@@ -23,6 +22,5 @@ class SendWelcomeEmailListener
         $user = $event->user;
 
         // Todo: Send Welcome Email
-        Log::info($user);
     }
 }

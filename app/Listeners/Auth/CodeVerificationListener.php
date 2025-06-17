@@ -3,7 +3,6 @@
 namespace App\Listeners\Auth;
 
 use App\Events\Auth\CodeVerificationEvent;
-use Illuminate\Support\Facades\Log;
 
 class CodeVerificationListener
 {
@@ -23,6 +22,5 @@ class CodeVerificationListener
         $user = $event->user;
 
         // Todo: Send Verification Code via Email
-        Log::info($user);
     }
 }

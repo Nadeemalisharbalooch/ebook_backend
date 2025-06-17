@@ -33,9 +33,7 @@ class UserObserver
     public function updated(User $user): void
     {
         if ($user->isDirty('email_verified_at')) {
-            // Todo: Send Welcome Email
             event(new SendWelcomeEmailEvent($user));
-            logger('Welcome Email Sent');
         }
     }
 

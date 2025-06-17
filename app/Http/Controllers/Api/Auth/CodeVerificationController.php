@@ -6,26 +6,13 @@ use App\Events\Auth\CodeVerificationEvent;
 use App\Events\Auth\SendWelcomeEmailEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Auth\AuthUserResource;
-use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CodeVerificationController extends Controller
 {
-    public function verification()
-    {
-        $user = Auth::user();
-
-        $resource = new AuthUserResource($user);
-
-        return ResponseService::success(
-            $resource,
-            'Please verify your account by entering a verification code sent to your email.'
-        );
-    }
-
-    public function store(Request $request)
+    public function verification(Request $request)
     {
         // Assuming the code is sent as a single input field
         $codeInput = $request->input('code');
