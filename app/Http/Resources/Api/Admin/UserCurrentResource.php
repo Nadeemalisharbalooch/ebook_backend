@@ -54,3 +54,4 @@ class UserCurrentResource extends JsonResource
         }
     }
 }
+

@@ -17,6 +17,7 @@ class ImpersonationController extends Controller
 
         // Save impersonated user ID in cache
         cache()->put('impersonate_token_'.auth()->id(), $user->id, now()->addMinutes(30));
+         $user->update(['is_impersonating' => true]);
 
         return response()->json([
             'message' => 'Now impersonating '.$user->name,
@@ -24,13 +25,17 @@ class ImpersonationController extends Controller
         ]);
     }
 
-    public function stopImpersonate()
-    {
+  public function stopImpersonate()
+{
+    cache()->forget('impersonate_token_'.Auth::id());
 
-        cache()->forget('impersonate_token_'.Auth::id());
-
-        return response()->json([
-            'message' => 'Impersonation stopped',
-        ]);
+    $userId = cache()->get('impersonated_by_'.Auth::id()); //
+    if ($userId) {
+        User::find($userId)?->update(['is_impersonating' => false]);
     }
+
+    return response()->json([
+        'message' => 'Impersonation stopped',
+    ]);
+}
 }
