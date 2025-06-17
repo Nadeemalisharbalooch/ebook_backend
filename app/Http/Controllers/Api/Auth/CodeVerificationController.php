@@ -27,7 +27,9 @@ class CodeVerificationController extends Controller
 
     public function store(Request $request)
     {
-        $codeInput = implode('', $request->input('code')); // Combine the 4 digits into one string
+
+        // $codeInput = implode('', $request->input('code')); // Combine the 4 digits into one string
+        $codeInput = $request->input('code'); // Assuming the code is sent as a single input field
         $user = Auth::user();
 
         if ($user->verification_code == $codeInput) {

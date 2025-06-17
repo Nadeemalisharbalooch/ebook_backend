@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\Auth\UserRegisterEvent;
 use App\Models\User;
 
 class UserObserver
@@ -20,7 +21,11 @@ class UserObserver
 
         // create random username
         $user->username = 'user'.$user->id;
+        $user->verification_code = rand(100000, 999999);
+
         $user->saveQuietly();
+        event(new UserRegisterEvent($user));
+
 
         // Todo: Send Verification Email
 
