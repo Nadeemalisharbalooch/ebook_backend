@@ -16,7 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'isAdmin' => \App\Http\Middleware\AdminMiddleware::class,
             'isUser' => \App\Http\Middleware\UserMiddleware::class,
             'impersonate' => \App\Http\Middleware\ImpersonateMiddleware::class,
-
         ]);
 
     })
