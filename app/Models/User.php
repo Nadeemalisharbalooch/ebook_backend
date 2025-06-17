@@ -125,6 +125,7 @@ class User extends Authenticatable
     {
         return $this->is_admin == 1;
     }
+
     /**
      * Determine if the user is a user/client.
      */

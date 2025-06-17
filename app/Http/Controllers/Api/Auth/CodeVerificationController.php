@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Events\Auth\CodeVerificationEvent;
-use App\Events\Auth\SendWelcomeEmailEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Auth\AuthUserResource;
 use App\Services\ResponseService;
@@ -24,8 +23,6 @@ class CodeVerificationController extends Controller
             $user->is_active = true;
             /** @var \App\Models\User $user */
             $user->save();
-
-            event(new SendWelcomeEmailEvent($user));
 
             $resource = new AuthUserResource($user);
 

@@ -3,6 +3,7 @@
 namespace App\Listeners\Auth;
 
 use App\Events\Auth\SendWelcomeEmailEvent;
+use Shaz3e\EmailBuilder\Services\EmailBuilderService;
 
 class SendWelcomeEmailListener
 {
@@ -21,6 +22,11 @@ class SendWelcomeEmailListener
     {
         $user = $event->user;
 
-        // Todo: Send Welcome Email
+        $email = new EmailBuilderService;
+        $email->sendEmailByKey('welcome_email', $user->email, [
+            'name' => $user->name,
+            'app_name' => config('app.name'),
+            'app_url' => config('app.url'),
+        ]);
     }
 }

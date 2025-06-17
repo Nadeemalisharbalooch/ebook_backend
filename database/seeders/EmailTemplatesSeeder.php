@@ -13,38 +13,51 @@ class EmailTemplatesSeeder extends Seeder
     public function run(): void
     {
         $email_templates = [
-            ['id' => '1', 'header_image' => null, 'header_text' => null, 'header_text_color' => '#000000', 'header_background_color' => '#000000', 'footer_image' => null, 'footer_text' => null, 'footer_text_color' => null, 'footer_background_color' => null, 'footer_bottom_image' => null, 'key' => 'welcome_email', 'name' => 'Welcome Email', 'subject' => 'Welcome Email {app_name}', 'body' => 'Dear {name},
+            ['id' => '1', 'header_image' => null, 'header_text' => null, 'header_text_color' => null, 'header_background_color' => null, 'footer_image' => null, 'footer_text' => null, 'footer_text_color' => null, 'footer_background_color' => null, 'footer_bottom_image' => null, 'key' => 'code_verification', 'name' => 'Code Verification Email', 'subject' => 'Verify Your Account {app_name}', 'body' => 'Dear {name},
 
-                    Thank you for registering {app_name}
+              Thank you for registering with {app_name}.
 
-                    Please  verify your email.
+              To complete your account verification, please enter the 6-digit verification code below:
 
-                    Regards,
-                    {app_name}', 'placeholders' => '["app_name", "name"]', 'header' => '0', 'footer' => '0', 'deleted_at' => null, 'created_at' => '2025-06-04 18:02:55', 'updated_at' => '2025-06-04 18:03:27'],
-            ['id' => '2', 'header_image' => null, 'header_text' => null, 'header_text_color' => null, 'header_background_color' => null, 'footer_image' => null, 'footer_text' => null, 'footer_text_color' => null, 'footer_background_color' => null, 'footer_bottom_image' => null, 'key' => 'verification_email', 'name' => 'Verify Your Email', 'subject' => 'Verify Your Email', 'body' => 'Hello {name},
+              Your Verification Code:
+              {verification_code}
 
-                    Please verify your email by clicking the link below
+              If you did not request this verification, please ignore this email or contact our support team immediately.
 
-                    <a href="{url}">{url}</a>
+              If you have any questions or need assistance, feel free to reach out.
 
-                    Regards,
-                    {app_name}', 'placeholders' => '["name", "app_name", "url"]', 'header' => '0', 'footer' => '0', 'deleted_at' => null, 'created_at' => '2025-06-04 18:09:41', 'updated_at' => '2025-06-04 20:28:48'],
-            ['id' => '3', 'header_image' => null, 'header_text' => null, 'header_text_color' => null, 'header_background_color' => null, 'footer_image' => null, 'footer_text' => null, 'footer_text_color' => null, 'footer_background_color' => null, 'footer_bottom_image' => null, 'key' => 'forget_password', 'name' => 'Forget Password', 'subject' => 'Forget Password', 'body' => 'Dear {name},
+              Best regards,
+              The {app_name} Team
+              {app_url}', 'placeholders' => '["name", "app_name", "verification_code", "app_url"]', 'header' => '0', 'footer' => '0', 'deleted_at' => null, 'created_at' => '2025-06-17 14:48:36', 'updated_at' => '2025-06-17 14:53:59'],
+            ['id' => '2', 'header_image' => null, 'header_text' => null, 'header_text_color' => null, 'header_background_color' => null, 'footer_image' => null, 'footer_text' => null, 'footer_text_color' => null, 'footer_background_color' => null, 'footer_bottom_image' => null, 'key' => 'welcome_email', 'name' => 'Welcome Email', 'subject' => 'Welcome to {app_name} – You’re All Set!', 'body' => 'Dear {name},
 
-                    You requested to change your password please click the link below to reset your password.
+              Welcome to {app_name} – we’re excited to have you on board!
 
-                    <a href="{url}">Change Password</a>
+              Your account has been successfully verified, and you\'re now ready to explore everything we have to offer. we\'re here to support you every step of the way.
 
-                    Regards,
-                    {app_name}', 'placeholders' => '["name", "app_name", "url"]', 'header' => '0', 'footer' => '0', 'deleted_at' => null, 'created_at' => '2025-06-04 20:34:50', 'updated_at' => '2025-06-04 20:34:50'],
-            ['id' => '4', 'header_image' => null, 'header_text' => null, 'header_text_color' => null, 'header_background_color' => null, 'footer_image' => null, 'footer_text' => null, 'footer_text_color' => null, 'footer_background_color' => null, 'footer_bottom_image' => null, 'key' => 'verification_code', 'name' => 'Send Verification Code', 'subject' => 'Verification Code', 'body' => 'Dear {name}
+              Thank you for choosing {app_name}. We look forward to helping you succeed!
 
-          Please enter your verification code as below.
+              Warm regards,
+              The {app_name} Team
+              {app_url}', 'placeholders' => '["name", "app_name", "app_url"]', 'header' => '0', 'footer' => '0', 'deleted_at' => null, 'created_at' => '2025-06-17 14:56:20', 'updated_at' => '2025-06-17 14:56:20'],
+            ['id' => '3', 'header_image' => null, 'header_text' => null, 'header_text_color' => null, 'header_background_color' => null, 'footer_image' => null, 'footer_text' => null, 'footer_text_color' => null, 'footer_background_color' => null, 'footer_bottom_image' => null, 'key' => 'reset_password', 'name' => 'Reset Your Password', 'subject' => 'Reset Your Password – {app_name}', 'body' => 'Dear {name},
 
-          {code}
+              We received a request to reset the password for your {app_name} account.
 
-          Regards,
-          {app_name}', 'placeholders' => '["name", "code", "app_name"]', 'header' => '0', 'footer' => '0', 'deleted_at' => null, 'created_at' => '2025-06-04 21:56:02', 'updated_at' => '2025-06-04 21:56:02'],
+              To reset your password, please click the link below:
+
+              Reset Password:
+              {reset_url}
+
+              This link will expire in 30 minutes for your security.
+
+              If you did not request this change, please ignore this email or contact our support team immediately.
+
+              We\'re here if you need any help.
+
+              Best regards,
+              The {app_name} Team
+              {app_url}', 'placeholders' => '["name", "app_name", "app_url", "reset_url"]', 'header' => '0', 'footer' => '0', 'deleted_at' => null, 'created_at' => '2025-06-17 14:59:46', 'updated_at' => '2025-06-17 14:59:46'],
         ];
 
         DB::table('email_templates')->insert($email_templates);
