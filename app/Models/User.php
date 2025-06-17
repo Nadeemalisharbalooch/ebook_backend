@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Events\Auth\CodeVerificationEvent;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Shaz3e\EmailBuilder\Services\EmailBuilderService;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -97,17 +97,7 @@ class User extends Authenticatable
     {
         if (! $this->email_verified_at) {
 
-            /*  $email = new EmailBuilderService;
-
-             $user = User::findOrFail($this->id);
-
-             $verification_link = route('auth.verification');
-
-             $email->sendEmailByKey('welcome_email', $user->email, [
-                 'name' => $user->name,
-                 'url' => $verification_link,
-                 'app_name' => config('app.name'),
-             ]); */
+            event(new CodeVerificationEvent($this));
 
             return 'Your account is not verified';
         }
