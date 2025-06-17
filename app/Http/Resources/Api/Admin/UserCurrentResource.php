@@ -33,6 +33,7 @@ class UserCurrentResource extends JsonResource
                 'is_suspended' => $this->is_suspended,
                 'is_locked' => $this->is_locked,
                 'is_admin' => $this->is_admin,
+                'is_impersonating' => $this->is_impersonating,
                 'created_at' => $this->created_at,
 
                 'profile' => [
@@ -54,4 +55,3 @@ class UserCurrentResource extends JsonResource
         }
     }
 }
-
