@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\StaffUserController;
 use App\Http\Controllers\Api\Admin\UserController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
