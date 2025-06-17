@@ -9,8 +9,10 @@ use App\Http\Requests\Admin\UpdateStaffUserRequest;
 use App\Http\Resources\Api\Admin\StaffUserResource;
 use App\Models\Permission;
 use App\Models\User;
+
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class StaffUserController extends Controller
 {
@@ -70,37 +72,42 @@ class StaffUserController extends Controller
         );
     }
 
-    public function update(UpdateStaffUserRequest $request, string $id)
+ public function update(UpdateStaffUserRequest $request, string $id)
 {
-    return $request->all();
-    $this->authorizePermission('clients.update');
-
-    $validated = $request->validated();
     $user = User::with('profile')->findOrFail($id);
+    $data = $request->validated();
 
     // Handle avatar upload
     if ($request->hasFile('profile.avatar_file')) {
-        $file = $request->file('profile.avatar_file');
-        $path = $file->store('avatars', 'public'); // stores in storage/app/public/avatars
-        $validated['profile']['avatar'] = $path;
+        // Delete old avatar if exists
+        if ($user->profile?->avatar) {
+            Storage::disk('public')->delete('avatars/'.$user->profile->avatar);
+        }
+
+        // Store new avatar
+        $filename = $request->file('profile.avatar_file')->store('avatars', 'public');
+        $data['profile']['avatar'] = basename($filename);
     }
 
-    $user->update($validated);
+    // Update user
+    $user->update($data);
 
-    if (isset($validated['profile']) && is_array($validated['profile'])) {
-        $user->profile()->updateOrCreate(
+    // Update profile
+    if (isset($data['profile'])) {
+        $user->profile()->update(
             ['user_id' => $user->id],
-            $validated['profile']
+            $data['profile']
         );
     }
 
-    if (isset($validated['roles'])) {
-        $user->syncRoles($validated['roles']);
+    // Sync roles
+    if (isset($data['roles'])) {
+        $user->syncRoles($data['roles']);
     }
 
     return ResponseService::success(
-        new StaffUserResource($user->load(['roles', 'profile'])),
-        'Staff user updated successfully'
+        new StaffUserResource($user->fresh(['roles', 'profile'])),
+        'Staff updated successfully'
     );
 }
 
