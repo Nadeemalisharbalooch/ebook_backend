@@ -21,6 +21,7 @@ class CodeVerificationController extends Controller
         if ($user->verification_code == $codeInput) {
             // Mark the user as verified
             $user->email_verified_at = now();
+            $user->is_active = true;
             /** @var \App\Models\User $user */
             $user->save();
 
