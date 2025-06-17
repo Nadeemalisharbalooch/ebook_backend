@@ -35,7 +35,7 @@ class CodeVerificationController extends Controller
             );
         }
 
-        return ResponseService::error('Verification code is invalid, please try again', 200);
+        return ResponseService::error('Verification code is invalid, please try again', 422);
     }
 
     public function resendVerificationCode(Request $request)
