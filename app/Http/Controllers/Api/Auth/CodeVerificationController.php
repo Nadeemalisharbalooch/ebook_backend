@@ -40,6 +40,7 @@ class CodeVerificationController extends Controller
 
     public function resendVerificationCode(Request $request)
     {
+
         $user = Auth::user();
 
         event(new CodeVerificationEvent($user));

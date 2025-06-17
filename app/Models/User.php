@@ -41,6 +41,7 @@ class User extends Authenticatable
         'is_active',
         'is_suspended',
         'email_verified_at',
+        'is_impersonating',
     ];
 
     protected $dates = ['deleted_at'];
@@ -71,6 +72,7 @@ class User extends Authenticatable
         'is_active' => 'boolean',
         'is_suspended' => 'boolean',
         'is_admin' => 'boolean',
+        'is_impersonating' => 'boolean',
     ];
 
     /**
@@ -123,7 +125,6 @@ class User extends Authenticatable
     {
         return $this->is_admin == 1;
     }
-
     /**
      * Determine if the user is a user/client.
      */
