@@ -10,7 +10,6 @@ use App\Http\Resources\Api\Admin\UserResource;
 use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -79,7 +78,7 @@ class UserController extends Controller
     {
         $this->authorizePermission('users.update');
 
-        $user->is_locked = !$user->is_locked;
+        $user->is_locked = ! $user->is_locked;
         $user->save();
 
         return ResponseService::success(new UserResource($user), 'Lock status updated.');
@@ -89,17 +88,17 @@ class UserController extends Controller
     {
         $this->authorizePermission('users.update');
 
-        $user->is_suspended = !$user->is_suspended;
+        $user->is_suspended = ! $user->is_suspended;
         $user->save();
 
         return ResponseService::success(new UserResource($user), 'Suspended status updated.');
     }
 
-  public function update(UserUpdateRequest $request, string $id)
-{
-    $this->authorizePermission('users.update');
+    public function update(UserUpdateRequest $request, string $id)
+    {
+        $this->authorizePermission('users.update');
 
-    $validated = $request->validated();
+        $validated = $request->validated();
 
         $user = User::with('profile')->findOrFail($id);
         $user->update($validated);
@@ -155,7 +154,7 @@ class UserController extends Controller
 
         $user = User::withTrashed()->findOrFail($userId);
 
-        if (!$user->trashed()) {
+        if (! $user->trashed()) {
             return ResponseService::error('User is not deleted', 400);
         }
 
@@ -180,7 +179,7 @@ class UserController extends Controller
 
         $user = User::withTrashed()->findOrFail($userId);
 
-        if (!$user->trashed()) {
+        if (! $user->trashed()) {
             return ResponseService::error('User is not deleted', 400);
         }
 
@@ -210,7 +209,7 @@ class UserController extends Controller
 
     protected function authorizePermission(string $permission)
     {
-        if (!auth()->user()->can($permission)) {
+        if (! auth()->user()->can($permission)) {
             abort(403, 'Unauthorized.');
         }
     }

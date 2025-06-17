@@ -21,7 +21,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Verification
     Route::get('/verification', [CodeVerificationController::class, 'verification']);
     Route::post('/verification', [CodeVerificationController::class, 'store'])->name('verification');
-    Route::get('/verification/{email}/{code}', [CodeVerificationController::class, 'verificationCode'])->name('verification.code');
     // Send Verification Code
     Route::post('/resend-verification', [CodeVerificationController::class, 'resendVerificationCode'])->name('resend.verification');
 

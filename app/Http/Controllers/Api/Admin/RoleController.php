@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Http\Resources\Api\Admin\RoleResource;
-use App\Models\Permission;
 use App\Models\Role;
 use App\Services\ResponseService;
 
@@ -67,7 +66,7 @@ class RoleController extends Controller
     public function toggleActive(Role $role)
     {
         $this->authorizePermission('roles.update');
-        $role->is_active = !$role->is_active;
+        $role->is_active = ! $role->is_active;
         $role->save();
 
         return ResponseService::success(new RoleResource($role), 'Active status updated.');
@@ -100,7 +99,7 @@ class RoleController extends Controller
         $this->authorizePermission('roles.restore');
         $role = Role::withTrashed()->findOrFail($roleId);
 
-        if (!$role->trashed()) {
+        if (! $role->trashed()) {
             return ResponseService::error('Role is not deleted', 400);
         }
 
@@ -117,7 +116,7 @@ class RoleController extends Controller
         $this->authorizePermission('roles.force.delete');
         $role = Role::withTrashed()->findOrFail($role);
 
-        if (!$role->trashed()) {
+        if (! $role->trashed()) {
             return ResponseService::error('Role is not deleted', 400);
         }
 
@@ -130,7 +129,7 @@ class RoleController extends Controller
 
     protected function authorizePermission(string $permission)
     {
-        if (!auth()->user()->can($permission)) {
+        if (! auth()->user()->can($permission)) {
             abort(403, 'Unauthorized.');
         }
     }

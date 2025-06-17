@@ -2,34 +2,33 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Events\Auth\CodeVerificationEvent;
+use App\Events\Auth\SendWelcomeEmailEvent;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\Auth\AuthUserResource;
 use App\Models\User;
+use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CodeVerificationController extends Controller
 {
-    public function verification(Request $request)
+    public function verification()
     {
         $user = Auth::user();
 
-        if (! $user) {
-            // Todo: Redirect to login page
-        }
+        $resource = new AuthUserResource($user);
 
-        // Example: Check if the user is already verified
-        if (! is_null($user->email_verified_at)) {
-            // Todo: Redirect to dashboard
-        }
-
-        // Todo: Redirect to verification page
+        return ResponseService::success(
+            $resource,
+            'Please verify your account by entering a verification code sent to your email.'
+        );
     }
 
     public function store(Request $request)
     {
-
-        // $codeInput = implode('', $request->input('code')); // Combine the 4 digits into one string
-        $codeInput = $request->input('code'); // Assuming the code is sent as a single input field
+        // Assuming the code is sent as a single input field
+        $codeInput = $request->input('code');
         $user = Auth::user();
 
         if ($user->verification_code == $codeInput) {
@@ -38,38 +37,25 @@ class CodeVerificationController extends Controller
             /** @var \App\Models\User $user */
             $user->save();
 
-            // Todo: Send Welcome Email
+            event(new SendWelcomeEmailEvent($user));
 
-            if ($user->is_admin) {
-                // Todo: Rdirect to admin dashboard
-            } else {
-                // Todo: Redirect to user dashboard
-            }
+            $resource = new AuthUserResource($user);
+
+            return ResponseService::success(
+                $resource,
+                'Your code has been verified you can now login'
+            );
         }
-        // Todo: Redirect to verification page
 
-    }
-
-    public function verificationCode(Request $request)
-    {
-        if ($request->email && $request->code) {
-            $user = User::where([
-                'email' => $request->email,
-                'verification_code' => $request->code,
-            ])->first();
-
-            if ($user) {
-                Auth::login($user);
-
-                return redirect()->route('verification');
-            }
-        }
+        return ResponseService::error('Verification code is invalid, please try again', 200);
     }
 
     public function resendVerificationCode(Request $request)
     {
         $user = Auth::user();
 
-        // Todo: Resend Verification Code via Event
+        event(new CodeVerificationEvent($user));
+
+        return ResponseService::success('New verification code has been sent to your email.');
     }
 }
