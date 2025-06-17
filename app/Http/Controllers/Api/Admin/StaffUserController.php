@@ -73,46 +73,42 @@ class StaffUserController extends Controller
     }
 
  public function update(UpdateStaffUserRequest $request, string $id)
-{
-    $user = User::with('profile')->findOrFail($id);
-    $data = $request->validated();
+    {
+         $this->authorizePermission('clients.update');
+        $validated = $request->validated();
 
-    // Handle avatar upload
-    if ($request->hasFile('profile.avatar_file')) {
-        // Delete old avatar if exists
-        if ($user->profile?->avatar) {
-            Storage::disk('public')->delete('avatars/'.$user->profile->avatar);
+        $user = User::with('profile')->findOrFail($id);
+        $user->update($validated);
+
+        if (isset($validated['profile']) && is_array($validated['profile'])) {
+            $user->profile()->update(
+                ['user_id' => $user->id],
+                $validated['profile']
+            );
         }
 
-        // Store new avatar
-        $filename = $request->file('profile.avatar_file')->store('avatars', 'public');
-        $data['profile']['avatar'] = basename($filename);
-    }
+        if (isset($validated['role'])) {
+            $user->syncRoles([$validated['role']]);
+        }
 
-    // Update user
-    $user->update($data);
-
-    // Update profile
-    if (isset($data['profile'])) {
-        $user->profile()->update(
-            ['user_id' => $user->id],
-            $data['profile']
+        return ResponseService::success(
+            new StaffUserResource($user->load(['roles', 'profile'])),
+            'Staff user updated successfully'
         );
     }
 
-    // Sync roles
-    if (isset($data['roles'])) {
-        $user->syncRoles($data['roles']);
-    }
 
-    return ResponseService::success(
-        new StaffUserResource($user->fresh(['roles', 'profile'])),
-        'Staff updated successfully'
-    );
-}
+    public function destroy(string $id)
+    {
+        $user = User::findOrFail($id);
 
+        if ($user->id === Auth::id()) {
+            return ResponseService::error('You cannot delete your own account', 403);
+        }
 
-    public function destroy(User $user)
+        if ($user->is_admin) {
+            return ResponseService::error('You cannot delete an admin user', 403);
+        }
     {
         $this->authorizePermission('clients.delete');
 
@@ -123,7 +119,7 @@ class StaffUserController extends Controller
             'Staff User deleted successfully'
         );
     }
-
+    }
     public function trashed()
     {
         $this->authorizePermission('clients.list');

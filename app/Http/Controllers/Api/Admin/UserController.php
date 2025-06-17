@@ -99,52 +99,23 @@ class UserController extends Controller
 {
     $this->authorizePermission('users.update');
 
-    $user = User::with('profile')->findOrFail($id);
-
-    if (in_array($user->id, [1, 2, 3])) {
-        return ResponseService::error(
-            'You do not have permission to update this user',
-            403
-        );
-    }
-
     $validated = $request->validated();
 
-    // Handle avatar upload if present
-    if ($request->hasFile('profile.avatar')) {
-        // Delete old avatar if exists
-        if ($user->profile && $user->profile->avatar) {
-            Storage::disk('public')->delete(
-                str_replace('/storage/', '', $user->profile->avatar)
+        $user = User::with('profile')->findOrFail($id);
+        $user->update($validated);
+
+        if (isset($validated['profile']) && is_array($validated['profile'])) {
+            $user->profile()->update(
+                ['user_id' => $user->id],
+                $validated['profile']
             );
         }
 
-        // Store new avatar
-        $avatarPath = $request->file('profile.avatar')->store('avatars', 'public');
-        $validated['profile']['avatar'] = '/storage/'.$avatarPath;
-    } elseif (isset($validated['profile']['avatar']) && is_string($validated['profile']['avatar'])) {
-        // Keep existing avatar if no new file was uploaded
-        $validated['profile']['avatar'] = $user->profile->avatar ?? null;
-    }
-
-    $user->update($validated);
-
-    if (isset($validated['profile']) && is_array($validated['profile'])) {
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            $validated['profile']
+        return ResponseService::success(
+            new UserResource($user->load(['roles', 'profile'])),
+            'user updated successfully'
         );
     }
-
-    if (isset($validated['role'])) {
-        $user->syncRoles($validated['role']);
-    }
-
-    return ResponseService::success(
-        new UserResource($user->load(['roles', 'profile'])),
-        'User updated successfully'
-    );
-}
 
     public function destroy(User $user)
     {
