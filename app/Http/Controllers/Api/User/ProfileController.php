@@ -9,6 +9,7 @@ use App\Models\Profile;
 use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {

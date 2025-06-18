@@ -33,7 +33,6 @@ public function update(ProfileUpdateRequest $request)
     $user->update(
         collect($validated)->only(['username', 'name', 'email'])->toArray()
     );
-
     $profileData = $validated['profile'] ?? [];
 
     if ($request->hasFile('avatar')) {
