@@ -27,7 +27,7 @@ Route::get('profile', [ProfileController::class, 'view'])
     ->middleware(['auth', 'impersonate'])
     ->name('profile');
 
-Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::put('profile/password', [ProfileController::class, 'updatePassword']);
 // Role routes
 Route::prefix('roles')->group(function () {
