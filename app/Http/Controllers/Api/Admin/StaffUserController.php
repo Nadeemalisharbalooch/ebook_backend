@@ -15,7 +15,6 @@ class StaffUserController extends Controller
 {
     public function index()
     {
-
         $this->authorizePermission('clients.list');
 
         $users = User::with(['profile'])
@@ -69,27 +68,38 @@ class StaffUserController extends Controller
     public function update(UpdateStaffUserRequest $request, string $id)
     {
         $this->authorizePermission('clients.update');
+
+        // Find the user by ID
+        $user = User::with('profile')->findOrFail($id);
+
+        // Validate the request data
         $validated = $request->validated();
 
-        $user = User::with('profile')->findOrFail($id);
+        // Update the user with the validated data
         $user->update($validated);
 
-        if (isset($validated['profile']) && is_array($validated['profile'])) {
-            $user->profile()->update(
+        // Handle profile update or creation
+        if (!empty($validated['profile']) && is_array($validated['profile'])) {
+            $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
                 $validated['profile']
             );
         }
 
-        if (isset($validated['role'])) {
-            $user->syncRoles([$validated['role']]);
+        // Sync roles if provided
+        if (!empty($validated['roles'])) {
+            $user->syncRoles($validated['roles']);
         }
 
         return ResponseService::success(
-            new StaffUserResource($user->load(['roles', 'profile'])),
+            new StaffUserResource(
+                $user->load(['roles', 'profile'])
+            ),
             'Staff user updated successfully'
         );
     }
+
+
 
     public function destroy(string $id)
     {
@@ -111,7 +121,6 @@ class StaffUserController extends Controller
             new StaffUserResource($user),
             'Staff User deleted successfully'
         );
-
     }
 
     public function trashed()

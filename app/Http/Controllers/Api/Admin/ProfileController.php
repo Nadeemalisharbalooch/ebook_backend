@@ -8,7 +8,7 @@ use App\Http\Requests\Admin\UpdatePassword;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
     public function view(Request $request)
@@ -25,27 +25,38 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     /** @var \App\Models\User */
-    public function update(ProfileUpdateRequest $request)
-    {
-        $user = Auth::user();
+public function update(Request $request)
+{
+    $user = Auth::user();
+    $validated = $request->validated();
 
-        $validated = $request->validated();
+    $user->update(
+        collect($validated)->only(['username', 'name', 'email'])->toArray()
+    );
 
-        //  update user table fields
-        $user->update(collect($validated)->only(['name', 'email', 'username'])->toArray());
+    $profileData = $validated['profile'] ?? [];
 
-        // Profile table update
-        $profile = $user->profile;
-        if ($profile) {
-            $profile->update(collect($validated)->except(['name', 'email', 'username'])->toArray());
-        } else {
-            return ResponseService::error('User profile does not exist.', 404);
+    if ($request->hasFile('avatar')) {
+        // Delete old avatar if exists
+        if ($user->profile && $user->profile->avatar) {
+            Storage::delete('public/' . $user->profile->avatar);
         }
 
-        return ResponseService::success(
-            'Profile updated successfully'
+        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        $profileData['avatar'] = $avatarPath;
+    }
+
+    if (!empty($profileData)) {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $profileData
         );
     }
+
+    return ResponseService::success('Profile updated successfully');
+}
+
+
 
     /**
      * Update the authenticated user's password.

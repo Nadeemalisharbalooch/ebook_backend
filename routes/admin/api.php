@@ -60,7 +60,6 @@ Route::patch('/{user}/toggle-suspended', [StaffUserController::class, 'toggleSus
 Route::patch('/{user}/toggle-email-verified', [StaffUserController::class, 'email_verified']);
 
 // Staff routes
-Route::apiResource('staff', UserController::class);
 Route::prefix('staff')->group(function () {
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
@@ -68,6 +67,7 @@ Route::prefix('staff')->group(function () {
     Route::delete('{user}/force-delete', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
     Route::put('/{user}/update-password', [UserController::class, 'updatePassword']);
 });
+Route::apiResource('staff', StaffUserController::class);
 
 // Global Email Templates
 Route::apiResource('global-email-templates', GlobalEmailTemplateController::class);

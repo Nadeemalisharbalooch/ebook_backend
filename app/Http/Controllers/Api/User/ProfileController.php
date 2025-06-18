@@ -22,31 +22,33 @@ class ProfileController extends Controller
 
     public function update(ProfileUpdateRequest $request)
     {
-        $user = auth()->user();
-        $validated = $request->validated();
+    $user = Auth::user();
+    $validated = $request->validated();
 
-        // One-liner: update user table fields
-        $user->update(collect($validated)->only(['name', 'email', 'username'])->toArray());
+    $user->update(
+        collect($validated)->only(['username', 'name', 'email'])->toArray()
+    );
 
-        // Profile data update
-        $profile = $user->profile;
-        if ($profile) {
-            $profile->update(collect($validated)->except(['name', 'email', 'username'])->toArray());
-        } else {
-            return ResponseService::error('User profile does not exist.', 404);
+    $profileData = $validated['profile'] ?? [];
+
+    if ($request->hasFile('avatar')) {
+        // Delete old avatar if exists
+        if ($user->profile && $user->profile->avatar) {
+            Storage::delete('public/' . $user->profile->avatar);
         }
 
-        return ResponseService::success(
-            'Profile updated successfully'
+        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        $profileData['avatar'] = $avatarPath;
+    }
+
+    if (!empty($profileData)) {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $profileData
         );
     }
 
-    public function updatePassword(updatePassword $request)
-    {
-        $user = auth()->user();
-        $validated = $request->validated();
-        $user->update($validated);
+    return ResponseService::success('Profile updated successfully');
+}
 
-        return ResponseService::success('Password updated successfully.');
-    }
 }
