@@ -19,22 +19,24 @@ class ProfileUpdateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
- public function rules(): array
+public function rules(): array
 {
     return [
         'username' => 'nullable|string|max:255',
-        'name' => 'nullable|string|max:255',
-        'email' => 'nullable|email|max:255',
-        'profile.avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'profile.gender' => 'nullable|string|in:male,female,other',
-        'profile.dob' => 'nullable|date|before_or_equal:today',
-        'profile.phone' => 'nullable|string|max:20',
-        'profile.country' => 'nullable|string|max:100',
-        'profile.state' => 'nullable|string|max:100',
-        'profile.city' => 'nullable|string|max:100',
-        'profile.zipcode' => 'nullable|string|max:20',
-        'profile.address' => 'nullable|string|max:255',
+        'name'     => 'nullable|string|max:255',
+        'email'    => 'nullable|email|max:255',
+        'avatar'   => 'nullable|file|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'gender'   => 'nullable|string|in:male,female,other',
+        'dob'      => 'nullable|date|before_or_equal:today',
+        'phone'    => 'nullable|string|max:20',
+        'country'  => 'nullable|string|max:100',
+        'state'    => 'nullable|string|max:100',
+        'city'     => 'nullable|string|max:100',
+        'zipcode'  => 'nullable|string|max:20',
+        'address'  => 'nullable|string|max:255',
     ];
 }
+
+
 
 }
