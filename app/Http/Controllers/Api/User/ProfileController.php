@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -52,4 +53,13 @@ class ProfileController extends Controller
     return ResponseService::success('Profile updated successfully');
 }
 
+
+ public function updatePassword(UpdatePassword $request)
+    {
+        $user = Auth::user();
+        $validated = $request->validated();
+        $user->update($validated);
+
+        return ResponseService::success('Password updated successfully.');
+    }
 }
