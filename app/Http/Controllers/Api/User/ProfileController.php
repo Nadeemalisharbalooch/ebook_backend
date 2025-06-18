@@ -9,7 +9,6 @@ use App\Models\Profile;
 use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -22,33 +21,33 @@ class ProfileController extends Controller
         return ResponseService::success($user);
     }
 
-    public function update(ProfileUpdateRequest $request)
-    {
+   public function update(ProfileUpdateRequest $request)
+{
     $user = Auth::user();
-    $validated = $request->validated();
+    $v = $request->validated();
 
-    $user->update(
-        collect($validated)->only(['username', 'name', 'email'])->toArray()
-    );
+    // Update user fields
+    $user->update($request->only(['username', 'name', 'email']));
 
-    $profileData = $validated['profile'] ?? [];
+    // Collect profile fields
+    $profileData = $request->only([
+      'avatar','gender','dob','phone',
+      'country','state','city','zipcode','address'
+    ]);
 
-    if ($request->hasFile('avatar')) {
-        // Delete old avatar if exists
-        if ($user->profile && $user->profile->avatar) {
-            Storage::delete('public/' . $user->profile->avatar);
+    // Handle avatar upload
+    if ($file = $request->file('avatar')) {
+        if ($old = $user->profile?->avatar) {
+            Storage::disk('public')->delete($old);
         }
-
-        $avatarPath = $request->file('avatar')->store('avatars', 'public');
-        $profileData['avatar'] = $avatarPath;
+        $profileData['avatar'] = $file->store('avatars', 'public');
     }
 
-    if (!empty($profileData)) {
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            $profileData
-        );
-    }
+    // Update or create profile
+    $user->profile()->updateOrCreate(
+        ['user_id' => $user->id],
+        $profileData
+    );
 
     return ResponseService::success('Profile updated successfully');
 }
