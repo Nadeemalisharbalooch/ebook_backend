@@ -37,5 +37,5 @@ public function __invoke(Request $request)
     ], 'User statistics retrieved successfully');
 }
 
-
 }
+
