@@ -65,7 +65,7 @@ Route::prefix('staff')->group(function () {
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::post('{user}/restore', [StaffUserController::class, 'restore'])->name('staff.restore');
     Route::delete('{user}/force-delete', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
-    Route::put('/{user}/update-password', [UserController::class, 'updatePassword']);
+    Route::put('/{user}/update-password', [StaffUserController::class, 'updatePassword']);
 });
 Route::apiResource('staff', StaffUserController::class);
 
