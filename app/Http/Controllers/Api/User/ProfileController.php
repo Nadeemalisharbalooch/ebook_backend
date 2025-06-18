@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+
     public function view(Request $request)
     {
-
         $user = $request->user()->load('profile');
 
         return ResponseService::success($user);
@@ -43,7 +43,6 @@ class ProfileController extends Controller
         }
         $profileData['avatar'] = $file->store('avatars', 'public');
     }
-
     // Update or create profile
     $user->profile()->updateOrCreate(
         ['user_id' => $user->id],
