@@ -25,7 +25,7 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     /** @var \App\Models\User */
-public function update(Request $request)
+public function update(ProfileUpdateRequest $request)
 {
     $user = Auth::user();
     $validated = $request->validated();
