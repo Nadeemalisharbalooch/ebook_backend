@@ -9,41 +9,53 @@ use App\Models\Profile;
 use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+
     public function view(Request $request)
     {
-
         $user = $request->user()->load('profile');
 
         return ResponseService::success($user);
     }
 
-    public function update(ProfileUpdateRequest $request)
-    {
-        $user = auth()->user();
-        $validated = $request->validated();
+   public function update(ProfileUpdateRequest $request)
+{
+    $user = Auth::user();
+    $v = $request->validated();
 
-        // One-liner: update user table fields
-        $user->update(collect($validated)->only(['name', 'email', 'username'])->toArray());
+    // Update user fields
+    $user->update($request->only(['username', 'name', 'email']));
 
-        // Profile data update
-        $profile = $user->profile;
-        if ($profile) {
-            $profile->update(collect($validated)->except(['name', 'email', 'username'])->toArray());
-        } else {
-            return ResponseService::error('User profile does not exist.', 404);
+    // Collect profile fields
+    $profileData = $request->only([
+      'avatar','gender','dob','phone',
+      'country','state','city','zipcode','address'
+    ]);
+
+    // Handle avatar upload
+    if ($file = $request->file('avatar')) {
+        if ($old = $user->profile?->avatar) {
+            Storage::disk('public')->delete($old);
         }
-
-        return ResponseService::success(
-            'Profile updated successfully'
-        );
+        $profileData['avatar'] = $file->store('avatars', 'public');
     }
+    // Update or create profile
+    $user->profile()->updateOrCreate(
+        ['user_id' => $user->id],
+        $profileData
+    );
 
-    public function updatePassword(updatePassword $request)
+    return ResponseService::success('Profile updated successfully');
+}
+
+
+ public function updatePassword(UpdatePassword $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $validated = $request->validated();
         $user->update($validated);
 

@@ -31,7 +31,7 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        $this->authorizePermission('users.create');
+        // $this->authorizePermission('users.create');
 
         $validated = $request->validated();
         unset($validated['email_verified_at']);
@@ -50,7 +50,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        $this->authorizePermission('users.read');
+        /*   $this->authorizePermission('users.read'); */
 
         if (in_array($user->id, [1, 2, 3])) {
             return ResponseService::error(
@@ -94,24 +94,21 @@ class UserController extends Controller
         return ResponseService::success(new UserResource($user), 'Suspended status updated.');
     }
 
-    public function update(UserUpdateRequest $request, string $id)
+    public function update(UserUpdateRequest $req, string $id)
     {
-        $this->authorizePermission('users.update');
-
-        $validated = $request->validated();
-
+        $validated = $req->validated();
         $user = User::with('profile')->findOrFail($id);
+
         $user->update($validated);
 
-        if (isset($validated['profile']) && is_array($validated['profile'])) {
-            $user->profile()->update(
-                ['user_id' => $user->id],
+        if (!empty($validated['profile']) && is_array($validated['profile'])) {
+            $user->profile()->updateOrCreate(
+                [], // no need to specify columns
                 $validated['profile']
             );
         }
-
         return ResponseService::success(
-            new UserResource($user->load(['roles', 'profile'])),
+            new UserResource($user->load('profile')),
             'user updated successfully'
         );
     }
