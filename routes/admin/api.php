@@ -35,7 +35,6 @@ Route::prefix('roles')->group(function () {
     Route::post('{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
     Route::delete('{role}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
     Route::patch('/{role}/toggle-active', [RoleController::class, 'toggleActive']);
-
 });
 Route::apiResource('roles', RoleController::class);
 
@@ -80,5 +79,4 @@ Route::middleware(['auth'])->group(function () {
     // add just
     Route::get('/impersonate/stop', [ImpersonationController::class, 'stopImpersonate'])->name('impersonate.stop');
     Route::get('/impersonate/{user}', [ImpersonationController::class, 'impersonate'])->name('impersonate.start');
-
 });

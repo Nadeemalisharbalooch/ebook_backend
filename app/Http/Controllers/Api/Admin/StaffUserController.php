@@ -79,7 +79,7 @@ class StaffUserController extends Controller
         $user->update($validated);
 
         // Handle profile update or creation
-        if (!empty($validated['profile']) && is_array($validated['profile'])) {
+        if (! empty($validated['profile']) && is_array($validated['profile'])) {
             $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
                 $validated['profile']
@@ -87,7 +87,7 @@ class StaffUserController extends Controller
         }
 
         // Sync roles if provided
-        if (!empty($validated['roles'])) {
+        if (! empty($validated['roles'])) {
             $user->syncRoles($validated['roles']);
         }
 
@@ -98,8 +98,6 @@ class StaffUserController extends Controller
             'Staff user updated successfully'
         );
     }
-
-
 
     public function destroy(string $id)
     {

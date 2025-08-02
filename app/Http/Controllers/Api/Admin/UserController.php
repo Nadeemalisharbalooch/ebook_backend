@@ -101,12 +101,13 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        if (!empty($validated['profile']) && is_array($validated['profile'])) {
+        if (! empty($validated['profile']) && is_array($validated['profile'])) {
             $user->profile()->updateOrCreate(
                 [], // no need to specify columns
                 $validated['profile']
             );
         }
+
         return ResponseService::success(
             new UserResource($user->load('profile')),
             'user updated successfully'
