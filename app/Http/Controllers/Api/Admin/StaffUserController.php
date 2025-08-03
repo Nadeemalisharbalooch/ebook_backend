@@ -34,7 +34,6 @@ class StaffUserController extends Controller
         $this->authorizePermission('clients.create');
 
         $validated = $request->validated();
-
         unset($validated['email_verified_at']);
 
         $validated['email_verified_at'] = $request->input('email_verified_at') === 'yes'
