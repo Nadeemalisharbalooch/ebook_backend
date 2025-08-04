@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\StaffUserController;
 use App\Http\Controllers\Api\Admin\UserController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,10 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 // Dashboard route
 Route::get('dashboard', DashboardController::class)->name('dashboard');
- Route::get('toggleAccountLock', [ProfileController::class, 'toggleAccountLock']);
+Route::get('toggleAccountLock', [ProfileController::class, 'toggleAccountLock']);
 
 // Profile routes
-
 
 Route::get('profile', [ProfileController::class, 'view'])
     ->middleware(['auth', 'impersonate'])
@@ -37,7 +35,6 @@ Route::prefix('roles')->group(function () {
     Route::post('{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
     Route::delete('{role}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
     Route::patch('/{role}/toggle-active', [RoleController::class, 'toggleActive']);
-
 });
 Route::apiResource('roles', RoleController::class);
 
@@ -62,14 +59,14 @@ Route::patch('/{user}/toggle-suspended', [StaffUserController::class, 'toggleSus
 Route::patch('/{user}/toggle-email-verified', [StaffUserController::class, 'email_verified']);
 
 // Staff routes
-Route::apiResource('staff', UserController::class);
 Route::prefix('staff')->group(function () {
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::get('trashed', [StaffUserController::class, 'trashed'])->name('staff.trashed');
     Route::post('{user}/restore', [StaffUserController::class, 'restore'])->name('staff.restore');
     Route::delete('{user}/force-delete', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
-    Route::put('/{user}/update-password', [UserController::class, 'updatePassword']);
+    Route::put('/{user}/update-password', [StaffUserController::class, 'updatePassword']);
 });
+Route::apiResource('staff', StaffUserController::class);
 
 // Global Email Templates
 Route::apiResource('global-email-templates', GlobalEmailTemplateController::class);
@@ -82,5 +79,4 @@ Route::middleware(['auth'])->group(function () {
     // add just
     Route::get('/impersonate/stop', [ImpersonationController::class, 'stopImpersonate'])->name('impersonate.stop');
     Route::get('/impersonate/{user}', [ImpersonationController::class, 'impersonate'])->name('impersonate.start');
-
 });

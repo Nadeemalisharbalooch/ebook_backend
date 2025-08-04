@@ -5,45 +5,35 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ProfileUpdateRequest;
 use App\Http\Requests\User\updatePassword;
-use App\Models\Profile;
-use App\Models\User;
+use App\Services\ProfileService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
     public function view(Request $request)
     {
-
         $user = $request->user()->load('profile');
 
         return ResponseService::success($user);
     }
 
-    public function update(ProfileUpdateRequest $request)
+    public function update(ProfileUpdateRequest $request, ProfileService $svc)
     {
-        $user = auth()->user();
-        $validated = $request->validated();
-
-        // One-liner: update user table fields
-        $user->update(collect($validated)->only(['name', 'email', 'username'])->toArray());
-
-        // Profile data update
-        $profile = $user->profile;
-        if ($profile) {
-            $profile->update(collect($validated)->except(['name', 'email', 'username'])->toArray());
-        } else {
-            return ResponseService::error('User profile does not exist.', 404);
-        }
-
-        return ResponseService::success(
-            'Profile updated successfully'
+        $svc->update(
+            Auth::user(),
+            $request->only(['username', 'name', 'email']),
+            $request->validated(),
+            $request->file('avatar')
         );
+
+        return ResponseService::success('Profile updated successfully');
     }
 
-    public function updatePassword(updatePassword $request)
+    public function updatePassword(UpdatePassword $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $validated = $request->validated();
         $user->update($validated);
 

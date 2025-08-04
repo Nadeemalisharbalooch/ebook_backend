@@ -19,9 +19,7 @@ Route::post('reset-password', ResetPasswordController::class)->name('reset-passw
 Route::middleware('auth:sanctum')->group(function () {
 
     // Verification
-    Route::get('/verification', [CodeVerificationController::class, 'verification']);
-    Route::post('/verification', [CodeVerificationController::class, 'store'])->name('verification');
-    Route::get('/verification/{email}/{code}', [CodeVerificationController::class, 'verificationCode'])->name('verification.code');
+    Route::post('/verification', [CodeVerificationController::class, 'verification'])->name('verification');
     // Send Verification Code
     Route::post('/resend-verification', [CodeVerificationController::class, 'resendVerificationCode'])->name('resend.verification');
 

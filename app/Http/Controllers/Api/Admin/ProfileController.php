@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProfileUpdateRequest;
 use App\Http\Requests\Admin\UpdatePassword;
+use App\Services\ProfileService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,6 @@ class ProfileController extends Controller
     {
 
         $user = $request->user()->load('profile');
-
         return ResponseService::success($user);
     }
 
@@ -25,26 +25,16 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     /** @var \App\Models\User */
-    public function update(ProfileUpdateRequest $request)
+    public function update(ProfileUpdateRequest $request, ProfileService $svc)
     {
-        $user = Auth::user();
-
-        $validated = $request->validated();
-
-        //  update user table fields
-        $user->update(collect($validated)->only(['name', 'email', 'username'])->toArray());
-
-        // Profile table update
-        $profile = $user->profile;
-        if ($profile) {
-            $profile->update(collect($validated)->except(['name', 'email', 'username'])->toArray());
-        } else {
-            return ResponseService::error('User profile does not exist.', 404);
-        }
-
-        return ResponseService::success(
-            'Profile updated successfully'
+        $svc->update(
+            Auth::user(),
+            $request->only(['username', 'name', 'email']),
+            $request->validated(),
+            $request->file('avatar')
         );
+
+        return ResponseService::success('Profile updated successfully');
     }
 
     /**
@@ -60,5 +50,4 @@ class ProfileController extends Controller
 
         return ResponseService::success('Password updated successfully.');
     }
-
 }

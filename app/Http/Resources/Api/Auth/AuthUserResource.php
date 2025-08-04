@@ -28,8 +28,10 @@ class AuthUserResource extends JsonResource
             'is_locked' => $this->is_locked,
             'is_admin' => $this->is_admin,
             'created_at' => $this->created_at,
+            'role' => $this->role,
             'type' => 'Bearer',
             'token' => $token,
+
         ];
     }
 }

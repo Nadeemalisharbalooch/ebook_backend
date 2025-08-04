@@ -21,20 +21,19 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
-            'username' => 'nullable|string',
+            'username' => 'nullable|string|max:255',
             'name' => 'nullable|string|max:255',
-            'email' => 'nullable|email',
-           'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'gender' => 'nullable|string',
-            'dob' => 'nullable|date',
-            'phone' => 'nullable|string',
-            'country' => 'nullable|string',
-            'state' => 'nullable|string',
-            'city' => 'nullable|string',
-            'zipcode' => 'nullable|string',
-            'address' => 'nullable|string',
+            'email' => 'nullable|email|max:255',
+            'avatar' => 'nullable|file|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gender' => 'nullable|string|in:male,female,other',
+            'dob' => 'nullable|date|before_or_equal:today',
+            'phone' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'city' => 'nullable|string|max:100',
+            'zipcode' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
         ];
     }
 }

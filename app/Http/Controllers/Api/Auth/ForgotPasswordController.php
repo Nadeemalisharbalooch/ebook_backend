@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Events\Auth\ResetPasswordEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Models\User;
 use App\Services\ResponseService;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class ForgotPasswordController extends Controller
 {
@@ -17,21 +16,10 @@ class ForgotPasswordController extends Controller
     public function __invoke(ForgotPasswordRequest $request)
     {
         $email = $request->input('email');
-        $token = Str::random(64);
-        $now = Carbon::now();
 
-        // Insert or update the token in password_resets table
-        DB::table('password_reset_tokens')->updateOrInsert(
-            ['email' => $email],
-            [
-                'token' => $token,
-                'created_at' => $now,
-            ]
-        );
+        $user = User::where('email', $email)->first();
+        event(new ResetPasswordEvent($user));
 
-        // Todo: Send email with the token
-        logger('Email Sent with Token: '.$token);
-
-        return ResponseService::success($token, 'Password reset token sent to your email.');
+        return ResponseService::success(null, 'Password reset token sent to your email.');
     }
 }

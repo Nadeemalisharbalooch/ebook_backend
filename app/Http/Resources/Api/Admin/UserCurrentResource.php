@@ -13,30 +13,47 @@ class UserCurrentResource extends JsonResource
      */
     public function toArray($request)
     {
-        $user = $this;
+        $emailVerified = $this->email_verified_at;
+        $isActive = $this->is_active;
+        $isSuspended = $this->is_suspended;
 
-        return [
-            'id' => $user->id,
-            'username' => $user->username,
-            'name' => $user->name,
-            'email' => $user->email,
-            'email_verified_at' => $user->email_verified_at,
+        if (
+            ! is_null($emailVerified) &&
+            $isActive &&
+            ! $isSuspended
+        ) {
+            return [
+                'id' => $this->id,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+                'username' => $this->username,
+                'name' => $this->name,
+                'email' => $this->email,
+                'role' => $this->role,
+                'code' => $this->verification_code,
+                'email_verified_at' => $this->email_verified_at,
+                'is_active' => $this->is_active,
+                'is_suspended' => $this->is_suspended,
+                'is_locked' => $this->is_locked,
+                'is_admin' => $this->is_admin,
+                'is_impersonating' => $this->is_impersonating,
+                'created_at' => $this->created_at,
 
-            'profile' => [
-                'avatar' => $user->profile->avatar,
-                'gender' => $user->profile->gender,
-                'dob' => $user->profile->dob,
-                'phone' => $user->profile->phone,
-                'country' => $user->profile->country,
-                'state' => $user->profile->state,
-                'city' => $user->profile->city,
-                'zipcode' => $user->profile->zipcode,
-                'address' => $user->profile->address,
-            ],
-
-            // Flat lists, no nesting
-            'roles' => $user->getRoleNames(),
-            'permissions' => $user->getPermissionsViaRoles()->pluck('name'),
-        ];
+                'profile' => [
+                    'avatar' => $this->profile->avatar,
+                    'gender' => $this->profile->gender,
+                    'dob' => $this->profile->dob,
+                    'phone' => $this->profile->phone,
+                    'country' => $this->profile->country,
+                    'state' => $this->profile->state,
+                    'city' => $this->profile->city,
+                    'zipcode' => $this->profile->zipcode,
+                    'address' => $this->profile->address,
+                ],
+                // Flat lists, no nesting
+                'roles' => $this->getRoleNames(),
+                'permissions' => $this->getPermissionsViaRoles()->pluck('name'),
+            ];
+        }
     }
 }

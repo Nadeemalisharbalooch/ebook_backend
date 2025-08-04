@@ -34,7 +34,7 @@ class ResetPasswordController extends Controller
             return ResponseService::error('User not found', 404);
         }
 
-        $user->touch($password);
+        $user->touch('password');
 
         // Delete the token from password_reset_tokens table
         DB::table('password_reset_tokens')

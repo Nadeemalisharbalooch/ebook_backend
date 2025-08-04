@@ -10,14 +10,12 @@ use App\Http\Resources\Api\Admin\UserResource;
 use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
     public function index()
     {
         $this->authorizePermission('users.list');
-
         $users = User::with(['profile'])
             ->withTrashed()
             ->where('is_admin', false)
@@ -32,7 +30,7 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        $this->authorizePermission('users.create');
+        // $this->authorizePermission('users.create');
 
         $validated = $request->validated();
         unset($validated['email_verified_at']);
@@ -51,7 +49,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        $this->authorizePermission('users.read');
+        /*   $this->authorizePermission('users.read'); */
 
         if (in_array($user->id, [1, 2, 3])) {
             return ResponseService::error(
@@ -79,7 +77,7 @@ class UserController extends Controller
     {
         $this->authorizePermission('users.update');
 
-        $user->is_locked = !$user->is_locked;
+        $user->is_locked = ! $user->is_locked;
         $user->save();
 
         return ResponseService::success(new UserResource($user), 'Lock status updated.');
@@ -89,62 +87,31 @@ class UserController extends Controller
     {
         $this->authorizePermission('users.update');
 
-        $user->is_suspended = !$user->is_suspended;
+        $user->is_suspended = ! $user->is_suspended;
         $user->save();
 
         return ResponseService::success(new UserResource($user), 'Suspended status updated.');
     }
 
-  public function update(UserUpdateRequest $request, string $id)
-{
-    $this->authorizePermission('users.update');
+    public function update(UserUpdateRequest $req, string $id)
+    {
+        $validated = $req->validated();
+        $user = User::with('profile')->findOrFail($id);
 
-    $user = User::with('profile')->findOrFail($id);
+        $user->update($validated);
 
-    if (in_array($user->id, [1, 2, 3])) {
-        return ResponseService::error(
-            'You do not have permission to update this user',
-            403
-        );
-    }
-
-    $validated = $request->validated();
-
-    // Handle avatar upload if present
-    if ($request->hasFile('profile.avatar')) {
-        // Delete old avatar if exists
-        if ($user->profile && $user->profile->avatar) {
-            Storage::disk('public')->delete(
-                str_replace('/storage/', '', $user->profile->avatar)
+        if (! empty($validated['profile']) && is_array($validated['profile'])) {
+            $user->profile()->updateOrCreate(
+                [], // no need to specify columns
+                $validated['profile']
             );
         }
 
-        // Store new avatar
-        $avatarPath = $request->file('profile.avatar')->store('avatars', 'public');
-        $validated['profile']['avatar'] = '/storage/'.$avatarPath;
-    } elseif (isset($validated['profile']['avatar']) && is_string($validated['profile']['avatar'])) {
-        // Keep existing avatar if no new file was uploaded
-        $validated['profile']['avatar'] = $user->profile->avatar ?? null;
-    }
-
-    $user->update($validated);
-
-    if (isset($validated['profile']) && is_array($validated['profile'])) {
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            $validated['profile']
+        return ResponseService::success(
+            new UserResource($user->load('profile')),
+            'user updated successfully'
         );
     }
-
-    if (isset($validated['role'])) {
-        $user->syncRoles($validated['role']);
-    }
-
-    return ResponseService::success(
-        new UserResource($user->load(['roles', 'profile'])),
-        'User updated successfully'
-    );
-}
 
     public function destroy(User $user)
     {
@@ -184,7 +151,7 @@ class UserController extends Controller
 
         $user = User::withTrashed()->findOrFail($userId);
 
-        if (!$user->trashed()) {
+        if (! $user->trashed()) {
             return ResponseService::error('User is not deleted', 400);
         }
 
@@ -209,7 +176,7 @@ class UserController extends Controller
 
         $user = User::withTrashed()->findOrFail($userId);
 
-        if (!$user->trashed()) {
+        if (! $user->trashed()) {
             return ResponseService::error('User is not deleted', 400);
         }
 
@@ -239,7 +206,7 @@ class UserController extends Controller
 
     protected function authorizePermission(string $permission)
     {
-        if (!auth()->user()->can($permission)) {
+        if (! auth()->user()->can($permission)) {
             abort(403, 'Unauthorized.');
         }
     }
