@@ -20,7 +20,6 @@ return new class extends Migration
             $table->boolean('is_locked')->default(false);
             $table->enum('role', ['admin', 'customer', 'company'])->default('customer');
             $table->boolean('is_admin')->default(false);
-            $table->boolean('is_publisher')->default(false);
             $table->boolean('is_active')->default(false);
             $table->boolean('is_suspended')->default(false);
             $table->boolean('is_impersonating')->default(false);

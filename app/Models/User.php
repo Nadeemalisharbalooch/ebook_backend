@@ -34,7 +34,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
-        'name',
         'email',
         'password',
         'is_admin',
@@ -42,6 +41,8 @@ class User extends Authenticatable
         'is_suspended',
         'email_verified_at',
         'is_impersonating',
+        'first_name',
+        'last_name',
     ];
 
     protected $dates = ['deleted_at'];

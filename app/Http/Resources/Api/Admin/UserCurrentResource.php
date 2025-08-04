@@ -24,9 +24,12 @@ class UserCurrentResource extends JsonResource
         ) {
             return [
                 'id' => $this->id,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
                 'username' => $this->username,
                 'name' => $this->name,
                 'email' => $this->email,
+                'role' => $this->role,
                 'code' => $this->verification_code,
                 'email_verified_at' => $this->email_verified_at,
                 'is_active' => $this->is_active,
@@ -47,7 +50,6 @@ class UserCurrentResource extends JsonResource
                     'zipcode' => $this->profile->zipcode,
                     'address' => $this->profile->address,
                 ],
-
                 // Flat lists, no nesting
                 'roles' => $this->getRoleNames(),
                 'permissions' => $this->getPermissionsViaRoles()->pluck('name'),
