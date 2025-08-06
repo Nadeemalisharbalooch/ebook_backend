@@ -27,6 +27,7 @@ class AuthUserResource extends JsonResource
             'is_suspended' => $this->is_suspended,
             'is_locked' => $this->is_locked,
             'is_admin' => $this->is_admin,
+            'is_accept_terms' => $this->is_accept_terms,
             'created_at' => $this->created_at,
             'role' => $this->role,
             'type' => 'Bearer',
