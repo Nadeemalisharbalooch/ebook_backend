@@ -68,6 +68,8 @@ class User extends Authenticatable
         // Cast the 'email_verified_at' to a datetime object.
         'email_verified_at' => 'datetime',
 
+        'is_accept_terms' => 'boolean',
+
         // Hash the 'password' attribute.
         'password' => 'hashed',
 
