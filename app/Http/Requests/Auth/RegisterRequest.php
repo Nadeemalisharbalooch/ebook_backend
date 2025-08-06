@@ -28,6 +28,7 @@ class RegisterRequest extends FormRequest
             'role'=> ['required', 'string', 'max:255'],
             'email' => ['required', new UniqueEmailRule],
             'password' => ['required', 'confirmed', 'min:8'],
+            'is_accept_terms' => ['required', 'boolean'],
             'password_confirmation' => ['required', 'same:password'],
         ];
     }
