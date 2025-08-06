@@ -14,7 +14,6 @@ class ImpersonationController extends Controller
         if (! Auth::user()?->is_admin) {
             abort(403, 'Unauthorized');
         }
-
         // Save impersonated user ID in cache
         cache()->put('impersonate_token_'.auth()->id(), $user->id, now()->addMinutes(30));
         $user->update(['is_impersonating' => true]);
