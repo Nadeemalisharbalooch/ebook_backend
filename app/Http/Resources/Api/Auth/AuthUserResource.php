@@ -32,6 +32,7 @@ class AuthUserResource extends JsonResource
             'role' => $this->role,
             'type' => 'Bearer',
             'token' => $token,
+            'is_accept_terms' => $this->is_accept_terms,
 
         ];
     }

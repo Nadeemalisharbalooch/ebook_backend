@@ -44,6 +44,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'is_accept_terms',
+        'role',
     ];
 
     protected $dates = ['deleted_at'];
