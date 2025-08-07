@@ -24,9 +24,12 @@ class UserStoreRequest extends FormRequest
         return [
             'email_verified_at' => 'nullable|in:yes,no',
             'username' => 'nullable|string|unique:users,username',
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:admin,customer,publisher',
+            'is_accept_terms' => 'required|boolean',
             'is_admin' => 'sometimes|boolean',
             'is_active' => 'sometimes|boolean',
             'is_suspended' => 'sometimes|boolean',
