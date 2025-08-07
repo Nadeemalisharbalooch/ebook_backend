@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_accept_terms')->default(false);
             $table->boolean('is_admin');
             $table->boolean('is_active')->default(false);
-            $table->boolean('is_suspended')->default(true);
+            $table->boolean('is_suspended')->default(false);
             $table->boolean('is_impersonating')->default(false);
 
             $table->rememberToken();
