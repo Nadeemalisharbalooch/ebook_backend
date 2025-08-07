@@ -35,7 +35,7 @@ class UserController extends Controller
         $validated = $request->validated();
         unset($validated['email_verified_at']);
 
-        $validated['email_verified_at'] = $request->input('email_verified_at') === 'yes'
+        $validated['email_verified_at'] = $request->input('email_verified_at') == 1
             ? now()
             : null;
 
