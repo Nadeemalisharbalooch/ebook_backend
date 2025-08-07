@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'email' => 'naseer123@gmail.com',
                 'password' => bcrypt('123456789'),
                 'email_verified_at' => now(),
-                'role'=>'company',
+                'role'=>'publisher',
                 'is_active' => true,
                 'is_admin' => true,
             ],
