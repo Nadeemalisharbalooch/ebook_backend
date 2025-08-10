@@ -25,7 +25,6 @@ class AuthUserResource extends JsonResource
             'email_verified_at' => $this->email_verified_at,
             'is_active' => $this->is_active,
             'is_suspended' => $this->is_suspended,
-            'is_locked' => $this->is_locked,
             'is_admin' => $this->is_admin,
             'is_accept_terms' => $this->is_accept_terms,
             'created_at' => $this->created_at,
