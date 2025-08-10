@@ -40,11 +40,13 @@ class UserUpdateRequest extends FormRequest
             'profile.gender' => 'nullable|string|in:male,female,other',
             'profile.dob' => 'nullable|date',
             'profile.phone' => 'nullable|string|max:20',
-            'profile.country' => 'nullable|string|max:100',
             'profile.state' => 'nullable|string|max:100',
             'profile.city' => 'nullable|string|max:100',
             'profile.zipcode' => 'nullable|string|max:20',
-            'profile.address' => 'nullable|string|max:255',
+            'profile.street' => 'nullable|string|max:255',
+            'profile.city_id' => 'nullable|exists:cities,id',
+            'profile.state_id' => 'nullable|exists:states,id',
+            'profile.country_id' => 'nullable|exists:countries,id',
 
         ];
     }

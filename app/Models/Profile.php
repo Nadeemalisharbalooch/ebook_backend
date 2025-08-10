@@ -17,7 +17,10 @@ class Profile extends Model
         'state',
         'city',
         'zipcode',
-        'address',
+        'street',
+        'city_id',
+        'state_id',
+        'country_id',
     ];
 
     protected function casts(): array
