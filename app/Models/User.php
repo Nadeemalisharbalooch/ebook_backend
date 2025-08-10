@@ -89,7 +89,6 @@ class User extends Authenticatable
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'is_locked' => false,
         'is_admin' => false,
         'is_active' => false,
         'is_suspended' => false,

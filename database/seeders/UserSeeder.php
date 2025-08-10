@@ -54,12 +54,12 @@ class UserSeeder extends Seeder
         DB::table('users')->insert($users);
 
         // Create Profiles
-        DB::table('profiles')->insert([
+       /*  DB::table('profiles')->insert([
             ['user_id' => 1, 'created_at' => now(), 'updated_at' => now()],
             ['user_id' => 2, 'created_at' => now(), 'updated_at' => now()],
             ['user_id' => 3, 'created_at' => now(), 'updated_at' => now()],
 
-        ]);
+        ]); */
 
 
     }
