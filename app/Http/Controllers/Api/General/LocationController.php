@@ -29,7 +29,7 @@ public function index()
 
      public function states(Country $country)
     {
-        $states = $country->states()->with('cities')->get();
+        $states = $country->states()->with('cities')->paginate(10);
         return StateResource::collection($states);
     }
 
