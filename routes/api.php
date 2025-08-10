@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\General\LocationController;
 use App\Http\Resources\Api\Admin\UserCurrentResource;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +24,9 @@ Route::prefix('admin')->name('admin.')->middleware(['isAdmin', 'auth:sanctum'])-
 Route::prefix('user')->name('user.')->middleware(['isUser', 'auth:sanctum'])->group(function () {
     require __DIR__.'/user/api.php';
 });
+
+Route::apiResource('countries', LocationController::class);
+
+Route::get('/states/{country}', [LocationController::class, 'states']);
+
+Route::get('/cities/{state}', [LocationController::class, 'cities']);

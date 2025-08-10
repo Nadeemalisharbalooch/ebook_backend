@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->date('dob')->nullable();
             $table->string('phone')->nullable();
-            $table->string('country')->nullable();
-            $table->string('state')->nullable();
-            $table->string('city')->nullable();
+            $table->foreignId('country_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('state_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('city_id')->nullable()->constrained()->nullOnDelete();
             $table->string('zipcode')->nullable();
-            $table->string('address')->nullable();
+            $table->string('street')->nullable();
             $table->timestamps();
         });
     }

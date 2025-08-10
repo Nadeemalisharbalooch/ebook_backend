@@ -15,12 +15,12 @@ class UserController extends Controller
 {
     public function index()
     {
-        $this->authorizePermission('users.list');
+        /*  $this->authorizePermission('users.list'); */
         $users = User::with(['profile'])
             ->withTrashed()
             ->where('is_admin', false)
             ->where('id', '!=', Auth::id())
-            ->get();
+            ->paginate(10);
 
         return ResponseService::success(
             UserResource::collection($users),

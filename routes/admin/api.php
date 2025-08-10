@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\StaffUserController;
 use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\General\LocationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -74,9 +75,11 @@ Route::apiResource('global-email-templates', GlobalEmailTemplateController::clas
 // Email Templates
 Route::apiResource('email-templates', EmailTemplateController::class);
 
+
 // Impersonation routes (require authentication)
 Route::middleware(['auth'])->group(function () {
     // add just
     Route::get('/impersonate/stop', [ImpersonationController::class, 'stopImpersonate'])->name('impersonate.stop');
     Route::get('/impersonate/{user}', [ImpersonationController::class, 'impersonate'])->name('impersonate.start');
 });
+
