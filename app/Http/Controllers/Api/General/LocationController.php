@@ -20,7 +20,7 @@ class LocationController extends Controller
      */
 public function index()
     {
-        $countries = Country::all();
+        $countries = Country::paginate(10);
 
         return CountryResource::collection($countries);
     }
