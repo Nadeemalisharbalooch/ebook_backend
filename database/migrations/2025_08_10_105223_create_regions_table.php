@@ -10,9 +10,6 @@ return new class extends Migration {
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->json('translations')->nullable();
-            $table->string('flag')->nullable();
-            $table->string('wikiDataId')->nullable();
             $table->timestamps();
         });
     }

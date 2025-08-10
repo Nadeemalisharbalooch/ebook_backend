@@ -9,11 +9,7 @@ return new class extends Migration {
     {
         Schema::create('subregions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->json('translations')->nullable();
-            $table->foreignId('region_id')->constrained('regions')->onDelete('cascade');
-            $table->string('flag')->nullable();
-            $table->string('wikiDataId')->nullable();
+
             $table->timestamps();
         });
     }

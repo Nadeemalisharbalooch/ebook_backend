@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            WorldDataSeeder::class,
+       
             // Required
             UserSeeder::class,
 

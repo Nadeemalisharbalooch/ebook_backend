@@ -10,36 +10,26 @@ class WorldDataSeeder extends Seeder
     public function run(): void
     {
         $files = [
-            // Agar yeh do files nahi hain to hata do
-            'regions.sql',
-            'subregions.sql',
-
+            'regions.sql',      // if you have it
+            'subregions.sql',   // if you have it
             'countries.sql',
             'states.sql',
             'cities.sql',
         ];
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;'); // disable FK checks during import
+        // If you only have 3 files, remove the top two from $files
 
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;'); // disable FK checks during import
         foreach ($files as $file) {
             $path = database_path('seeders/sql/' . $file);
             if (File::exists($path)) {
                 $sql = File::get($path);
-
-                // MySQL dump ke special commands aur extra syntax remove karo
-                $sql = preg_replace('/\/\*![0-9]+.*?\*\//s', '', $sql); // /*! ... */ comments hataye
-                $sql = preg_replace('/--.*/', '', $sql);                // -- se start hone wali comments hataye
-                $sql = preg_replace('/-- Dump completed on.*/', '', $sql);
-                $sql = preg_replace('/\)\s*;+\s*\)+/m', ');', $sql);    // extra parenthesis fix
-                $sql = preg_replace('/;+\s*;+/m', ';', $sql);           // double semicolons fix
-
                 DB::unprepared($sql);
                 $this->command->info("Imported: {$file}");
             } else {
                 $this->command->warn("Missing: {$file} (skipped)");
             }
         }
-
         DB::statement('SET FOREIGN_KEY_CHECKS=1;'); // enable back
     }
 }
