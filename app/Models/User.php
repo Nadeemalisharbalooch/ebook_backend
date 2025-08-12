@@ -105,8 +105,13 @@ class User extends Authenticatable
 
             event(new CodeVerificationEvent($this));
 
-            return redirect()->away(env('FRONTEND_URL'));
-        }
+            return response()->json([
+    'status' => 'success',
+    'message' => 'Payment completed successfully',
+    'redirect_url' => env('FRONTEND_URL') . '/verificationtest'
+]);
+}
+
 
         if (! $this->is_active) {
             return 'Your account is not active';
