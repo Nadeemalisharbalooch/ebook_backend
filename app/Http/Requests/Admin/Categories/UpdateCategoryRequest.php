@@ -19,16 +19,15 @@ class UpdateCategoryRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-   public function rules(): array
-{
-    $category = $this->route('category'); // This should be a Category model
+    public function rules(): array
+    {
+        $category = $this->route('category'); // This should be a Category model
 
-    $categoryId = is_object($category) ? $category->id : $category;
+        $categoryId = is_object($category) ? $category->id : $category;
 
-    return [
-        'name' => 'required|string|max:255|unique:categories,name,' . $categoryId,
-        'description' => 'nullable|string',
-    ];
-}
-
+        return [
+            'name' => 'required|string|max:255|unique:categories,name,'.$categoryId,
+            'description' => 'nullable|string',
+        ];
+    }
 }

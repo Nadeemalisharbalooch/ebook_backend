@@ -16,6 +16,7 @@ class ProfileController extends Controller
     {
 
         $user = $request->user()->load('profile');
+
         return ResponseService::success($user);
     }
 

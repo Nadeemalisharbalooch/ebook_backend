@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Api\Admin;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SubCategoryResource extends JsonResource
@@ -12,7 +11,7 @@ class SubCategoryResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-     public function toArray($request)
+    public function toArray($request)
     {
         return [
             'id' => $this->id,

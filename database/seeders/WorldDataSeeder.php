@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -21,7 +22,7 @@ class WorldDataSeeder extends Seeder
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;'); // disable FK checks during import
         foreach ($files as $file) {
-            $path = database_path('seeders/sql/' . $file);
+            $path = database_path('seeders/sql/'.$file);
             if (File::exists($path)) {
                 $sql = File::get($path);
                 DB::unprepared($sql);

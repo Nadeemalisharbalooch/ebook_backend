@@ -21,7 +21,7 @@ class State extends Model
         'longitude',
         'timezone',
         'flag',
-        'wikiDataId'
+        'wikiDataId',
     ];
 
     public function country()

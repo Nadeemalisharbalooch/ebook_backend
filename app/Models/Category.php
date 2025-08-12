@@ -8,16 +8,16 @@ use Illuminate\Support\Str;
 
 class Category extends Model
 {
-     use SoftDeletes;
+    use SoftDeletes;
 
-      protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'slug'];
 
     public function subcategories()
     {
         return $this->hasMany(Subcategory::class);
     }
 
-     protected static function boot()
+    protected static function boot()
     {
         parent::boot();
 

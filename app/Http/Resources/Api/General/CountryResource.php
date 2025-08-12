@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Api\General;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CountryResource extends JsonResource
@@ -12,16 +11,12 @@ class CountryResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-public function toArray($request)
-{
-    return [
-        'id'        => $this->id,
-        'name'      => $this->name,
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
 
-    ];
-}
-
-
-
-
+        ];
+    }
 }

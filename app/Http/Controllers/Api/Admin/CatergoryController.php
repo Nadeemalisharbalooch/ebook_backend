@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\Categories\UpdateCategoryRequest;
 use App\Http\Resources\Api\Admin\CategoryResource;
 use App\Models\Category;
 use App\Services\ResponseService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CatergoryController extends Controller
@@ -32,6 +31,7 @@ class CatergoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         $category = Category::create($request->validated());
+
         return ResponseService::success(
             new CategoryResource($category),
             'Category created successfully'
@@ -81,7 +81,6 @@ class CatergoryController extends Controller
             return ResponseService::error('You cannot delete an admin user', 403);
         }
 
-
         $category->delete();
 
         return ResponseService::success(
@@ -90,10 +89,8 @@ class CatergoryController extends Controller
         );
     }
 
-
     public function trashed()
     {
-
 
         $categories = Category::onlyTrashed()->get();
 
@@ -107,6 +104,7 @@ class CatergoryController extends Controller
     {
 
         $category->restore();
+
         return ResponseService::success(
             new CategoryResource($category),
             'Category restored successfully'
@@ -130,6 +128,7 @@ class CatergoryController extends Controller
     {
         $category->is_active = ! $category->is_active;
         $category->save();
+
         return ResponseService::success(
             new CategoryResource($category),
             'Category active status updated successfully'

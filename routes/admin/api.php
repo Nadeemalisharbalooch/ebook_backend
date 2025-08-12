@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\BookController;
 use App\Http\Controllers\Api\Admin\CatergoryController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\EmailBuilder\EmailTemplateController;
@@ -11,8 +12,6 @@ use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\StaffUserController;
 use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\UserController;
-use App\Http\Controllers\Api\General\LocationController;
-use App\Models\SubCategory;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,6 +86,14 @@ Route::prefix('sub-categories')->group(function () {
 });
 Route::apiResource('sub-categories', SubCategoryController::class);
 
+Route::apiResource('books', BookController::class);
+Route::prefix('books')->group(function () {
+    Route::get('trashed', [BookController::class, 'trashed'])->name('books.trashed');
+    Route::post('{book}/restore', [BookController::class, 'restore'])->name('books.restore');
+    Route::delete('{book}/force-delete', [BookController::class, 'forceDelete'])->name('books.forceDelete');
+    Route::patch('/{book}/toggle-active', [BookController::class, 'toggleActive']);
+});
+
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('staff', StaffUserController::class);
 
@@ -96,11 +103,9 @@ Route::apiResource('global-email-templates', GlobalEmailTemplateController::clas
 // Email Templates
 Route::apiResource('email-templates', EmailTemplateController::class);
 
-
 // Impersonation routes (require authentication)
 Route::middleware(['auth'])->group(function () {
     // add just
     Route::get('/impersonate/stop', [ImpersonationController::class, 'stopImpersonate'])->name('impersonate.stop');
     Route::get('/impersonate/{user}', [ImpersonationController::class, 'impersonate'])->name('impersonate.start');
 });
-

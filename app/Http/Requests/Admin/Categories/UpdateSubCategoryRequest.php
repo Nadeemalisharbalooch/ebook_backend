@@ -19,7 +19,7 @@ class UpdateSubCategoryRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-     public function rules()
+    public function rules()
     {
         $subCategory = $this->route('sub_category');
         $subCategoryId = is_object($subCategory) ? $subCategory->id : $subCategory;

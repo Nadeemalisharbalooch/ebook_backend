@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\Categories\UpdateSubCategoryRequest;
 use App\Http\Resources\Api\Admin\SubCategoryResource;
 use App\Models\SubCategory;
 use App\Services\ResponseService;
-use Illuminate\Http\Request;
 
 class SubCategoryController extends Controller
 {
@@ -81,7 +80,6 @@ class SubCategoryController extends Controller
             return ResponseService::error('You cannot delete an admin user', 403);
         }
 
-
         $subCategory->delete();
 
         return ResponseService::success(
@@ -89,7 +87,6 @@ class SubCategoryController extends Controller
             'Subcategory deleted successfully'
         );
     }
-
 
     public function trashed()
     {

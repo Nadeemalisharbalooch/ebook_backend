@@ -7,10 +7,7 @@ use App\Http\Resources\Api\General\CityResource;
 use App\Http\Resources\Api\General\CountryResource;
 use App\Http\Resources\Api\General\StateResource;
 use App\Models\Country;
-use App\Models\Region;
 use App\Models\State;
-use App\Models\Subregion;
-use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
@@ -18,18 +15,17 @@ class LocationController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index()
+    public function index()
     {
         $countries = Country::paginate(10);
 
         return CountryResource::collection($countries);
     }
 
-
-
-     public function states(Country $country)
+    public function states(Country $country)
     {
         $states = $country->states()->with('cities')->get();
+
         return StateResource::collection($states);
     }
 
@@ -37,6 +33,7 @@ public function index()
     {
         return CityResource::collection($state->cities);
     }
+
     /**
      * Show the form for creating a new resource.
      */

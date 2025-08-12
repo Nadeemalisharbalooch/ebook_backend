@@ -28,7 +28,7 @@ class Country extends Model
         'emoji',
         'emojiU',
         'flag',
-        'wikiDataId'
+        'wikiDataId',
     ];
 
     public function region()

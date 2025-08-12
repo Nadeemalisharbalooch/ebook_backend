@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Api\General;
+namespace App\Http\Resources\Api\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CityResource extends JsonResource
+class BookResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

@@ -16,7 +16,7 @@ class City extends Model
         'longitude',
         'timezone',
         'flag',
-        'wikiDataId'
+        'wikiDataId',
     ];
 
     public function state()

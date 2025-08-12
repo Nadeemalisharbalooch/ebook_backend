@@ -8,7 +8,6 @@ class Subregion extends Model
 {
     protected $fillable = ['name', 'translations', 'region_id', 'flag', 'wikiDataId'];
 
-
     protected $casts = [
         'translations' => 'array', // If stored as JSON
     ];

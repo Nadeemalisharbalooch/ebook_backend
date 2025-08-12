@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Api\General;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SubregionResource extends JsonResource
@@ -16,7 +15,7 @@ class SubregionResource extends JsonResource
     {
 
         return [
-            'id'   => $this->id,
+            'id' => $this->id,
             'name' => $this->name,
         ];
     }
