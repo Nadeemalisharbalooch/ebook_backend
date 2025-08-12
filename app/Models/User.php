@@ -105,7 +105,7 @@ class User extends Authenticatable
 
             event(new CodeVerificationEvent($this));
 
-            return redirect(env('FRONTEND_URL'));
+            return redirect()->away(env('FRONTEND_URL'));
         }
 
         if (! $this->is_active) {
