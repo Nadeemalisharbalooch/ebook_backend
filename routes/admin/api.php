@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CatergoryController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\EmailBuilder\EmailTemplateController;
 use App\Http\Controllers\Api\Admin\EmailBuilder\GlobalEmailTemplateController;
@@ -8,8 +9,10 @@ use App\Http\Controllers\Api\Admin\PermissionController;
 use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\StaffUserController;
+use App\Http\Controllers\Api\Admin\SubCategoryController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\General\LocationController;
+use App\Models\SubCategory;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +70,24 @@ Route::prefix('staff')->group(function () {
     Route::delete('{user}/force-delete', [StaffUserController::class, 'forceDelete'])->name('staff.forceDelete');
     Route::put('/{user}/update-password', [StaffUserController::class, 'updatePassword']);
 });
+
+Route::prefix('categories')->group(function () {
+    Route::get('trashed', [CatergoryController::class, 'trashed'])->name('categories.trashed');
+    Route::post('{category}/restore', [CatergoryController::class, 'restore'])->name('categories.restore');
+    Route::delete('{category}/force-delete', [CatergoryController::class, 'forceDelete'])->name('categories.forceDelete');
+    Route::patch('/{category}/toggle-active', [CatergoryController::class, 'toggleActive']);
+});
+Route::apiResource('categories', CatergoryController::class);
+
+Route::prefix('sub-categories')->group(function () {
+    Route::get('trashed', [SubCategoryController::class, 'trashed'])->name('sub-categories.trashed');
+    Route::post('{subCategory}/restore', [SubCategoryController::class, 'restore'])->name('sub-categories.restore');
+    Route::delete('{subCategory}/force-delete', [SubCategoryController::class, 'forceDelete'])->name('sub-categories.forceDelete');
+    Route::patch('/{subCategory}/toggle-active', [SubCategoryController::class, 'toggleActive']);
+});
+Route::apiResource('sub-categories', SubCategoryController::class);
+
+Route::apiResource('roles', RoleController::class);
 Route::apiResource('staff', StaffUserController::class);
 
 // Global Email Templates

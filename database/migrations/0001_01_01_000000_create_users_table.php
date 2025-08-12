@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'customer', 'publisher'])->default('customer');
             $table->boolean('is_accept_terms')->default(false);
             $table->boolean('is_admin');
-            $table->boolean('is_active')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->boolean('is_suspended')->default(false);
             $table->boolean('is_impersonating')->default(false);
 
