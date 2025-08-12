@@ -105,7 +105,7 @@ class User extends Authenticatable
 
             event(new CodeVerificationEvent($this));
 
-            return 'Your account is not verified';
+            return redirect(env('FRONTEND_URL') . '/verification-needed');
         }
 
         if (! $this->is_active) {
