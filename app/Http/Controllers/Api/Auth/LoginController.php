@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\Api\Auth\AuthUserResource;
+use App\Http\Resources\Api\Auth\LoginUserResource;
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,12 +30,10 @@ class LoginController extends Controller
         }
 
         /** @var \App\Models\User $user */
-        $token = $user->createToken('auth_token')->plainTextToken;
 
+         $resource = new LoginUserResource($user);
         return ResponseService::success([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user,
+            'user' => $resource,
         ], 'Login successful');
     }
 }

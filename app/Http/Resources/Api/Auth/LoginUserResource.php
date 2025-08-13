@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AuthUserResource extends JsonResource
+class LoginUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +15,7 @@ class AuthUserResource extends JsonResource
     public function toArray(Request $request): array
     {
         // Generate Token
-      /*   $token = $this->createToken($this->email)->plainTextToken; */
+        $token = $this->createToken($this->email)->plainTextToken;
 
         return [
             'id' => $this->id,
@@ -29,8 +29,8 @@ class AuthUserResource extends JsonResource
             'is_accept_terms' => $this->is_accept_terms,
             'created_at' => $this->created_at,
             'role' => $this->role,
-           /*  'type' => 'Bearer', */
-           /*  'token' => $token, */
+            'type' => 'Bearer',
+            'token' => $token,
             'is_accept_terms' => $this->is_accept_terms,
 
         ];
