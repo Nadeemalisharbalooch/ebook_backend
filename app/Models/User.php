@@ -105,9 +105,8 @@ class User extends Authenticatable
 
             event(new CodeVerificationEvent($this));
 
-           return 'Your account is not verify';
-}
-
+            return 'Your account is not verify';
+        }
 
         if (! $this->is_active) {
             return 'Your account is not active';

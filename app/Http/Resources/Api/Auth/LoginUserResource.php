@@ -20,7 +20,8 @@ class LoginUserResource extends JsonResource
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'name' => $this->name,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
             'is_active' => $this->is_active,
@@ -28,6 +29,7 @@ class LoginUserResource extends JsonResource
             'is_admin' => $this->is_admin,
             'is_accept_terms' => $this->is_accept_terms,
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'role' => $this->role,
             'type' => 'Bearer',
             'token' => $token,

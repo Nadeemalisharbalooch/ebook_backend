@@ -30,7 +30,3 @@ Route::apiResource('countries', LocationController::class);
 Route::get('/states/{country}', [LocationController::class, 'states']);
 
 Route::get('/cities/{state}', [LocationController::class, 'cities']);
-
-
-
-

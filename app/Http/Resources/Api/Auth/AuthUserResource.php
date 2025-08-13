@@ -15,12 +15,13 @@ class AuthUserResource extends JsonResource
     public function toArray(Request $request): array
     {
         // Generate Token
-      /*   $token = $this->createToken($this->email)->plainTextToken; */
+        /*   $token = $this->createToken($this->email)->plainTextToken; */
 
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'name' => $this->name,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
             'is_active' => $this->is_active,
@@ -28,10 +29,10 @@ class AuthUserResource extends JsonResource
             'is_admin' => $this->is_admin,
             'is_accept_terms' => $this->is_accept_terms,
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'role' => $this->role,
-           /*  'type' => 'Bearer', */
-           /*  'token' => $token, */
-            'is_accept_terms' => $this->is_accept_terms,
+            /*  'type' => 'Bearer', */
+            /*  'token' => $token, */
 
         ];
     }

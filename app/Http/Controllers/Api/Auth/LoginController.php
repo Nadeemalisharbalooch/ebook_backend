@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Resources\Api\Auth\AuthUserResource;
 use App\Http\Resources\Api\Auth\LoginUserResource;
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
@@ -30,10 +29,9 @@ class LoginController extends Controller
         }
 
         /** @var \App\Models\User $user */
+        $resource = new LoginUserResource($user);
 
-         $resource = new LoginUserResource($user);
-        return ResponseService::success([
-            'user' => $resource,
-        ], 'Login successful');
+        // Direct user resource pass karna hai (nested array ke andar 'user' key nahi)
+        return ResponseService::success($resource, 'Login successful');
     }
 }
