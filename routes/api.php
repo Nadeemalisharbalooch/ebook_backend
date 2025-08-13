@@ -31,10 +31,6 @@ Route::get('/states/{country}', [LocationController::class, 'states']);
 
 Route::get('/cities/{state}', [LocationController::class, 'cities']);
 
-Route::post('/verificationtest', function () {
-    return response()->json([
-        'message' => 'Verification endpoint is not implemented yet.'
-    ]);
-})->name('verificationtest');
+
 
 
