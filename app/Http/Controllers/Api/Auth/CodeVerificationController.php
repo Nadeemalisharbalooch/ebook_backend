@@ -11,29 +11,38 @@ use Illuminate\Support\Facades\Auth;
 
 class CodeVerificationController extends Controller
 {
-    public function verification(Request $request)
-    {
-        // Assuming the code is sent as a single input field
-        $codeInput = $request->input('code');
-        $user = Auth::user();
+  public function verification(Request $request)
+{
+    $request->validate([
+        'otp' => 'required|digits:6', // exactly 6 digits
+    ]);
 
-        if ($user->verification_code == $codeInput) {
-            // Mark the user as verified
-            $user->email_verified_at = now();
-            $user->is_active = true;
-            /** @var \App\Models\User $user */
-            $user->save();
+    $user = Auth::user();
 
-            $resource = new AuthUserResource($user);
-
-            return ResponseService::success(
-                $resource,
-                'Your code has been verified you can now login'
-            );
-        }
-
-        return ResponseService::error('Verification code is invalid, please try again', 422);
+    if (! $user) {
+        return ResponseService::error('User not authenticated', 401);
     }
+
+    $otpInput = (string) $request->input('otp');
+    $verificationCode = (string) $user->verification_code;
+
+    if ($verificationCode && $verificationCode === $otpInput) {
+        $user->email_verified_at = now();
+        $user->is_active = true;
+        $user->verification_code = null; // optional: clear OTP after use
+        $user->save();
+
+        $resource = new AuthUserResource($user);
+
+        return ResponseService::success(
+            $resource,
+            'Your code has been verified. You can now login.'
+        );
+    }
+
+    return ResponseService::error('Verification code is invalid, please try again', 422);
+}
+
 
     public function resendVerificationCode(Request $request)
     {

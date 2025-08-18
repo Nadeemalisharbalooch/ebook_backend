@@ -15,7 +15,7 @@ class AuthUserResource extends JsonResource
     public function toArray(Request $request): array
     {
         // Generate Token
-        /*   $token = $this->createToken($this->email)->plainTextToken; */
+          $token = $this->createToken($this->email)->plainTextToken;
 
         return [
             'id' => $this->id,
@@ -31,8 +31,8 @@ class AuthUserResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'role' => $this->role,
-            /*  'type' => 'Bearer', */
-            /*  'token' => $token, */
+            'type' => 'Bearer',
+            'token' => $token,
 
         ];
     }

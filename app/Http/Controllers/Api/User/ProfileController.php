@@ -23,7 +23,7 @@ class ProfileController extends Controller
     {
         $svc->update(
             Auth::user(),
-            $request->only(['username', 'name', 'email']),
+            $request->only(['username', 'first_name', 'last_name', 'email']),
             $request->validated(),
             $request->file('avatar')
         );

@@ -23,15 +23,16 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'username' => 'nullable|string|max:255',
-            'name' => 'nullable|string|max:255',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'avatar' => 'nullable|file|image|mimes:jpeg,png,jpg,gif|max:2048',
             'gender' => 'nullable|string|in:male,female,other',
             'dob' => 'nullable|date|before_or_equal:today',
             'phone' => 'nullable|string|max:20',
-            'country' => 'nullable|string|max:100',
-            'state' => 'nullable|string|max:100',
-            'city' => 'nullable|string|max:100',
+            'country_id' => 'nullable|exists:countries,id',
+            'state_id' => 'nullable|exists:states,id',
+            'city_id' => 'nullable|exists:cities,id',
             'zipcode' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
         ];
