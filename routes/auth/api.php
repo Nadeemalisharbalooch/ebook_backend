@@ -19,9 +19,11 @@ Route::post('reset-password', ResetPasswordController::class)->name('reset-passw
 Route::middleware('auth:sanctum')->group(function () {
 
     // Verification
-    Route::post('/verification', [CodeVerificationController::class, 'verification'])->name('verification');
     // Send Verification Code
-    Route::post('/resend-verification', [CodeVerificationController::class, 'resendVerificationCode'])->name('resend.verification');
 
     Route::post('logout', LogoutController::class)->name('logout')->middleware('auth:sanctum');
 });
+
+    Route::post('/verification', [CodeVerificationController::class, 'verification'])->name('verification');
+    Route::post('/resend-verification', [CodeVerificationController::class, 'resendVerificationCode'])->name('resend.verification');
+
