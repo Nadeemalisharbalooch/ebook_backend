@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Events\Auth\CodeVerificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Auth\AuthUserResource;
+use App\Http\Resources\Api\Auth\LoginUserResource;
 use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class CodeVerificationController extends Controller
         $user->verification_code = null; // optional: clear OTP after use
         $user->save();
 
-        $resource = new AuthUserResource($user);
+        $resource = new LoginUserResource($user);
 
         return ResponseService::success(
             $resource,
