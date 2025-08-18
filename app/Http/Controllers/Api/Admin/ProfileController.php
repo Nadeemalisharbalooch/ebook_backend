@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProfileUpdateRequest;
 use App\Http\Requests\Admin\UpdatePassword;
+use App\Http\Resources\Api\Auth\AuthUserResource;
 use App\Services\ProfileService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -26,17 +27,28 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     /** @var \App\Models\User */
-    public function update(ProfileUpdateRequest $request, ProfileService $svc)
-    {
-        $svc->update(
-            Auth::user(),
-            $request->only(['username', 'first_name', 'last_name', 'email']),
-            $request->validated(),
-            $request->file('avatar')
-        );
+  public function update(ProfileUpdateRequest $request, ProfileService $svc)
+{
+    $user = Auth::user();
 
-        return ResponseService::success('Profile updated successfully');
-    }
+    $svc->update(
+        $user,
+        $request->only(['username', 'first_name', 'last_name', 'email']),
+        $request->validated(),
+        $request->file('avatar')
+    );
+
+    // Refresh to make sure we have latest data (esp. avatar changes)
+    $user->refresh();
+
+    $resource = new AuthUserResource($user);
+
+    return ResponseService::success(
+        $resource,
+        'Profile updated successfully'
+    );
+}
+
 
     /**
      * Update the authenticated user's password.

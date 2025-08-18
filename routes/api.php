@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\General\LocationController;
 use App\Http\Resources\Api\Admin\UserCurrentResource;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,8 @@ Route::middleware('auth:sanctum', 'impersonate')->get('/user', function () {
     );
 });
 
+Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::put('profile/password', [ProfileController::class, 'updatePassword']);
 // Auth Routes
 Route::prefix('auth')->name('auth.')->group(function () {
     require __DIR__.'/auth/api.php';
