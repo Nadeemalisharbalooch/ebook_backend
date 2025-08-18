@@ -3,16 +3,28 @@
 use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\General\LocationController;
 use App\Http\Resources\Api\Admin\UserCurrentResource;
+use App\Services\ResponseService;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum', 'impersonate')->get('/user', function () {
-    return new UserCurrentResource(
-        auth()->user()->load('roles.permissions')
+
+Route::middleware(['auth:sanctum', 'impersonate'])->get('/user', function () {
+    $user = auth()->user()->load('roles.permissions');
+
+    $resource = new UserCurrentResource($user);
+
+    return ResponseService::success(
+        $resource,
+        'User fetched successfully'
     );
 });
 
-Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
-Route::put('profile/password', [ProfileController::class, 'updatePassword']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('me', [ProfileController::class, 'view'])->name('profile');
+    Route::put('me', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('me/password', [ProfileController::class, 'updatePassword']);
+    Route::delete('me/account', [ProfileController::class, 'destroy']);
+});
+
 // Auth Routes
 Route::prefix('auth')->name('auth.')->group(function () {
     require __DIR__.'/auth/api.php';

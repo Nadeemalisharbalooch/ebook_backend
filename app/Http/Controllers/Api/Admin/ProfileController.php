@@ -63,4 +63,27 @@ class ProfileController extends Controller
 
         return ResponseService::success('Password updated successfully.');
     }
+
+    // UserController.php
+
+public function destroy(Request $request)
+{
+    $user = Auth::user();
+
+    if (! $user) {
+        return ResponseService::error('User not authenticated', 401);
+    }
+
+    // Soft delete user
+    $user->delete();
+
+    // Optionally: logout / revoke token (agar Passport/Sanctum use kar rahe ho)
+    Auth::logout();
+
+    return ResponseService::success(
+        null,
+        'Your account has been deleted successfully.'
+    );
+}
+
 }
