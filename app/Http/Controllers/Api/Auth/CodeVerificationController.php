@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Events\Auth\CodeVerificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Auth\AuthUserResource;
+use App\Models\User;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,8 @@ class CodeVerificationController extends Controller
         'otp' => 'required|digits:6', // exactly 6 digits
     ]);
 
-    $user = Auth::user();
+    $user = User::where('email', $request->input('email'))->first();
+   /*  $user = Auth::user(); */
 
     if (! $user) {
         return ResponseService::error('User not authenticated', 401);
