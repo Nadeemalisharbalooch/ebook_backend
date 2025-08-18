@@ -21,15 +21,10 @@ Route::middleware(['auth:sanctum', 'impersonate'])->get('/user', function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [ProfileController::class, 'view'])->name('profile');
     Route::put('me', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('me/password', [ProfileController::class, 'updatePassword']);
-    Route::delete('me/account', [ProfileController::class, 'destroy']);
-});
+    Route::delete('me', [ProfileController::class, 'destroy']);
+    Route::put('me/change-password', [ProfileController::class, 'updatePassword']);
 
-// Auth Routes
-Route::prefix('auth')->name('auth.')->group(function () {
-    require __DIR__.'/auth/api.php';
 });
-
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['isAdmin', 'auth:sanctum'])->group(function () {
     require __DIR__.'/admin/api.php';
