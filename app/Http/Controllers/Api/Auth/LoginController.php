@@ -21,7 +21,7 @@ class LoginController extends Controller
             return ResponseService::error('Invalid credentials', 401);
         }
 
-        $user = Auth::user();
+      $user = Auth::user()->load('profile');
 
         $statusError = $user->checkStatus();
         if ($statusError !== null) {

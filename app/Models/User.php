@@ -90,7 +90,7 @@ class User extends Authenticatable
      */
     protected $attributes = [
         'is_admin' => false,
-        'is_active' => false,
+        'is_active' => true,
         'is_suspended' => false,
     ];
 
