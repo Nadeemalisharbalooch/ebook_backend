@@ -24,9 +24,9 @@ class LocationController extends Controller
 
     public function states(Country $country)
     {
-        $states = $country->states()->with('cities')->get();
+       /*  $states = $country->states()->with('cities')->get(); */
 
-        return StateResource::collection($states);
+        return StateResource::collection($country->states);
     }
 
     public function cities(State $state)
