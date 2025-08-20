@@ -17,7 +17,7 @@ class ProfileService
         $user->update($userData);
 
         $profileData = Arr::only($validated, [
-            'gender', 'dob', 'phone', 'country', 'state', 'city', 'zipcode', 'address',
+            'gender', 'dob', 'phone', 'country_id', 'state_id', 'city_id', 'zipcode', 'address',
         ]);
         if ($avatarFile) {
             // Delete old image if exists
