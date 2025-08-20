@@ -16,7 +16,12 @@ class ProfileController extends Controller
     public function view(Request $request)
     {
 
-        $user = $request->user()->load('profile');
+        $user = $request->user()->load([
+    'profile.country',
+    'profile.state',
+    'profile.city',
+]);
+
 
         return ResponseService::success($user);
     }

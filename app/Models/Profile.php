@@ -62,7 +62,7 @@ class Profile extends Model
 
         // Step 2: Ensure it starts with a single + at the start
         $phone = preg_replace('/^\++/', '', $phone); // Remove multiple + signs
-        $phone = '+'.$phone;
+        $phone = '+' . $phone;
 
         return $phone;
     }
@@ -73,5 +73,20 @@ class Profile extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 }
