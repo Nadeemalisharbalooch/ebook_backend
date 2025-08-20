@@ -30,6 +30,7 @@ class ProfileController extends Controller
   public function update(ProfileUpdateRequest $request, ProfileService $svc)
 {
     $user = Auth::user();
+    $user->load('profile'); // Ensure profile is loaded
 
     $svc->update(
         $user,
