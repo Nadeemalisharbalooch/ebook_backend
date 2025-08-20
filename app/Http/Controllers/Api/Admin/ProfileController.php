@@ -36,8 +36,11 @@ public function view(Request $request)
     /** @var \App\Models\User */
   public function update(ProfileUpdateRequest $request, ProfileService $svc)
 {
-    $user = Auth::user();
-    $user->load('profile'); // Ensure profile is loaded
+    $user = $request->user()->load([
+        'profile.country',
+        'profile.state',
+        'profile.city',
+    ]);
 
     $svc->update(
         $user,
@@ -49,7 +52,7 @@ public function view(Request $request)
     // Refresh to make sure we have latest data (esp. avatar changes)
     $user->refresh();
 
-    $resource = new AuthUserResource($user);
+    $resource = new ProfileResource($user);
 
     return ResponseService::success(
         $resource,
