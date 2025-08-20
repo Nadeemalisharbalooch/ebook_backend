@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProfileUpdateRequest;
 use App\Http\Requests\Admin\UpdatePassword;
+use App\Http\Resources\Api\Admin\ProfileResource;
 use App\Http\Resources\Api\Auth\AuthUserResource;
 use App\Services\ProfileService;
 use App\Services\ResponseService;
@@ -13,18 +14,19 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function view(Request $request)
-    {
-
-        $user = $request->user()->load([
-    'profile.country',
-    'profile.state',
-    'profile.city',
-]);
 
 
-        return ResponseService::success($user);
-    }
+public function view(Request $request)
+{
+    $user = $request->user()->load([
+        'profile.country',
+        'profile.state',
+        'profile.city',
+    ]);
+
+    return ResponseService::success(new ProfileResource($user));
+}
+
 
     /**
      * Update the authenticated user's profile.

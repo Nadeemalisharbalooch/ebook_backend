@@ -12,8 +12,24 @@ class ProfileResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+   public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id'        => $this->id,
+            'user_id'   => $this->user_id,
+            'avatar'    => $this->avatar,
+            'gender'    => $this->gender,
+            'dob'       => $this->dob,
+            'phone'     => $this->phone,
+            'zipcode'   => $this->zipcode,
+            'street'    => $this->street,
+            'created_at'=> $this->created_at,
+            'updated_at'=> $this->updated_at,
+
+            // Relations
+            'country'   => $this->whenLoaded('country'),
+            'state'     => $this->whenLoaded('state'),
+            'city'      => $this->whenLoaded('city'),
+        ];
     }
 }
