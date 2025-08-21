@@ -22,22 +22,20 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country_id' => 'required|exists:countries,id',
-            'state_id' => 'required|exists:states,id',
-            'city_id' => 'required|exists:cities,id',
+
             'username' => 'nullable|string|max:255',
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
-            'avatar' => 'nullable|file|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'gender' => 'nullable|string|in:male,female,other',
-            'dob' => 'nullable|date|before_or_equal:today',
-            'phone' => 'nullable|string|max:20',
-            'country_id' => 'nullable|exists:countries,id',
-            'state_id' => 'nullable|exists:states,id',
-            'city_id' => 'nullable|exists:cities,id',
-            'zipcode' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
+            'profile.avatar' => 'nullable|file|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile.gender' => 'nullable|string|in:male,female,other',
+            'profile.dob' => 'nullable|date|before_or_equal:today',
+            'profile.phone' => 'nullable|string|max:20',
+            'profile.country_id' => 'nullable|exists:countries,id',
+            'profile.state_id' => 'nullable|exists:states,id',
+            'profile.city_id' => 'nullable|exists:cities,id',
+            'profile.zipcode' => 'nullable|string|max:20',
+            'profile.street' => 'nullable|string|max:255',
         ];
     }
 }

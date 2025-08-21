@@ -34,7 +34,7 @@ public function view(Request $request)
      * @return \Illuminate\Http\JsonResponse
      */
     /** @var \App\Models\User */
-  public function update(ProfileUpdateRequest $request, ProfileService $svc)
+public function update(ProfileUpdateRequest $request, ProfileService $svc)
 {
     $user = $request->user()->load([
         'profile.country',
@@ -46,10 +46,10 @@ public function view(Request $request)
         $user,
         $request->only(['username', 'first_name', 'last_name', 'email']),
         $request->validated(),
-        $request->file('avatar')
+        $request->file('profile.avatar')
     );
 
-    // Refresh to make sure we have latest data (esp. avatar changes)
+    // Refresh to make sure we have latest data
     $user->refresh();
 
     $resource = new ProfileResource($user);
@@ -59,6 +59,7 @@ public function view(Request $request)
         'Profile updated successfully'
     );
 }
+
 
 
     /**
