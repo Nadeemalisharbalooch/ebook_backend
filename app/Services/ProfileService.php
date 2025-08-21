@@ -12,25 +12,29 @@ class ProfileService
     /**
      * Create a new class instance.
      */
-    public function update(User $user, array $userData, array $validated, ?UploadedFile $avatarFile): void
-    {
-        $user->update($userData);
+   public function update(User $user, array $userData, array $validated, ?UploadedFile $avatarFile): void
+{
+    // Update user fields
+    $user->update($userData);
 
-        $profileData = Arr::only($validated, [
-            'gender', 'dob', 'phone', 'country_id', 'state_id', 'city_id', 'zipcode', 'address',
-        ]);
-        if ($avatarFile) {
-            // Delete old image if exists
-            if ($old = $user->profile?->avatar) {
-                Storage::disk('public')->delete($old);
-            }
-            // Store new image
-            $profileData['avatar'] = $avatarFile->store('avatars', 'public');
+    // Get profile fields from nested 'profile'
+    $profileData = Arr::only($validated['profile'] ?? [], [
+        'gender', 'dob', 'phone', 'country_id', 'state_id', 'city_id', 'zipcode', 'street',
+    ]);
+
+    // Handle avatar file
+    if ($avatarFile) {
+        if ($old = $user->profile?->avatar) {
+            Storage::disk('public')->delete($old);
         }
-
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            $profileData
-        );
+        $profileData['avatar'] = $avatarFile->store('avatars', 'public');
     }
+
+    // Update or create profile
+    $user->profile()->updateOrCreate(
+        ['user_id' => $user->id],
+        $profileData
+    );
+}
+
 }
