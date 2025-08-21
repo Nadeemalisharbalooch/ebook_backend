@@ -42,14 +42,16 @@ public function update(ProfileUpdateRequest $request, ProfileService $svc)
         'profile.city',
     ]);
 
+    // Correct avatar retrieval (frontend key: profile_avatar)
+    $avatarFile = $request->file('profile_avatar');
     $svc->update(
         $user,
         $request->only(['username', 'first_name', 'last_name', 'email']),
         $request->validated(),
-        $request->file('profile.avatar')
+        $avatarFile
     );
 
-    // Refresh to make sure we have latest data
+    // Refresh to get latest data
     $user->refresh();
 
     $resource = new ProfileResource($user);
@@ -59,6 +61,9 @@ public function update(ProfileUpdateRequest $request, ProfileService $svc)
         'Profile updated successfully'
     );
 }
+
+
+
 
 
 
