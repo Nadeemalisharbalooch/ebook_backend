@@ -20,7 +20,7 @@ Route::middleware(['auth:sanctum', 'impersonate'])->get('/user', function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [ProfileController::class, 'view'])->name('profile');
-    Route::put('me', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('me', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('me', [ProfileController::class, 'destroy']);
     Route::put('me/change-password', [ProfileController::class, 'updatePassword']);
 
