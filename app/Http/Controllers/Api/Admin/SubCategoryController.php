@@ -133,4 +133,15 @@ class SubCategoryController extends Controller
             'Subcategory active status updated successfully'
         );
     }
+
+    public function getSubcategories($id)
+    {
+        return "data has een ";
+       return $subCategories = SubCategory::where('category_id', $id)->where('is_active', true)->get();
+
+        return ResponseService::success(
+            SubCategoryResource::collection($subCategories),
+            'Subcategories retrieved successfully'
+        );
+    }
 }

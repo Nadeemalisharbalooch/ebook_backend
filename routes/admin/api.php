@@ -84,6 +84,8 @@ Route::prefix('sub-categories')->group(function () {
     Route::delete('{subCategory}/force-delete', [SubCategoryController::class, 'forceDelete'])->name('sub-categories.forceDelete');
     Route::patch('/{subCategory}/toggle-active', [SubCategoryController::class, 'toggleActive']);
 });
+  Route::get('/categories/{id}/subcategories', [SubCategoryController::class, 'getSubcategories']);
+
 Route::apiResource('sub-categories', SubCategoryController::class);
 
 Route::apiResource('books', BookController::class);
