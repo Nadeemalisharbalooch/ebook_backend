@@ -36,9 +36,7 @@ public function view(Request $request)
     /** @var \App\Models\User */
 public function update(ProfileUpdateRequest $request, ProfileService $svc)
 {
-        dd($request->all(), $request->file('avatar'));
 
-    return response()->json(['message' => 'reached']);
     $user = $request->user()->load([
         'profile.country',
         'profile.state',
