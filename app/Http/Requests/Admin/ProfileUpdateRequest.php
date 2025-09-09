@@ -27,7 +27,7 @@ class ProfileUpdateRequest extends FormRequest
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
-            'profile.avatar' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile.avatar' => 'nullable|file|image|mimes:jpeg,png,jpg,gif|max:2048',
             'profile.gender' => 'nullable|string|in:male,female,other',
             'profile.dob' => 'nullable|date|before_or_equal:today',
             'profile.phone' => 'nullable|string|max:20',
