@@ -23,7 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('me', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('me', [ProfileController::class, 'destroy']);
     Route::put('me/change-password', [ProfileController::class, 'updatePassword']);
-
 });
 
 // Auth Routes
