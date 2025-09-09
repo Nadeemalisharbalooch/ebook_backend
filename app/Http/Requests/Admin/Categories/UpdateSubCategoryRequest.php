@@ -25,7 +25,7 @@ class UpdateSubCategoryRequest extends FormRequest
         $subCategoryId = is_object($subCategory) ? $subCategory->id : $subCategory;
 
         return [
-            'category_id' => 'required|exists:categories,id',
+           /*  'category_id' => 'required|exists:categories,id', */
             'name' => 'required|string|max:255',
             'is_active' => 'boolean',
         ];
