@@ -36,6 +36,7 @@ public function view(Request $request)
     /** @var \App\Models\User */
 public function update(ProfileUpdateRequest $request, ProfileService $svc)
 {
+    dd('here');
     $user = $request->user()->load([
         'profile.country',
         'profile.state',
@@ -43,7 +44,7 @@ public function update(ProfileUpdateRequest $request, ProfileService $svc)
     ]);
 
     // Correct avatar retrieval (frontend key: profile_avatar)
-    $avatarFile = $request->file('profile_avatar');
+    $avatarFile = $request->file('profile.avatar');
     $svc->update(
         $user,
         $request->only(['username', 'first_name', 'last_name', 'email']),

@@ -7,6 +7,7 @@ use App\Services\ResponseService;
 use Illuminate\Support\Facades\Route;
 
 
+
 Route::middleware(['auth:sanctum', 'impersonate'])->get('/user', function () {
     $user = auth()->user()->load('roles.permissions');
 

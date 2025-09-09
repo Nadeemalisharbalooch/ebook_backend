@@ -13,9 +13,6 @@ class ProfileService
      * Create a new class instance.
      */
 
-
-
-
 public function update(User $user, array $userData, array $validated, ?UploadedFile $avatarFile): void
 {
     // User ke basic data update karo
