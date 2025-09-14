@@ -18,7 +18,6 @@ class CatergoryController extends Controller
     public function index()
     {
         $categories = Category::withTrashed()->get();
-
         return ResponseService::success(
             CategoryResource::collection($categories),
             'Categories retrieved successfully'
@@ -31,7 +30,6 @@ class CatergoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         $category = Category::create($request->validated());
-
         return ResponseService::success(
             new CategoryResource($category),
             'Category created successfully'

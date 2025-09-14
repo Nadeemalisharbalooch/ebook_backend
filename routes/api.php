@@ -41,6 +41,10 @@ Route::prefix('user')->name('user.')->middleware(['isUser', 'auth:sanctum'])->gr
     require __DIR__.'/user/api.php';
 });
 
+Route::prefix('vendor')->name('vendor.')->middleware(['isAdmin', 'auth:sanctum'])->group(function () {
+    require __DIR__.'/vendor/api.php';
+});
+
 Route::apiResource('countries', LocationController::class);
 
 Route::get('/states/{country}', [LocationController::class, 'states']);
