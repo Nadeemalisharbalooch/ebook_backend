@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $this->authorizePermission('users.list');
+      /*   $this->authorizePermission('users.list'); */
         $users = User::with(['profile'])
             ->withTrashed()
             ->where('is_admin', false)
