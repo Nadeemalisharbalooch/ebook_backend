@@ -55,6 +55,7 @@ class BookController extends Controller
     }
 
 
+
     /**
      * Display the specified resource.
      */
@@ -67,6 +68,7 @@ class BookController extends Controller
             'Book retrieved successfully'
         );
     }
+
 
     /**
      * Update the specified resource in storage.

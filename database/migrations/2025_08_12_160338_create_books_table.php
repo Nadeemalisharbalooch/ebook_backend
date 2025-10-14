@@ -9,51 +9,60 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('books', function (Blueprint $table) {
-            $table->id();
+  public function up(): void
+{
+    Schema::create('books', function (Blueprint $table) {
+        $table->id();
 
-            // Company / Tenancy scope
-           $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+        // Company / Tenancy scope
+        $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-            // Categories
-            $table->foreignId('sub_category_id')->nullable()->constrained('sub_categories')->nullOnDelete();
+        // Categories
+        $table->foreignId('sub_category_id')->nullable()->constrained('sub_categories')->nullOnDelete();
 
-            // Book details
-            $table->string('title');
-            $table->string('author')->nullable();
-            $table->string('slug')->unique();
-            $table->text('description')->nullable();
+        // Book details
+        $table->string('title');
+        $table->string('author')->nullable();
+        $table->string('slug')->unique();
+        $table->text('description')->nullable();
 
-            // Pricing
-            $table->decimal('price', 10, 2)->default(0);
-            $table->decimal('discount_price', 10, 2)->nullable();
+        // Pricing
+        $table->decimal('price', 10, 2)->default(0);
+        $table->decimal('discount_price', 10, 2)->nullable();
+        $table->string('currency')->default('PKR'); // ✅ New field
 
-            // Media
-            $table->string('cover_image')->nullable();
-            $table->json('images')->nullable();
+        // Media
+        $table->string('cover_image')->nullable();
+        $table->json('images')->nullable();
 
-            // Extra details
-            $table->string('language')->nullable();
-            $table->string('isbn')->nullable()->unique();
+        // Extra details
+        $table->string('language')->nullable();
+        $table->string('isbn')->nullable()->unique();
+        $table->string('edition')->nullable();
+        $table->integer('pages')->nullable();
+        $table->string('dimensions')->nullable();
 
-            $table->string('edition')->nullable();
-            $table->integer('pages')->nullable();
-            $table->string('dimensions')->nullable();
-            $table->unsignedBigInteger('view_count')->default(0);
-            $table->enum('type', ['hard', 'soft', 'audio', 'video'])->default('hard');
-            $table->enum('status', ['draft', 'published'])->default('draft');
+        $table->unsignedBigInteger('view_count')->default(0);
 
-            // Stock
-            $table->integer('stock_quantity')->default(0);
+        // ✅ Updated Enums (from your provided ones)
+        $table->enum('format', ['Digital', 'Physical'])->default('Digital');
+        $table->enum('type', ['Ebook', 'Hardcover', 'Paperback', 'Audiobook'])->default('Ebook');
+        $table->enum('status', ['Draft', 'Published', 'Unpublished'])->default('Draft');
 
-            $table->boolean('is_active')->default(true);
+        // ✅ Additional new fields
+        $table->json('tags')->nullable();
+        $table->timestamp('published_at')->nullable();
+        $table->boolean('is_featured')->default(false);
 
-            $table->softDeletes();
-            $table->timestamps();
-        });
-    }
+        // Stock
+        $table->integer('stock_quantity')->default(0);
+
+        $table->boolean('is_active')->default(true);
+
+        $table->softDeletes();
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
