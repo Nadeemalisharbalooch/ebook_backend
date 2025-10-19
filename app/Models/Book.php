@@ -34,6 +34,13 @@ class Book extends Model
         'status',
         'stock_quantity',
         'is_active',
+        'currency',
+        'format',
+        'tags',
+        'published_at',
+        'is_featured',
+
+
     ];
 
     protected $casts = [
