@@ -35,10 +35,10 @@ class Book extends Model
         'stock_quantity',
         'is_active',
         'currency',
-        'format',
+       /*  'format',
         'tags',
         'published_at',
-        'is_featured',
+        'is_featured', */
 
 
     ];
