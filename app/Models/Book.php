@@ -45,6 +45,10 @@ class Book extends Model
 
     protected $casts = [
         'images' => 'array',
+        'tags' => 'array',
+        'published_at' => 'datetime',
+        'is_featured' => 'boolean',
+
     ];
 
 
