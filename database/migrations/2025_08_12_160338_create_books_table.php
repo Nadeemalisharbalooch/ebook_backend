@@ -19,7 +19,7 @@ return new class extends Migration
 
         // Categories
         $table->foreignId('sub_category_id')->nullable()->constrained('sub_categories')->nullOnDelete();
-
+        $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
         // Book details
         $table->string('title');
         $table->string('author')->nullable();
@@ -29,7 +29,7 @@ return new class extends Migration
         // Pricing
         $table->decimal('price', 10, 2)->default(0);
         $table->decimal('discount_price', 10, 2)->nullable();
-        $table->string('currency')->default('PKR'); // ✅ New field
+        $table->string('currency')->default('PKR');
 
         // Media
         $table->string('cover_image')->nullable();

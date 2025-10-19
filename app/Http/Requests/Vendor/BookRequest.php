@@ -22,11 +22,12 @@ class BookRequest extends FormRequest
   public function rules(): array
 {
     return [
+        'category_id'      => ['required', 'exists:categories,id'],
         'sub_category_id'  => ['required', 'exists:sub_categories,id'],
 
         // Book details
         'title'            => ['required', 'string', 'max:255'],
-        'author'           => ['nullable', 'string', 'max:255'],
+        'author'           => ['required', 'string', 'max:255'],
         'description'      => ['nullable', 'string'],
 
         // Pricing
@@ -35,7 +36,7 @@ class BookRequest extends FormRequest
         'currency'         => ['nullable', 'string', 'max:10'], // default handled in DB
 
         // Media
-        'cover_image'      => ['nullable', 'string', 'max:255'],
+        'cover_image'      => ['required', 'string', 'max:255'],
         'images'           => ['nullable', 'array'],
         'images.*'         => ['nullable', 'string', 'max:255'],
 
@@ -43,7 +44,7 @@ class BookRequest extends FormRequest
         'language'         => ['nullable', 'string', 'max:100'],
         'isbn'             => ['required', 'string', 'max:50', 'unique:books,isbn,' . $this->book],
         'edition'          => ['nullable', 'string', 'max:100'],
-        'pages'            => ['required', 'integer', 'min:1'],
+        'pages'            => ['nullable', 'integer', 'min:1'],
         'dimensions'       => ['nullable', 'string', 'max:100'],
 
         // Enums (Updated)
@@ -54,12 +55,11 @@ class BookRequest extends FormRequest
         // Additional fields
         'tags'             => ['nullable', 'array'],
         'tags.*'           => ['string', 'max:50'],
-        'published_at'     => ['nullable', 'date'],
+        'published_at'     => ['required', 'date'],
         'is_featured'      => ['boolean'],
 
         // Stock
         'stock_quantity'   => ['required', 'integer', 'min:0'],
-
         'is_active'        => ['boolean'],
     ];
 }
