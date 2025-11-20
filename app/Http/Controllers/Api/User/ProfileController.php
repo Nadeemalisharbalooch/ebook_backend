@@ -22,7 +22,6 @@ class ProfileController extends Controller
 
 public function update(ProfileUpdateRequest $request, ProfileService $svc)
 {
-    dd('here');
     $user = $svc->update(
         Auth::user(),
         $request->only(['username', 'first_name', 'last_name', 'email']),

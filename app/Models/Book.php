@@ -40,7 +40,6 @@ class Book extends Model
         'published_at',
         'is_featured',
 
-
     ];
 
     protected $casts = [

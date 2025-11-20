@@ -45,6 +45,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['isAdmin', 'auth:sanctum']
     require __DIR__.'/vendor/api.php';
 });
 
+  require __DIR__.'/frontend/api.php';
 Route::apiResource('countries', LocationController::class);
 
 Route::get('/states/{country}', [LocationController::class, 'states']);
